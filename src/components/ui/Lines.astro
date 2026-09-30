@@ -1,0 +1,13 @@
+---
+/** Heading rendered as masked lines that slide up in sequence. */
+import { rich } from '../../lib/rich';
+
+interface Props { lines: string[]; step?: number; tilt?: boolean }
+const { lines, step = 90, tilt = true } = Astro.props;
+---
+
+{lines.map((line, i) => (
+  <span class="mask">
+    <span data-line data-tilt={tilt ? '' : undefined} style={i ? `--d:${i * step}ms` : undefined} set:html={rich(line)} />
+  </span>
+))}

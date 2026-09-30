@@ -1,0 +1,11 @@
+---
+/** Giant decorative "BARATTO 1948" row; letters reveal one by one. */
+interface Props { delayStart?: number; step?: number; class?: string }
+const { delayStart = 0, step = 60, class: cls } = Astro.props;
+const letters = 'BARATTO'.split('');
+---
+
+<div class:list={['wordmark', cls]} aria-hidden="true">
+  {letters.map((l, i) => <span data-line data-tilt style={`--d:${delayStart + i * step}ms`}>{l}</span>)}
+  <span class="yr" data-line data-tilt style={`--d:${delayStart + letters.length * step + 40}ms`}>1948</span>
+</div>

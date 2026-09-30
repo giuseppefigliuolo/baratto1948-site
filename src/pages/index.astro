@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import Intro from '../components/Intro.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/sections/Hero.astro';
+import Manifesto from '../components/sections/Manifesto.astro';
+import Heritage from '../components/sections/Heritage.astro';
+import Today from '../components/sections/Today.astro';
+import Quote from '../components/sections/Quote.astro';
+import Process from '../components/sections/Process.astro';
+import Details from '../components/sections/Details.astro';
+import Collection from '../components/sections/Collection.astro';
+import Atelier from '../components/sections/Atelier.astro';
+import Marquee from '../components/sections/Marquee.astro';
+import Contact from '../components/sections/Contact.astro';
+import { getHome, getSettings } from '../lib/content';
+
+const home = await getHome();
+const settings = await getSettings();
+---
+
+<Base home={home} settings={settings}>
+  <Intro home={home} settings={settings} />
+  <Header settings={settings} />
+  <main id="main">
+    <Hero home={home} settings={settings} />
+    <div class="sheet">
+      <Manifesto home={home} />
+      <Heritage home={home} />
+      <Today home={home} />
+      <Quote home={home} />
+      <Process home={home} />
+      <Details home={home} />
+      <Collection home={home} settings={settings} />
+      <Atelier home={home} />
+      <Marquee home={home} />
+      <Contact home={home} settings={settings} />
+    </div>
+  </main>
+</Base>
+
+<style>
+  /* Content sheet that slides over the sticky hero. */
+  .sheet { position: relative; z-index: 1; background: var(--bg); box-shadow: 0 -40px 80px rgba(0, 0, 0, 0.6); }
+</style>

@@ -1,0 +1,118 @@
+---
+import type { Home, Settings } from '../../lib/content';
+import Img from '../ui/Img.astro';
+
+interface Props { home: Home; settings: Settings }
+const { home } = Astro.props;
+const c = home.collection;
+const pad = (n: number) => String(n).padStart(2, '0');
+const total = pad(c.chapters.length);
+---
+
+<section id="collezione" class="coll" data-coll aria-labelledby="collezione-title">
+  <div class="stage">
+    <div class="top">
+      <h2 id="collezione-title" class="kicker">{c.kicker}</h2>
+      <div class="ctr" aria-hidden="true"><span data-coll-ctr>01</span><span class="of">/ {total}</span></div>
+    </div>
+    <div class="viewport" data-coll-viewport>
+      <div class="track" data-coll-track>
+        {c.chapters.map((ch, i) => (
+          <div class="skew" data-skew id={ch.id}>
+            <article class="card" data-coll-card data-cursor="Scopri">
+              <div class="media pic">
+                <Img src={ch.image.src} alt={ch.image.alt} sizes="(max-width: 759px) 84vw, 36vw" class="coll-img" data-coll-img />
+              </div>
+              <div class="dim" data-coll-dim></div>
+              <div class="body" data-coll-body>
+                <span class="n">{pad(i + 1)} / {total}</span>
+                <div class="main">
+                  <span class="k">{ch.kicker}</span>
+                  <h3 class="h">{ch.title} <em>{ch.titleAccent}</em></h3>
+                  <p class="b">{ch.body}</p>
+                  <p class="x">{ch.extra}</p>
+                </div>
+                <a class="go" href="#contatti">Scopri <span aria-hidden="true">→</span><span class="sr-only"> — prenota una consulenza per {ch.title} {ch.titleAccent}</span></a>
+              </div>
+            </article>
+          </div>
+        ))}
+      </div>
+    </div>
+    <div class="bar" aria-hidden="true"><div data-coll-bar></div></div>
+  </div>
+</section>
+
+<style>
+  .coll { position: relative; }
+  .stage {
+    display: flex; flex-direction: column; justify-content: center;
+    gap: clamp(20px, 3.4vh, 40px);
+    padding: clamp(64px, 7vh, 80px) 0 clamp(40px, 6vh, 64px);
+  }
+  :global(.m) .coll { height: 320vh; }
+  :global(.m) .stage { position: sticky; top: 0; height: 100vh; overflow: hidden; padding-bottom: 0; }
+
+  .top { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 0 var(--gutter); }
+  .top .kicker { margin: 0; font-weight: 500; }
+  .ctr { display: flex; align-items: baseline; gap: 6px; flex: none; font: 400 clamp(24px, 3vw, 48px)/1 var(--serif); }
+  .ctr span:first-child { color: var(--gold); }
+  .of { color: var(--dim); }
+
+  /* Without motion the track is a native horizontal scroller. */
+  .viewport { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .viewport::-webkit-scrollbar { display: none; }
+  :global(.m) .viewport { overflow: visible; }
+  .track {
+    position: relative; display: flex; align-items: center;
+    gap: clamp(16px, 2vw, 32px); padding: 0 var(--gutter); width: max-content;
+  }
+  :global(.m) .track { will-change: transform; }
+  .skew { scroll-snap-align: center; }
+  :global(.m) .skew { will-change: transform; }
+
+  .card {
+    position: relative; display: flex;
+    width: min(76vw, 1180px); height: min(68vh, 640px);
+    border: 1px solid rgba(236, 229, 214, 0.16); background: var(--bg-2); overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+    transform-origin: 50% 50%;
+    transition: border-color 0.5s;
+  }
+  :global(.m) .card { will-change: transform; }
+  @media (hover: hover) { .card:hover { border-color: var(--gold); } }
+  .pic { flex: 0 0 48%; }
+  .pic :global(.coll-img) {
+    position: absolute; top: 0; left: -10%; width: 120%; height: 100%;
+    object-fit: cover; object-position: 50% 30%;
+    filter: saturate(0.6) sepia(0.14) contrast(1.06) brightness(0.9);
+  }
+  :global(.m) .pic :global(.coll-img) { will-change: transform; }
+  .dim { position: absolute; inset: 0; z-index: 1; background: var(--bg); opacity: 0; pointer-events: none; }
+  .body {
+    position: relative; z-index: 2; flex: 1 1 0; min-width: 0;
+    display: flex; flex-direction: column; justify-content: space-between; gap: 16px;
+    padding: clamp(20px, 2.8vw, 44px);
+  }
+  .n { font: 500 10px/1 var(--sans); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .main { display: flex; flex-direction: column; gap: clamp(12px, 1.4vw, 18px); }
+  .k { font: 500 11px/1.4 var(--sans); letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
+  .h { font: 400 clamp(40px, 4.6vw, 80px)/0.92 var(--serif); }
+  .b { font: 400 clamp(13px, 1vw, 15px)/1.6 var(--sans); color: var(--muted); }
+  .x { font: 400 italic 18px/1.35 var(--serif); color: var(--fg-2); }
+  .go { display: flex; align-items: center; gap: 10px; font: 600 11px/1 var(--sans); letter-spacing: 0.2em; text-transform: uppercase; }
+  .go::after { content: ''; position: absolute; inset: 0; z-index: 3; }
+  .go span[aria-hidden] { color: var(--gold); }
+
+  .bar { margin: 0 var(--gutter); height: 1px; background: rgba(236, 229, 214, 0.15); }
+  .bar div { height: 1px; background: var(--gold); transform-origin: 0 50%; transform: scaleX(0); }
+  :global(html:not(.m)) .bar { display: none; }
+
+  @media (max-width: 759px) {
+    :global(.m) .coll { height: 280vh; }
+    .track { gap: 12px; }
+    .card { flex-direction: column; width: 84vw; height: min(74svh, 640px); }
+    .pic { flex: 0 0 34%; }
+    .x { display: none; }
+  }
+</style>

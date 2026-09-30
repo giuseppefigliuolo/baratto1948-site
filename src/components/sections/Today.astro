@@ -1,0 +1,24 @@
+---
+import type { Home } from '../../lib/content';
+import { rich } from '../../lib/rich';
+
+interface Props { home: Home }
+const { home } = Astro.props;
+const phrases = home.today.phrases;
+const last = phrases.length - 1;
+---
+
+<section class="today" aria-label="Oggi">
+  <p class="text" data-phrases>
+    {phrases.map((p, i) => <span data-phrase class:list={{ accent: i === last }} set:html={rich(p)} />)}
+  </p>
+</section>
+
+<style>
+  .today { padding: 0 var(--gutter) clamp(72px, 11vw, 168px); display: flex; justify-content: center; }
+  .text {
+    max-width: 960px; text-align: center; text-wrap: balance;
+    font: 400 clamp(28px, 3.4vw, 52px)/1.18 var(--serif);
+  }
+  .accent { color: var(--gold); }
+</style>

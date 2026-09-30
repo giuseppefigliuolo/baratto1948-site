@@ -1,0 +1,54 @@
+---
+import { Font } from 'astro:assets';
+import '../styles/global.css';
+import Seo from '../components/Seo.astro';
+import type { Home, Settings } from '../lib/content';
+import favicon from '../assets/brand/logo.svg?url';
+
+interface Props {
+  home: Home;
+  settings: Settings;
+}
+
+const { home, settings } = Astro.props;
+// Collaudo / preview builds stay out of search engines until INDEXABLE=true.
+const indexable = process.env.INDEXABLE === 'true';
+const intro = settings.intro.enabled;
+---
+
+<!doctype html>
+<html lang="it" data-intro={intro ? '1' : '0'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0c0b0a" />
+    <meta name="format-detection" content="telephone=no" />
+    <!-- Decides motion + intro before first paint: no flash, no layout shift. -->
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        d.classList.add('m');
+        try {
+          if (d.dataset.intro === '1' && !sessionStorage.getItem('b48-intro')) {
+            d.classList.add('intro');
+            // Failsafe if the script never loads: release the page.
+            setTimeout(function () { d.classList.remove('intro'); }, 6000);
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <Font cssVariable="--font-serif" preload={[{ weight: 400, style: 'normal' }]} />
+    <Font cssVariable="--font-sans" preload={[{ weight: 500 }]} />
+    <link rel="icon" href={favicon} type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <Seo home={home} settings={settings} indexable={indexable} />
+  </head>
+  <body>
+    <a class="skip" href="#main">Vai al contenuto</a>
+    <slot />
+    <script>
+      import '../scripts/main';
+    </script>
+  </body>
+</html>

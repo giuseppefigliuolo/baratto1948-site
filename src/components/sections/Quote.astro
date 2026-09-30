@@ -1,0 +1,63 @@
+---
+import type { Home } from '../../lib/content';
+import { rich } from '../../lib/rich';
+import Img from '../ui/Img.astro';
+
+interface Props { home: Home }
+const { home } = Astro.props;
+const q = home.quote;
+---
+
+<section class="quote" data-zoomreveal aria-label="Citazione">
+  <div class="stage">
+    <div class="sides" aria-hidden="true">
+      <span>{q.sideLeft}</span><span>{q.sideRight}</span>
+    </div>
+    <div class="box" data-zr-box>
+      <Img src={q.image.src} alt={q.image.alt} sizes="100vw" class="cover-img zr-img" data-zr-img />
+      <div class="dim" data-zr-dim></div>
+    </div>
+    <figure class="text" data-zr-text>
+      <blockquote><p set:html={rich(q.text)} /></blockquote>
+      <figcaption>— {q.author}</figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .quote { position: relative; }
+  .stage { position: relative; height: 100vh; overflow: hidden; }
+  :global(.m) .quote { height: 300vh; }
+  :global(.m) .stage { position: sticky; top: 0; }
+
+  .sides {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 var(--gutter); text-align: center;
+    font: 400 italic clamp(24px, 3vw, 48px)/1.1 var(--serif); color: var(--muted);
+  }
+  .sides span { max-width: 24vw; }
+  .box { position: absolute; inset: 0; overflow: hidden; }
+  :global(.m) .box { clip-path: inset(22% 34% 22% 34%); }
+  :global(.m) .box :global(.zr-img) { transform: scale(1.35); will-change: transform; }
+  .dim { position: absolute; inset: 0; background: var(--bg); opacity: 0.55; }
+  :global(.m) .dim { opacity: 0; }
+
+  .text {
+    position: absolute; inset: 0; margin: 0;
+    padding: 0 var(--gutter);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 24px; text-align: center;
+  }
+  :global(.m) .text { opacity: 0; }
+  blockquote { margin: 0; }
+  blockquote p { font: 400 italic clamp(46px, 9vw, 160px)/0.94 var(--serif); letter-spacing: -0.01em; }
+  figcaption { font: 500 11px/1 var(--sans); letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); }
+
+  @media (max-width: 759px) {
+    :global(.m) .quote { height: 230vh; }
+    :global(.m) .box { clip-path: inset(24% 14% 24% 14%); }
+    .sides { flex-direction: column; padding: 15vh 24px; }
+    .sides span { max-width: 80vw; }
+  }
+</style>

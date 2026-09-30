@@ -1,0 +1,80 @@
+---
+/**
+ * First-visit intro: image flicker + counter, then the frame expands into the hero.
+ * Rendered in HTML (so it paints with the page), only visible under `html.intro`.
+ * Thumbnails are lazy, so returning visitors never download them.
+ * The last frame reuses the hero's exact srcset → same cached file as the LCP image.
+ */
+import { getImage } from 'astro:assets';
+import type { Home, Settings } from '../lib/content';
+import Img from './ui/Img.astro';
+
+interface Props { home: Home; settings: Settings }
+const { home, settings } = Astro.props;
+
+const frames = await Promise.all(
+  [
+    home.heritage.roots.image.src,
+    home.heritage.founder.image.src,
+    home.process.steps[1].image.src,
+    home.process.steps[2].image.src,
+    home.details.image.src,
+    home.collection.chapters[0].image.src
+  ].map((src) => getImage({ src, width: 360, format: 'webp', quality: 55 }))
+);
+---
+
+{settings.intro.enabled && (
+  <div class="intro" aria-hidden="true" data-intro-el>
+    <div class="frame" data-intro-frame>
+      {frames.map((f, i) => (
+        <img src={f.src} width={f.attributes.width} height={f.attributes.height} alt="" loading="lazy" decoding="async" data-intro-img style={i ? 'opacity:0' : undefined} />
+      ))}
+      <Img src={home.hero.image.src} alt="" sizes="100vw" widths={[768, 1080, 1440, 1920]} priority class="frame-hero" data-intro-img style="opacity:0" />
+    </div>
+    <div class="label" data-intro-fade>{settings.intro.label}</div>
+    <div class="count" data-intro-count data-intro-fade>0</div>
+    <div class="word" data-intro-fade>{settings.intro.word}</div>
+  </div>
+)}
+
+<style>
+  .intro {
+    display: none;
+    position: fixed; inset: 0; z-index: 9999;
+    background: var(--bg); color: var(--fg);
+    transition: opacity 0.5s ease;
+  }
+  :global(html.intro) { overflow: hidden; }
+  /* Failsafe: if JS never runs, the overlay removes itself. */
+  :global(html.intro) .intro { display: block; animation: intro-failsafe 0.4s 5.6s forwards; }
+  @keyframes intro-failsafe { to { opacity: 0; visibility: hidden; } }
+
+  .frame {
+    position: absolute; inset: 0; overflow: hidden;
+    clip-path: inset(calc(50% - min(20vw, 170px)) calc(50% - min(15vw, 130px)));
+    transition: clip-path 0.9s var(--ease);
+  }
+  .frame.is-open { clip-path: inset(0 0 0 0); }
+  .frame img,
+  .frame :global(img) {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  }
+  .frame :global(.frame-hero) { object-position: 50% 40%; transform: scale(1.1); }
+
+  .label {
+    position: absolute; left: var(--gutter); top: 24px;
+    font: 500 11px/1.4 var(--sans); letter-spacing: 0.26em; text-transform: uppercase;
+  }
+  .count {
+    position: absolute; right: var(--gutter); bottom: 8px;
+    font: 400 clamp(72px, 14vw, 220px)/1 var(--serif); color: var(--gold);
+    font-variant-numeric: tabular-nums;
+  }
+  .word {
+    position: absolute; left: var(--gutter); bottom: 24px;
+    font: 400 italic clamp(28px, 4vw, 56px)/1 var(--serif);
+  }
+  [data-intro-fade] { transition: opacity 0.4s; }
+  .is-done [data-intro-fade] { opacity: 0; }
+</style>

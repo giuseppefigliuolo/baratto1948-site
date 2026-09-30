@@ -1,0 +1,28 @@
+---
+import type { Home } from '../../lib/content';
+
+interface Props { home: Home }
+const { home } = Astro.props;
+const { a, b } = home.marquee;
+---
+
+<section class="band" aria-label={`${a} ${b}`}>
+  <div class="track" data-marquee>
+    {[0, 1].map(() => (
+      <span class="set" aria-hidden="true">
+        <span>{a}</span><em>{b}</em><span>{a}</span><em>{b}</em>
+      </span>
+    ))}
+  </div>
+</section>
+
+<style>
+  .band { padding: clamp(40px, 7vw, 96px) 0; background: var(--fg); color: var(--bg); overflow: hidden; }
+  .track {
+    display: flex; width: max-content; white-space: nowrap;
+    font: 400 clamp(60px, 11vw, 190px)/1.05 var(--serif);
+  }
+  :global(.m) .track { will-change: transform; }
+  .set { display: flex; gap: clamp(24px, 3vw, 56px); padding-right: clamp(24px, 3vw, 56px); }
+  em { color: var(--gold-dark); }
+</style>

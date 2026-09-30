@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- Temporary vector seal. Replace with the official logo (assets/g/logow.png) when available. -->
+  <defs>
+    <path id="t" d="M28 100a72 72 0 0 1 144 0"/>
+    <path id="b" d="M40 104a60 60 0 0 0 120 0"/>
+  </defs>
+  <text fill="#ece5d6" font-family="Didot, 'Bodoni 72', 'Times New Roman', serif" font-size="23" letter-spacing="2.2">
+    <textPath href="#t" startOffset="50%" text-anchor="middle">BARATTO 1948</textPath>
+  </text>
+  <path d="M46 100a54 54 0 0 1 108 0" stroke="#ece5d6" stroke-width="2"/>
+  <text fill="#ece5d6" font-family="'Helvetica Neue', Arial, sans-serif" font-size="11" letter-spacing="3.2">
+    <textPath href="#b" startOffset="50%" text-anchor="middle">SARTORIA ARTIGIANALE</textPath>
+  </text>
+</svg>

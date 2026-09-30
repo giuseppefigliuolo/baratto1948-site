@@ -1,0 +1,63 @@
+---
+import type { Home } from '../../lib/content';
+import { rich } from '../../lib/rich';
+import Img from '../ui/Img.astro';
+import Lines from '../ui/Lines.astro';
+
+interface Props { home: Home }
+const { home } = Astro.props;
+const h = home.heritage;
+const half = '(max-width: 759px) 92vw, 48vw';
+---
+
+<section id="radici" class="heritage" aria-labelledby="radici-title">
+  <h2 id="radici-title" class="title"><Lines lines={h.title} /></h2>
+
+  <div class="grid">
+    <div class="fig">
+      <div class="media ratio-45" data-clip>
+        <Img src={h.roots.image.src} alt={h.roots.image.alt} sizes={half} data-gl data-speed="0.08" data-zoom="1.12" />
+      </div>
+      <span class="year" aria-hidden="true">1948</span>
+    </div>
+    <div class="copy" data-fade>
+      <span class="kicker">{h.roots.kicker}</span>
+      <p class="lead" set:html={rich(h.roots.lead)} />
+      <p class="body-copy">{h.roots.body}</p>
+    </div>
+  </div>
+
+  <div class="grid founder">
+    <div class="copy" data-fade>
+      <span class="kicker">{h.founder.kicker}</span>
+      <p class="lead" set:html={rich(h.founder.lead)} />
+      <p class="body-copy">{h.founder.body}</p>
+    </div>
+    <div class="media ratio-43" data-clip="c">
+      <Img src={h.founder.image.src} alt={h.founder.image.alt} sizes={half} data-gl data-speed="0.08" data-zoom="1.12" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .heritage {
+    position: relative; z-index: 1;
+    padding: 0 var(--gutter) clamp(72px, 11vw, 168px);
+    display: flex; flex-direction: column; gap: clamp(56px, 9vw, 144px);
+  }
+  .title { max-width: 1100px; font: 400 clamp(42px, 6.4vw, 112px)/0.96 var(--serif); letter-spacing: -0.01em; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+    gap: clamp(40px, 6vw, 96px); align-items: center;
+  }
+  .fig { position: relative; padding-right: clamp(0px, 2vw, 24px); }
+  .ratio-45 { aspect-ratio: 4 / 5; max-height: 80vh; }
+  .ratio-43 { aspect-ratio: 4 / 3; }
+  .year {
+    position: absolute; right: 0; bottom: -0.3em; padding-right: 0.1em; pointer-events: none;
+    font: 400 italic clamp(80px, 14vw, 240px)/1 var(--serif); color: var(--gold);
+  }
+  .copy { display: flex; flex-direction: column; gap: clamp(16px, 2vw, 24px); max-width: 520px; }
+  @media (max-width: 759px) { .founder .copy { order: 1; } }
+</style>

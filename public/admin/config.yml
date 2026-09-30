@@ -1,0 +1,202 @@
+# Decap CMS — ready, not yet active.
+# Local editing (no account needed):  npm run cms  +  npm run dev  → http://localhost:4321/admin/
+# Online editing: push the repo to GitHub, set `repo` below, enable Netlify's GitHub
+# OAuth provider (Site configuration → Access & security → OAuth). See README.
+backend:
+  name: github
+  repo: OWNER/baratto1948-site # TODO: set when the GitHub repo exists
+  branch: main
+  base_url: https://api.netlify.com
+  commit_messages:
+    update: 'Contenuti: aggiorna {{collection}} “{{slug}}”'
+    uploadMedia: 'Media: carica “{{path}}”'
+
+local_backend: true
+locale: it
+site_url: https://baratto1948.netlify.app
+display_url: https://baratto1948.netlify.app
+
+# Images are optimized at build time (AVIF/WebP, responsive sizes) — upload originals.
+media_folder: src/assets/images
+public_folder: ../../assets/images
+
+collections:
+  - name: pagine
+    label: Pagine
+    editor: { preview: false }
+    files:
+      - name: home
+        label: Home
+        file: src/content/pages/home.json
+        fields:
+          - label: SEO
+            name: seo
+            widget: object
+            fields:
+              - { label: Titolo (max 70), name: title, widget: string }
+              - { label: Descrizione (max 170), name: description, widget: text }
+              - { label: Immagine social (1200×630), name: ogImage, widget: image }
+          - label: Hero
+            name: hero
+            widget: object
+            fields:
+              - { label: Occhiello, name: kicker, widget: string }
+              - { label: Titolo, name: title, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
+              - { label: Sottotitolo, name: tagline, widget: string }
+              - { label: Immagine, name: image, widget: object, collapsed: true, fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
+          - label: Manifesto
+            name: manifesto
+            widget: object
+            fields:
+              - { label: Frasi (l'ultima è in oro), name: phrases, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
+              - { label: Testo, name: body, widget: text }
+              - { label: Testo evidenziato, name: bodyAccent, widget: string }
+              - label: Immagini decorative (3)
+                name: decor
+                widget: list
+                field: { label: Immagine, name: img, widget: image }
+          - label: Radici & Founder
+            name: heritage
+            widget: object
+            fields:
+              - { label: Titolo, name: title, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
+              - label: Radici
+                name: roots
+                widget: object
+                fields:
+                  - { label: Occhiello, name: kicker, widget: string }
+                  - { label: Frase d'apertura, name: lead, widget: text }
+                  - { label: Testo, name: body, widget: text }
+                  - { label: Immagine, name: image, widget: object, collapsed: true, fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
+              - label: Founder
+                name: founder
+                widget: object
+                fields:
+                  - { label: Occhiello, name: kicker, widget: string }
+                  - { label: Frase d'apertura, name: lead, widget: text }
+                  - { label: Testo, name: body, widget: text }
+                  - { label: Immagine, name: image, widget: object, collapsed: true, fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
+          - label: Oggi
+            name: today
+            widget: object
+            fields:
+              - { label: Frasi (l'ultima è in oro), name: phrases, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
+          - label: Citazione
+            name: quote
+            widget: object
+            fields:
+              - { label: Testo laterale sinistro, name: sideLeft, widget: string }
+              - { label: Testo laterale destro, name: sideRight, widget: string }
+              - { label: Citazione (a capo = nuova riga), name: text, widget: text }
+              - { label: Autore, name: author, widget: string }
+              - { label: Immagine, name: image, widget: object, collapsed: true, fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
+          - label: Processo
+            name: process
+            widget: object
+            fields:
+              - { label: Occhiello, name: kicker, widget: string }
+              - { label: Titolo, name: title, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
+              - { label: Introduzione, name: intro, widget: text }
+              - label: Fasi (4)
+                name: steps
+                widget: list
+                min: 4
+                max: 4
+                summary: '{{fields.title}} {{fields.titleAccent}}'
+                fields:
+                  - { label: Titolo, name: title, widget: string }
+                  - { label: Titolo (corsivo), name: titleAccent, widget: string }
+                  - { label: Testo, name: body, widget: text }
+                  - { label: Immagine, name: image, widget: object, collapsed: true, fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
+          - label: Dettagli
+            name: details
+            widget: object
+            fields:
+              - { label: Titolo, name: title, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
+              - { label: Testo, name: body, widget: text }
+              - { label: Immagine, name: image, widget: object, collapsed: true, fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
+          - label: Collezione
+            name: collection
+            widget: object
+            fields:
+              - { label: Occhiello, name: kicker, widget: string }
+              - label: Capitoli (3)
+                name: chapters
+                widget: list
+                min: 3
+                max: 3
+                summary: '{{fields.title}} {{fields.titleAccent}}'
+                fields:
+                  - { label: ID ancora, name: id, widget: select, options: [giacca, pantalone, tessuti] }
+                  - { label: Occhiello, name: kicker, widget: string }
+                  - { label: Titolo, name: title, widget: string }
+                  - { label: Titolo (corsivo), name: titleAccent, widget: string }
+                  - { label: Testo, name: body, widget: text }
+                  - { label: Nota (solo desktop), name: extra, widget: string }
+                  - { label: Immagine, name: image, widget: object, collapsed: true, fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
+          - label: Atelier (galleria)
+            name: atelier
+            widget: object
+            fields:
+              - { label: Titolo, name: title, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
+              - { label: Suggerimento, name: hint, widget: string }
+              - label: Immagini
+                name: gallery
+                widget: list
+                min: 3
+                summary: '{{fields.alt}}'
+                fields:
+                  - { label: Immagine, name: src, widget: image }
+                  - { label: Didascalia / testo alternativo, name: alt, widget: string }
+          - label: Fascia scorrevole
+            name: marquee
+            widget: object
+            fields:
+              - { label: Frase 1, name: a, widget: string }
+              - { label: Frase 2 (corsivo), name: b, widget: string }
+          - label: Contatti
+            name: contact
+            widget: object
+            fields:
+              - { label: Titolo, name: title, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
+              - { label: Località, name: location, widget: string }
+              - { label: Immagine di sfondo, name: background, widget: image }
+              - { label: Frase footer, name: footerTagline, widget: string }
+
+  - name: impostazioni
+    label: Impostazioni
+    editor: { preview: false }
+    files:
+      - name: site
+        label: Dati aziendali & contatti
+        file: src/content/settings/site.json
+        fields:
+          - { label: Marchio, name: brand, widget: string }
+          - { label: Ragione sociale, name: legalName, widget: string }
+          - { label: Payoff, name: tagline, widget: string }
+          - { label: Anno di fondazione, name: foundingYear, widget: number, value_type: int }
+          - { label: Fondatore, name: founder, widget: string }
+          - { label: Telefono (formato +39...), name: phone, widget: string }
+          - { label: Telefono (come mostrato), name: phoneDisplay, widget: string }
+          - { label: Email, name: email, widget: string }
+          - { label: Sito web, name: website, widget: string }
+          - { label: Instagram (URL), name: instagram, widget: string }
+          - { label: Instagram (handle), name: instagramHandle, widget: string }
+          - label: Indirizzo
+            name: address
+            widget: object
+            fields:
+              - { label: Via e numero, name: street, widget: string, required: false }
+              - { label: Comune, name: locality, widget: string }
+              - { label: CAP, name: postalCode, widget: string }
+              - { label: Provincia (sigla), name: province, widget: string }
+              - { label: Regione, name: region, widget: string }
+              - { label: Paese (ISO, es. IT), name: country, widget: string }
+          - { label: Partita IVA, name: vatNumber, widget: string, required: false }
+          - label: Intro animata
+            name: intro
+            widget: object
+            fields:
+              - { label: Attiva, name: enabled, widget: boolean }
+              - { label: Etichetta, name: label, widget: string }
+              - { label: Frase, name: word, widget: string }

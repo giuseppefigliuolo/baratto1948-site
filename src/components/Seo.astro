@@ -1,0 +1,127 @@
+---
+/**
+ * <head> SEO/GEO block: meta, Open Graph, Twitter, canonical, hreflang and
+ * a schema.org JSON-LD graph (business + website + page) built from content.
+ */
+import { getImage } from 'astro:assets';
+import type { Home, Settings } from '../lib/content';
+import { plain } from '../lib/rich';
+import logo from '../assets/brand/logo.svg?url';
+
+interface Props {
+  home: Home;
+  settings: Settings;
+  indexable: boolean;
+}
+
+const { home, settings: s, indexable } = Astro.props;
+const site = Astro.site!;
+const url = new URL(Astro.url.pathname, site).href;
+const og = await getImage({ src: home.seo.ogImage, width: 1200, height: 630, fit: 'cover', format: 'jpg', quality: 78 });
+const ogUrl = new URL(og.src, site).href;
+const logoUrl = new URL(logo, site).href;
+
+const businessId = `${site.origin}/#business`;
+const address = {
+  '@type': 'PostalAddress',
+  ...(s.address.street ? { streetAddress: s.address.street } : {}),
+  addressLocality: s.address.locality,
+  postalCode: s.address.postalCode,
+  addressRegion: s.address.region,
+  addressCountry: s.address.country
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': ['ClothingStore', 'Organization'],
+      '@id': businessId,
+      name: s.brand,
+      legalName: s.legalName,
+      alternateName: ['Baratto', 'Baratto Sartoria', 'BARATTO 1948'],
+      description: home.seo.description,
+      slogan: plain(home.hero.title.join(' ')),
+      url: site.origin + '/',
+      logo: logoUrl,
+      image: ogUrl,
+      telephone: s.phone,
+      email: s.email,
+      foundingDate: String(s.foundingYear),
+      foundingLocation: { '@type': 'Place', name: `${s.address.locality}, ${s.address.region}, Italia` },
+      founder: { '@type': 'Person', name: s.founder, alumniOf: { '@type': 'EducationalOrganization', name: 'Istituto Marangoni' } },
+      address,
+      ...(s.geo ? { geo: { '@type': 'GeoCoordinates', latitude: s.geo.lat, longitude: s.geo.lng } } : {}),
+      ...(s.vatNumber ? { vatID: s.vatNumber } : {}),
+      areaServed: [{ '@type': 'Country', name: 'Italia' }, 'Europe'],
+      knowsAbout: [
+        'Sartoria su misura',
+        'Abiti su misura',
+        'Giacche sartoriali',
+        'Pantaloni su misura',
+        'Tessuti pregiati',
+        'Cucitura a mano',
+        'Made in Italy'
+      ],
+      makesOffer: home.collection.chapters.map((c) => ({
+        '@type': 'Offer',
+        itemOffered: { '@type': 'Service', name: `${c.title} ${c.titleAccent} su misura`, description: c.body }
+      })),
+      sameAs: [s.instagram, s.website].filter((u) => !u.startsWith(site.origin)),
+      contactPoint: {
+        '@type': 'ContactPoint',
+        telephone: s.phone,
+        email: s.email,
+        contactType: 'customer service',
+        availableLanguage: ['Italian', 'English']
+      }
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${site.origin}/#website`,
+      url: site.origin + '/',
+      name: s.brand,
+      inLanguage: 'it-IT',
+      publisher: { '@id': businessId }
+    },
+    {
+      '@type': 'WebPage',
+      '@id': `${url}#webpage`,
+      url,
+      name: home.seo.title,
+      description: home.seo.description,
+      inLanguage: 'it-IT',
+      isPartOf: { '@id': `${site.origin}/#website` },
+      about: { '@id': businessId },
+      primaryImageOfPage: { '@type': 'ImageObject', url: ogUrl, width: 1200, height: 630 }
+    }
+  ]
+};
+---
+
+<title>{home.seo.title}</title>
+<meta name="description" content={home.seo.description} />
+<link rel="canonical" href={url} />
+<link rel="alternate" hreflang="it" href={url} />
+<link rel="alternate" hreflang="x-default" href={url} />
+<meta name="robots" content={indexable ? 'index, follow, max-image-preview:large' : 'noindex, nofollow'} />
+
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="it_IT" />
+<meta property="og:site_name" content={s.brand} />
+<meta property="og:title" content={home.seo.title} />
+<meta property="og:description" content={home.seo.description} />
+<meta property="og:url" content={url} />
+<meta property="og:image" content={ogUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={home.hero.image.alt} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={home.seo.title} />
+<meta name="twitter:description" content={home.seo.description} />
+<meta name="twitter:image" content={ogUrl} />
+
+<meta name="geo.region" content={`${s.address.country}-${s.address.province}`} />
+<meta name="geo.placename" content={s.address.locality} />
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

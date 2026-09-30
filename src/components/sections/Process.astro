@@ -1,0 +1,93 @@
+---
+import type { Home } from '../../lib/content';
+import Img from '../ui/Img.astro';
+import Lines from '../ui/Lines.astro';
+
+interface Props { home: Home }
+const { home } = Astro.props;
+const p = home.process;
+// Resting tilt/offset, entry tilt/offset (px), sticky top desktop/mobile (px).
+const PILE = [
+  { r: -0.4, x: -4, er: -3.5, ex: -60, t: 108, tm: 70 },
+  { r: 0.5, x: 6, er: 4, ex: 70, t: 124, tm: 80 },
+  { r: -0.3, x: -2, er: -3, ex: -50, t: 140, tm: 90 },
+  { r: 0.4, x: 5, er: 3.5, ex: 60, t: 156, tm: 100 }
+];
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<section id="processo" class="process" aria-labelledby="processo-title">
+  <div class="grid">
+    <div class="intro">
+      <span class="kicker">{p.kicker}</span>
+      <h2 id="processo-title" class="title"><Lines lines={p.title} step={100} /></h2>
+      <p class="body-copy">{p.intro}</p>
+    </div>
+    <ol class="steps">
+      {p.steps.map((s, i) => {
+        const P = PILE[i];
+        return (
+          <li
+            class="card"
+            data-pile={[P.r, P.x, P.er, P.ex].join(',')}
+            style={`--r:${P.r}deg;--x:${P.x}px;--t:${P.t}px;--tm:${P.tm}px`}
+          >
+            <div class="dim" data-pile-dim></div>
+            <div class="media pic">
+              <Img src={s.image.src} alt={s.image.alt} sizes="(max-width: 759px) 92vw, 26vw" class="pile-img" data-pile-img />
+            </div>
+            <div class="txt">
+              <span class="kicker">Fase {pad(i + 1)} / {pad(p.steps.length)}</span>
+              <h3 class="h">{s.title} <em>{s.titleAccent}</em></h3>
+              <p class="b">{s.body}</p>
+            </div>
+          </li>
+        );
+      })}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .process { padding: clamp(72px, 11vw, 168px) var(--gutter); }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+    gap: clamp(32px, 6vw, 96px); align-items: start;
+  }
+  .intro { position: sticky; top: 120px; display: flex; flex-direction: column; gap: clamp(14px, 1.6vw, 20px); }
+  .title { font: 400 clamp(40px, 5vw, 84px)/1 var(--serif); }
+  .intro .body-copy { max-width: 440px; }
+
+  .steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: clamp(14px, 2vw, 24px); }
+  .card {
+    --k: 1;
+    position: sticky; top: var(--t);
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    background: var(--bg); border-top: 1px solid var(--line-2); overflow: hidden;
+    box-shadow: 0 -28px 56px rgba(0, 0, 0, 0.5);
+    transform: translate3d(calc(var(--x) * var(--k)), 0, 0) rotate(var(--r));
+    transform-origin: 50% 60%;
+  }
+  :global(.m) .card { will-change: transform; }
+  .dim { position: absolute; inset: 0; z-index: 2; background: var(--bg); opacity: 0; pointer-events: none; }
+  .pic { min-height: clamp(220px, 30vw, 440px); }
+  .pic :global(.pile-img) {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    transform: scale(1.14);
+    filter: saturate(0.6) sepia(0.14) contrast(1.06) brightness(0.9);
+  }
+  :global(html:not(.m)) .pic :global(.pile-img) { transform: none; }
+  .txt {
+    display: flex; flex-direction: column; justify-content: flex-end;
+    gap: clamp(14px, 1.6vw, 20px);
+    padding: clamp(24px, 3vw, 44px) clamp(20px, 3vw, 40px);
+  }
+  .h { font: 400 clamp(30px, 3vw, 48px)/1 var(--serif); text-wrap: balance; }
+  .b { max-width: 440px; font: 400 14px/1.65 var(--sans); color: var(--muted); text-wrap: pretty; }
+
+  @media (max-width: 759px) {
+    .intro { position: relative; top: auto; }
+    .card { --k: 0.5; top: var(--tm); }
+  }
+</style>

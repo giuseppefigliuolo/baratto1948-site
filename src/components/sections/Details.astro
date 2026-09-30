@@ -1,0 +1,32 @@
+---
+import type { Home } from '../../lib/content';
+import Img from '../ui/Img.astro';
+import Lines from '../ui/Lines.astro';
+
+interface Props { home: Home }
+const { home } = Astro.props;
+const d = home.details;
+---
+
+<section class="details" aria-labelledby="dettagli-title">
+  <div class="media frame" data-clip>
+    <Img src={d.image.src} alt={d.image.alt} sizes="(max-width: 759px) 92vw, 94vw" data-gl data-speed="0.1" data-zoom="1.14" />
+  </div>
+  <div class="row">
+    <h2 id="dettagli-title" class="title"><Lines lines={d.title} step={100} /></h2>
+    <p class="body-copy text" data-fade>{d.body}</p>
+  </div>
+</section>
+
+<style>
+  .details {
+    padding: 0 var(--gutter) clamp(56px, 8vw, 120px);
+    display: flex; flex-direction: column; gap: clamp(32px, 5vw, 72px);
+  }
+  .frame { aspect-ratio: 21 / 9; }
+  .row { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 24px 48px; }
+  .title { font: 400 clamp(42px, 6vw, 104px)/0.96 var(--serif); }
+  .title :global(em) { color: var(--gold); }
+  .text { max-width: 400px; }
+  @media (max-width: 759px) { .frame { aspect-ratio: 4 / 5; } }
+</style>

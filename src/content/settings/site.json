@@ -1,0 +1,27 @@
+{
+  "brand": "Baratto 1948",
+  "legalName": "Baratto 1948 Sartoria Artigianale",
+  "tagline": "Southern tailoring, proudly Made in Italy",
+  "foundingYear": 1948,
+  "founder": "Mario Mele",
+  "phone": "+393318531941",
+  "phoneDisplay": "+39 331 853 1941",
+  "email": "info@baratto1948.com",
+  "website": "https://www.baratto1948.com",
+  "instagram": "https://www.instagram.com/baratto1948/",
+  "instagramHandle": "@baratto1948",
+  "address": {
+    "street": "",
+    "locality": "Francavilla in Sinni",
+    "postalCode": "85034",
+    "province": "PZ",
+    "region": "Basilicata",
+    "country": "IT"
+  },
+  "vatNumber": "",
+  "intro": {
+    "enabled": true,
+    "label": "Baratto 1948 — Sartoria Artigianale",
+    "word": "Il tuo stile, la nostra storia."
+  }
+}

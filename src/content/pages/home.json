@@ -76,7 +76,9 @@
   "details": {
     "title": ["La maestria nei dettagli.", "*Ogni scelta, una firma.*"],
     "body": "BARATTO 1948 parla attraverso i dettagli costruttivi. Qui, non ci sono compromessi. Solo eccellenza consapevole.",
-    "image": { "src": "../../assets/images/dettagli.jpg", "alt": "Banco con cartamodello, tessuti e forbici" }
+    "image": { "src": "../../assets/images/dettagli.jpg", "alt": "Banco con cartamodello, tessuti e forbici" },
+    "video": { "src": "/video/dettagli.mp4" },
+    "split": [["La maestria", "nei dettagli."], ["*Ogni scelta,*", "*una firma.*"]]
   },
   "collection": {
     "kicker": "Giacca · Pantalone · Tessuti",

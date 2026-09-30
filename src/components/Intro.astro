@@ -64,11 +64,12 @@ const frames = await Promise.all(
 
   .label {
     position: absolute; left: var(--gutter); top: 24px;
-    font: 500 var(--fs-micro)/1.4 var(--sans); letter-spacing: 0.26em; text-transform: uppercase;
+    font: var(--w-bold) var(--fs-micro)/1.4 var(--sans); letter-spacing: 0.26em; text-transform: uppercase;
   }
   .count {
     position: absolute; right: var(--gutter); bottom: 8px;
-    font: 400 clamp(72px, min(14vw, 26svh), 260px)/1 var(--serif); color: var(--gold);
+    font: var(--w-thin) clamp(72px, min(14vw, 26svh), 260px)/1 var(--sans); color: var(--gold);
+    font-variant-numeric: tabular-nums; letter-spacing: -0.04em;
     font-variant-numeric: tabular-nums;
   }
   .word {

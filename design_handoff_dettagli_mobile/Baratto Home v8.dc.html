@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@400;500;600&display=swap">
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="baratto-motion-v4.js"></script>
+<style>html,body{margin:0;background:#0c0b0a;color:#ece5d6;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}*{box-sizing:border-box}a{color:#ece5d6;text-decoration:none}a:hover{color:#c2a36b}::selection{background:#c2a36b;color:#0c0b0a}img{display:block}@font-face{font-family:'Gloom';src:url('assets/fonts/Gloom.woff2') format('woff2'),url('assets/fonts/Gloom.woff') format('woff');font-weight:400;font-style:normal;font-display:swap}</style>
+</helmet>
+<div style="font-family:'Hanken Grotesk',sans-serif;background:#0c0b0a;color:#ece5d6;overflow-x:clip">
+
+<div data-progress="1" style="position:fixed;top:0;left:0;right:0;height:1px;background:#c2a36b;transform-origin:0 50%;transform:scaleX(0);z-index:60"></div>
+
+<header style="position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:clamp(12px,1.6vw,16px) clamp(20px,4vw,80px);mix-blend-mode:difference">
+  <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+    <nav style="flex:1;display:flex;flex-wrap:wrap;gap:6px 22px;font:500 clamp(11px,0.2vw + 9.6px,15.2px)/1 'Hanken Grotesk';letter-spacing:.22em;text-transform:uppercase">
+      <a href="#giacca">Giacca</a><a href="#pantalone">Pantalone</a><a href="#tessuti">Tessuti</a>
+    </nav>
+  </sc-if>
+  <a href="#top" style="display:block;flex:none"><img src="assets/brand/logo.png" alt="Baratto 1948 Sartoria Artigianale" style="width:clamp(46px,4.4vw,84px);height:clamp(46px,4.4vw,84px)"></img></a>
+  <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+    <div style="flex:1;display:flex;justify-content:flex-end"><a href="#contatti" data-magnetic="1" style="display:inline-flex;align-items:center;padding:.95em 1.8em;border:1px solid #ece5d6;border-radius:100px;font:500 clamp(11px,0.2vw + 9.6px,15.2px)/1 'Hanken Grotesk';letter-spacing:.2em;text-transform:uppercase;transition:background .3s,color .3s" style-hover="background:#ece5d6;color:#0c0b0a">Contatti</a></div>
+  </sc-if>
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+    <button onClick="{{ toggleMenu }}" aria-label="Menu" style="display:flex;align-items:center;gap:12px;height:44px;padding:0 4px;background:none;border:0;color:#ece5d6;font:500 clamp(11px,0.2vw + 9.6px,15.2px)/1 'Hanken Grotesk';letter-spacing:.22em;text-transform:uppercase;cursor:pointer">
+      <span>{{ menuLabel }}</span>
+      <span style="display:flex;flex-direction:column;gap:6px;width:22px"><span style="display:block;height:1px;background:#ece5d6;transition:transform .5s cubic-bezier(.16,1,.3,1);transform:{{ burgerTop }}"></span><span style="display:block;height:1px;background:#ece5d6;transition:transform .5s cubic-bezier(.16,1,.3,1);transform:{{ burgerBot }}"></span></span>
+    </button>
+  </sc-if>
+</header>
+
+<sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:49;background:#12110f;display:flex;flex-direction:column;justify-content:space-between;padding:96px 20px calc(28px + env(safe-area-inset-bottom));clip-path:{{ menuClip }};transition:clip-path .9s cubic-bezier(.76,0,.24,1);pointer-events:{{ menuPE }}">
+    <nav style="display:flex;flex-direction:column;border-top:1px solid rgba(236,229,214,.14)">
+      <sc-for list="{{ menuLinks }}" as="l" hint-placeholder-count="6">
+        <a href="{{ l.href }}" data-menu="1" onClick="{{ onNav }}" style="display:flex;align-items:baseline;justify-content:space-between;padding:17px 0;border-bottom:1px solid rgba(236,229,214,.14);overflow:hidden">
+          <span style="display:block;font:400 clamp(40px,min(12vw,7svh),72px)/1.05 'Instrument Serif',serif;transform:{{ menuLinkT }};transition:transform .9s cubic-bezier(.16,1,.3,1) {{ l.delay }}">{{ l.label }}</span>
+          <span style="font:500 clamp(11px,0.2vw + 9.6px,15.2px)/1 'Hanken Grotesk';letter-spacing:.2em;color:#c2a36b">{{ l.n }}</span>
+        </a>
+      </sc-for>
+    </nav>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <a href="tel:+393318531941" style="display:flex;justify-content:center;align-items:center;height:56px;background:#c2a36b;color:#0c0b0a;border-radius:100px;font:600 clamp(11px,0.2vw + 9.6px,15.2px)/1 'Hanken Grotesk';letter-spacing:.16em;text-transform:uppercase">+39 331 853 1941</a>
+      <div style="display:flex;justify-content:space-between;gap:12px;font:400 clamp(13px,0.2vw + 11.2px,17px)/1.4 'Hanken Grotesk';color:#bdb4a4"><a href="mailto:info@baratto1948.com" style="color:#bdb4a4">info@baratto1948.com</a><a href="https://www.instagram.com/baratto1948/" style="color:#bdb4a4">Instagram</a></div>
+    </div>
+  </div>
+</sc-if>
+
+<section id="top" data-cover="1" data-screen-label="01 Hero" style="position:sticky;top:0;height:{{ heroH }};min-height:560px;z-index:0;overflow:hidden;background:#000">
+  <div data-cover-inner="1" style="position:absolute;inset:0;overflow:hidden;transform-origin:50% 100%;will-change:transform">
+    <div ref="{{ heroHost }}" style="position:absolute;inset:0;overflow:hidden">
+      <img ref="{{ heroImg }}" data-speed="-0.2" data-zoom="1.1" src="assets/g/hero.jpg" alt="Giacca doppiopetto Baratto 1948 su manichino" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%"></img>
+    </div>
+    <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(12,11,10,.55) 0%,rgba(12,11,10,0) 28%,rgba(12,11,10,.1) 55%,rgba(12,11,10,.94) 100%)"></div>
+    <div style="position:absolute;left:0;right:0;bottom:0;padding:0 clamp(20px,4vw,80px) clamp(18px,3vw,40px);display:flex;flex-direction:column;gap:clamp(14px,2.4vw,32px);pointer-events:none">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px 24px">
+        <div style="display:flex;flex-direction:column;gap:12px;max-width:32rem">
+          <span style="overflow:hidden;display:block;padding-bottom:.1em;margin-bottom:-.1em"><span data-line="1" style="font:500 clamp(11px,0.2vw + 9.6px,15.2px)/1.4 'Hanken Grotesk';letter-spacing:.26em;text-transform:uppercase;color:#c2a36b">Sartoria Artigianale · Dal 1948</span></span>
+          <h1 style="margin:0;font:400 clamp(36px,min(4vw,7.5svh),80px)/1.02 'Instrument Serif',serif">
+            <span style="display:block;overflow:hidden;padding:0 .14em .14em 0;margin-bottom:-.14em"><span data-line="1" data-delay="80">Il tuo stile,</span></span>
+            <span style="display:block;overflow:hidden;padding:0 .14em .14em 0;margin-bottom:-.14em"><span data-line="1" data-delay="160"><em>la nostra storia.</em></span></span>
+          </h1>
+        </div>
+        <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+          <p data-fade="1" data-delay="300" style="margin:0;font:400 italic clamp(20px,min(1.6vw,3.2svh),32px)/1.3 'Instrument Serif',serif;color:#e3dccd">Fatto a mano. Fatto per te.</p>
+        </sc-if>
+      </div>
+      <div aria-hidden="true" style="display:flex;justify-content:space-between;align-items:baseline;overflow:hidden;border-top:1px solid rgba(236,229,214,.3);padding:6px 0 .14em;font:400 clamp(44px,12.6vw,380px)/.84 'Gloom','Instrument Serif',serif;letter-spacing:-.02em">
+        <span data-line="1" data-tilt="1" data-delay="120">B</span><span data-line="1" data-tilt="1" data-delay="170">A</span><span data-line="1" data-tilt="1" data-delay="220">R</span><span data-line="1" data-tilt="1" data-delay="270">A</span><span data-line="1" data-tilt="1" data-delay="320">T</span><span data-line="1" data-tilt="1" data-delay="370">T</span><span data-line="1" data-tilt="1" data-delay="420">O</span><span data-line="1" data-tilt="1" data-delay="520" style="color:#c2a36b;padding-right:.12em">1948</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div style="position:relative;z-index:1;background:#0c0b0a;box-shadow:0 -40px 80px rgba(0,0,0,.6)">
+
+<section data-screen-label="02 Manifesto" style="position:relative;min-height:{{ manMinH }};padding:{{ manPad }} clamp(20px,4vw,80px);display:flex;flex-direction:column;align-items:center;justify-content:center;overflow-x:clip">
+  <div aria-hidden="true" style="position:absolute;left:{{ d1.l }};top:{{ d1.t }};width:{{ d1.w }};aspect-ratio:3/4;pointer-events:none"><div data-speed="-0.12" style="position:absolute;inset:0;-webkit-mask-image:radial-gradient(closest-side,#000 35%,transparent 100%);mask-image:radial-gradient(closest-side,#000 35%,transparent 100%)"><img src="assets/g/giacca.jpg" alt="" style="width:100%;height:100%;object-fit:cover;opacity:.4;filter:grayscale(.7) sepia(.25) brightness(.8) contrast(1.05)"></img></div></div>
+  <div aria-hidden="true" style="position:absolute;right:{{ d2.r }};top:{{ d2.t }};width:{{ d2.w }};aspect-ratio:4/5;pointer-events:none"><div data-speed="-0.16" style="position:absolute;inset:0;-webkit-mask-image:radial-gradient(closest-side,#000 35%,transparent 100%);mask-image:radial-gradient(closest-side,#000 35%,transparent 100%)"><img src="assets/g/spalla.jpg" alt="" style="width:100%;height:100%;object-fit:cover;opacity:.4;filter:grayscale(.7) sepia(.25) brightness(.8) contrast(1.05)"></img></div></div>
+  <div aria-hidden="true" style="position:absolute;left:{{ d3.l }};bottom:{{ d3.b }};width:{{ d3.w }};aspect-ratio:1/1;pointer-events:none"><div data-speed="0.2" style="position:absolute;inset:0;-webkit-mask-image:radial-gradient(closest-side,#000 25%,transparent 100%);mask-image:radial-gradient(closest-side,#000 25%,transparent 100%)"><img src="assets/g/denim1.jpg" alt="" style="width:100%;height:100%;object-fit:cover;opacity:.3;filter:grayscale(1) brightness(.85)"></img></div></div>
+  <p data-phrases="1" style="position:relative;margin:0;max-width:18em;text-align:center;font:400 clamp(36px,min(5.4vw,10svh),112px)/1.04 'Instrument Serif',serif;letter-spacing:-.01em;text-wrap:balance">
+    <span data-phrase="1">Su misura, </span><span data-phrase="1">dalle mani di <em>maestri artigiani italiani</em>. </span><span data-phrase="1" style="display:block;color:#c2a36b"><em>Ogni filo racconta chi sei.</em></span>
+  </p>
+  <span aria-hidden="true" style="position:relative;display:block;flex:none;width:1px;height:clamp(48px,7vw,104px);margin:clamp(32px,4vw,56px) 0;background:linear-gradient(#c2a36b,transparent)"></span>
+  <p data-fade="1" style="position:relative;margin:0;max-width:{{ manTextMax }};text-align:center;font:400 clamp(15px,0.3vw + 13.1px,22px)/1.7 'Hanken Grotesk';color:#bdb4a4;text-wrap:pretty">BARATTO 1948 non è una collezione. È un sistema sartoriale dove la tradizione incontra la tua personalità. <span style="color:#ece5d6">Fatto a mano. Fatto per te.</span></p>
+</section>
+
+<section id="radici" data-screen-label="03 Heritage" style="position:relative;z-index:1;padding:0 clamp(20px,4vw,80px) clamp(72px,min(11vw,18svh),200px);display:flex;flex-direction:column;gap:clamp(56px,9vw,144px)">
+  <h2 style="margin:0;max-width:14em;font:400 clamp(44px,min(6.4vw,11.5svh),128px)/.96 'Instrument Serif',serif;letter-spacing:-.01em">
+    <span style="display:block;overflow:hidden;padding:0 .14em .14em 0;margin-bottom:-.14em"><span data-line="1" data-tilt="1">Dal 1948:</span></span>
+    <span style="display:block;overflow:hidden;padding:0 .14em .14em 0;margin-bottom:-.14em"><span data-line="1" data-tilt="1" data-delay="90"><em>una eredità di</em></span></span>
+    <span style="display:block;overflow:hidden;padding:0 .14em .14em 0;margin-bottom:-.14em"><span data-line="1" data-tilt="1" data-delay="180"><em>eccellenza artigianale.</em></span></span>
+  </h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,24rem),1fr));gap:clamp(40px,6vw,96px);align-items:center">
+    <div style="position:relative;padding-right:clamp(0px,2vw,24px)">
+      <div data-clip="1" style="position:relative;aspect-ratio:4/5;max-height:80svh;overflow:hidden;background:#1d1b18">
+        <img data-gl="1" data-gl-gray="1" data-speed="0.08" data-zoom="1.12" src="assets/g/her1.jpg" alt="Le mani del maestro sarto al lavoro" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></img>
+      </div>
+      <span aria-hidden="true" style="position:absolute;right:0;bottom:-.3em;font:400 italic clamp(80px,min(14vw,26svh),240px)/1 'Instrument Serif',serif;color:#c2a36b;padding-right:.1em;pointer-events:none">1948</span>
+    </div>
+    <div data-fade="1" style="display:flex;flex-direction:column;gap:clamp(16px,2vw,24px);max-width:clamp(20rem,32vw,36rem)">
+      <span style="font:500 clamp(11px,0.2vw + 9.6px,15.2px)/1.4 'Hanken Grotesk';letter-spacing:.26em;text-transform:uppercase;color:#c2a36b">Radici</span>
+      <p style="margin:0;font:400 clamp(22px,min(2.2vw,4.2svh),44px)/1.28 'Instrument Serif',serif;text-wrap:pretty">Tutto inizia in <em style="color:#c2a36b">Basilicata</em>, nel cuore di Francavilla in Sinni.</p>
+      <p style="margin:0;font:400 clamp(15px,0.3vw + 13.1px,22px)/1.7 'Hanken Grotesk';color:#bdb4a4;text-wrap:pretty">Una famiglia, una visione: vestire l'uomo non come consumatore, ma come soggetto unico. Settantasei anni di dedizione, dove ogni abito è una promessa di qualità senza compromessi.</p>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,24rem),1fr));gap:clamp(40px,6vw,96px);align-items:center">
+    <div data-fade="1" style="display:flex;flex-direction:column;gap:clamp(16px,2vw,24px);max-width:clamp(20rem,32vw,36rem);order:{{ founderOrder }}">
+      <span style="font:500 clamp(11px,0.2vw + 9.6px,15.2px)/1.4 'Hanken Grotesk';letter-spacing:.26em;text-transform:uppercase;color:#c2a36b">Founder</span>
+      <p style="margin:0;font:400 clamp(22px,min(2.2vw,4.2svh),44px)/1.28 'Instrument Serif',serif;text-wrap:pretty"><em style="color:#c2a36b">Mario Mele</em>, formatosi all'Istituto Marangoni di Milano, porta la sartoria italiana alle più grandi piattaforme mondiali.</p>
+      <p style="margin:0;font:400 clamp(15px,0.3vw + 13.1px,22px)/1.7 'Hanken Grotesk';color:#bdb4a4;text-wrap:pretty">Pitti Immagine, le fiere d'eccellenza: Baratto racconta l'Italia attraverso il gesto della mano, la precisione del dettaglio.</p>
+    </div>
+    <div data-clip="c" style="position:relative;aspect-ratio:4/3;overflow:hidden;background:#1d1b18">
+      <img data-gl="1" data-speed="0.08" data-zoom="1.12" src="assets/g/founder.jpg" alt="Il banco di lavoro dell'atelier Baratto" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></img>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="04 Oggi" style="padding:0 clamp(20px,4vw,80px) clamp(72px,min(11vw,18svh),200px);display:flex;justify-content:center">
+  <p data-phrases="1" style="margin:0;max-width:24em;text-align:center;font:400 clamp(28px,min(3.4vw,6.2svh),64px)/1.18 'Instrument Serif',serif;text-wrap:balance">
+    <span data-phrase="1">Oggi, BARATTO 1948 è il laboratorio dove la tradizione non è nostalgia, ma linguaggio vivo. </span><span data-phrase="1"><em>Qui, il filo diventa narrazione.</em> </span><span data-phrase="1"><em>La cucitura, identità.</em> </span><span data-phrase="1" style="color:#c2a36b"><em>L'abito, autoritratto.</em></span>
+  </p>
+</section>
+
+<section data-zoomreveal="1" data-screen-label="05 Quote" style="position:relative;height:{{ zrH }}">
+  <div style="position:sticky;top:0;height:100vh;overflow:hidden">
+    <div style="position:absolute;inset:0;display:flex;flex-direction:{{ zrDir }};align-items:center;justify-content:space-between;padding:{{ zrPad }};font:400 italic clamp(28px,min(3vw,5.4svh),56px)/1.1 'Instrument Serif',serif;color:#bdb4a4;text-align:center">
+      <span style="max-width:{{ zrTextMax }}">Il filo diventa narrazione.</span><span style="max-width:{{ zrTextMax }}">La cucitura, identità.</span>
+    </div>
+    <div data-zr-box="1" style="position:absolute;inset:0;overflow:hidden;clip-path:{{ zrClip }}">
+      <img data-zr-img="1" src="assets/g/her2.jpg" alt="Etichetta ricamata Baratto 1948 Sartoria Artigianale" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.35)"></img>
+      <div data-zr-dim="1" style="position:absolute;inset:0;background:#0c0b0a;opacity:0"></div>
+    </div>
+    <blockquote data-zr-text="1" style="position:absolute;inset:0;margin:0;padding:0 clamp(20px,4vw,80px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;text-align:center;opacity:0">
+      <p style="margin:0;font:400 italic clamp(46px,min(9vw,17svh),176px)/.94 'Instrument Serif',serif;letter-spacing:-.01em">"Vestire l'uomo<br></br>come atto culturale."</p>
+      <cite style="font:500 normal clamp(11px,0.2vw + 9.6px,15.2px)/1 'Hanken Grotesk';letter-spacing:.28em;text-transform:uppercase;color:#c2a36b">— Mario Mele</cite>
+    </blockquote>
+  </div>
+</section>
+
+<section id="processo" data-screen-label="06 Processo" style="padding:clamp(72px,min(11vw,18svh),200px) clamp(20px,4vw,80px)">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,24rem),1fr));gap:clamp(32px,6vw,96px);align-items:start">
+    <div style="position:{{ procPos }};top:120px;display:flex;flex-direction:column;gap:clamp(14px,1.6vw,20px)">
+      <span style="font:500 clamp(11px,0.2vw + 9.6px,15.2px)/1.4 'Hanken Grotesk';letter-spacing:.26em;text-transform:uppercase;color:#c2a36b">Il processo</span>
+      <h2 style="margin:0;font:400 clamp(40px,min(5.2vw,9.5svh),104px)/1 'Instrument Serif',serif"><span style="display:block;overflow:hidden;padding:0 .14em .14em 0;margin-bottom:-.14em"><span data-line="1" data-tilt="1">Dalla visione</span></span><span style="display:block;overflow:hidden;padding:0 .14em .14em 0;margin-bottom:-.14em"><span data-line="1" data-tilt="1" data-delay="100"><em>alla creazione.</em></span></span></h2>
+      <p style="margin:0;max-width:clamp(20rem,32vw,36rem);font:400 clamp(15px,0.3vw + 13.1px,22px)/1.7 'Hanken Grotesk';color:#bdb4a4">Ogni capo Baratto nasce da un dialogo profondo tra cliente e maestro artigiano. Quattro momenti che trasformano il tuo stile in realtà.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:clamp(14px,2vw,24px)">
+      <sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
+        <article data-pile="{{ s.pile }}" style="position:sticky;top:{{ s.top }};display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));background:#0c0b0a;border-top:1px solid rgba(236,229,214,.3);overflow:hidden;box-shadow:0 -28px 56px rgba(0,0,0,.5);transform:{{ s.tf }};transform-origin:50% 60%;will-change:transform">
+          <div data-pile-dim="1" style="position:absolute;inset:0;z-index:2;background:#0c0b0a;opacity:0;pointer-events:none"></div>
+          <div style="position:relative;overflow:hidden;background:#1d1b18;min-height:clamp(220px,min(30vw,44svh),560px)"><img data-pile-img="1" src="{{ s.img }}" alt="{{ s.alt }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.14);filter:saturate(.6) sepia(.14) contrast(1.06) brightness(.9)"></img></div>
+          <div style="display:flex;flex-direction:column;justify-content:flex-end;gap:clamp(14px,1.6vw,20px);padding:clamp(24px,3vw,44px) clamp(20px,3vw,40px)">
+            <span style="font:500 clamp(11px,0.2vw + 9.6px,15.2px)/1.4 'Hanken Grotesk';letter-spacing:.26em;text-transform:uppercase;color:#c2a36b">Fase {{ s.n }} / 04</span>
+            <h3 style="margin:0;font:400 clamp(28px,min(3vw,5.4svh),56px)/1 'Instrument Serif',serif;text-wrap:balance">{{ s.t1 }} <em>{{ s.t2 }}</em></h3>
+            <p style="margin:0;max-width:clamp(20rem,32vw,36rem);font:400 clamp(13px,0.2vw + 11.2px,17px)/1.65 'Hanken Grotesk';color:#bdb4a4;text-wrap:pretty">{{ s.body }}</p>
+          </div>
+        </article>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="dettagli" data-column="1" data-screen-label="07 Dettagli" style="position:relative;height:{{ colH }}">
+  <div style="position:sticky;top:0;height:100vh;overflow:hidden">
+    <div data-col-box="1" style="position:absolute;left:50%;top:50%;width:calc(56vh * 9 / 16);height:56vh;transform:translate(-50%,-50%);border-radius:4px;overflow:hidden;background:#1d1b18">
+      <video data-col-video="1" src="assets/video/dettagli.mp4" autoPlay="{{ true }}" muted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" preload="auto" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.12)"></video>
+      <div data-col-dim="1" style="position:absolute;inset:0;background:rgba(12,11,10,.55);opacity:0"></div>
+    </div>
+    <h2 data-col-title="1" aria-label="La maestria nei dettagli. Ogni scelta, una firma." style="margin:0;font:400 clamp(40px,min(5.8vw,9.3vh),112px)/1 'Instrument Serif',serif;letter-spacing:-.01em">
+      <span data-col-w="l1" aria-hidden="true" style="position:absolute;top:50%;right:calc(50% + 28vh * 9 / 16 + 40px);transform:translateY(-50%);white-space:nowrap;">La maestria</span>
+      <span data-col-w="r1" aria-hidden="true" style="position:absolute;top:50%;left:calc(50% + 28vh * 9 / 16 + 40px);transform:translateY(-50%);white-space:nowrap;">nei dettagli.</span>
+      <span data-col-w="l2" aria-hidden="true" style="position:absolute;top:56%;right:calc(50% + 28vh * 9 / 16 + 40px);transform:translateY(-50%);white-space:nowrap;opacity:0;"><em style="color:#c2a36b">Ogni scelta,</em></span>
+      <span data-col-w="r2" aria-hidden="true" style="position:absolute;top:56%;left:calc(50% + 28vh * 9 / 16 + 40px);transform:translateY(-50%);white-space:nowrap;opacity:0;"><em style="color:#c2a36b">una firma.</em></span>
+    </h2>
+    <span data-col-foot="n" style="position:absolute;right:calc(50% + 50vh * 9 / 16 + 40px);bottom:64px;opacity:0;font:600 12px/1 'Hanken Grotesk';letter-spacing:.2em;color:#bdb4a4">07</span>
+    <p data-col-foot="p" style="position:absolute;left:calc(50% + 50vh * 9 / 16 + 40px);bottom:64px;margin:0;max-width:21rem;opacity:0;font:400 clamp(15px,0.3vw + 13.1px,22px)/1.65 'Hanken Grotesk';color:#bdb4a4;text-wrap:pretty">BARATTO 1948 parla attraverso i dettagli costruttivi. Qui, non ci sono compromessi. Solo eccellenza consapevole.</p>
+  </div>
+</section>
+
+<section id="collezione" data-coll="1" data-screen-label="08 Collezione" style="position:relative;height:{{ hsH }}">
+  <div style="position:sticky;top:0;height:100vh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:clamp(20px,3.4vh,40px);padding-top:clamp(64px,7vh,80px)">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding:0 clamp(20px,4vw,80px)">
+      <h2 style="margin:0;font:500 clamp(11px,0.2vw + 9.6px,15.2px)/1.4 'Hanken Grotesk';letter-spacing:.26em;text-transform:uppercase;color:#c2a36b">Giacca · Pantalone · Tessuti</h2>
+      <div style="display:flex;align-items:baseline;gap:6px;flex:none;font:400 clamp(28px,min(3vw,5.4svh),56px)/1 'Instrument Serif',serif"><span data-coll-ctr="1" style="color:#c2a36b">01</span><span style="color:#8a8275">/ 03</span></div>
+    </div>
+    <div data-coll-track="1" style="position:relative;display:flex;align-items:center;gap:{{ panelGap }};padding:0 {{ panelPad }};width:max-content;will-change:transform">
+      <sc-for list="{{ chapters }}" as="c" hint-placeholder-count="3">
+        <div data-skew="1" id="{{ c.id }}" style="will-change:transform">
+          <article data-cursor="Scopri" data-coll-card="1" style="position:relative;width:{{ panelW }};height:{{ panelH }};display:flex;flex-direction:{{ panelDir }};border:1px solid rgba(236,229,214,.16);background:#12110f;color:#ece5d6;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.5);transform-origin:50% 50%;will-change:transform;transition:border-color .5s" style-hover="border-color:#c2a36b">
+            <div style="position:relative;flex:{{ panelImgFlex }};overflow:hidden;background:#1d1b18"><img data-coll-img="1" src="{{ c.img }}" alt="{{ c.t1 }} {{ c.t2 }}" style="position:absolute;top:0;left:-10%;width:120%;height:100%;object-fit:cover;object-position:50% 30%;will-change:transform"></img></div>
+            <div data-coll-dim="1" style="position:absolute;inset:0;z-index:1;background:#0c0b0a;opacity:0;pointer-events:none"></div>
+            <div data-coll-body="1" style="position:relative;z-index:2;flex:1 1 0;min-width:0;display:flex;flex-direction:column;justify-content:space-between;gap:16px;padding:clamp(20px,2.8vw,44px)">
+              <span data-coll-line="1" style="font:500 clamp(11px,0.2vw + 9.6px,15.2px)/1 'Hanken Grotesk';letter-spacing:.2em;text-transform:uppercase;color:#bdb4a4">{{ c.n }} / 03</span>
+              <div data-coll-line="1" style="display:flex;flex-direction:column;gap:clamp(12px,1.4vw,18px)">
+                <span style="font:500 clamp(11px,0.2vw + 9.6px,15.2px)/1.4 'Hanken Grotesk';letter-spacing:.22em;text-transform:uppercase;color:#c2a36b">{{ c.kicker }}</span>
+                <h3 style="margin:0;font:400 clamp(40px,min(4.6vw,9svh),96px)/.92 'Instrument Serif',serif">{{ c.t1 }} <em>{{ c.t2 }}</em></h3>
+                <p style="margin:0;font:400 clamp(13px,0.2vw + 11.2px,17px)/1.6 'Hanken Grotesk';color:#bdb4a4">{{ c.body }}</p>
+                <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}"><p style="margin:0;font:400 italic clamp(20px,min(1.6vw,3.2svh),32px)/1.35 'Instrument Serif',serif;color:#e3dccd">{{ c.extra }}</p></sc-if>
+              </div>
+              <a href="#contatti" data-coll-line="1" style="display:flex;align-items:center;gap:10px;font:600 clamp(11px,0.2vw + 9.6px,15.2px)/1 'Hanken Grotesk';letter-spacing:.2em;text-transform:uppercase;color:#ece5d6">Scopri <span style="color:#c2a36b">→</span><span style="position:absolute;inset:0;z-index:3"></span></a>
+            </div>
+          </article>
+        </div>
+      </sc-for>
+    </div>
+    <div style="margin:0 clamp(20px,4vw,80px);height:1px;background:rgba(236,229,214,.15)"><div data-coll-bar="1" style="height:1px;background:#c2a36b;transform-origin:0 50%;transform:scaleX(0)"></div></div>
+  </div>
+</section>
+
+<section data-screen-label="09 Atelier" style="padding:clamp(72px,min(11vw,18svh),200px) 0;border-top:1px solid rgba(236,229,214,.1)">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px 24px;padding:0 clamp(20px,4vw,80px);margin-bottom:clamp(24px,3vw,40px)">
+    <h2 style="margin:0;max-width:14em;font:400 clamp(40px,min(5.2vw,9.5svh),104px)/.98 'Instrument Serif',serif"><span style="display:block;overflow:hidden;padding:0 .14em .14em 0;margin-bottom:-.14em"><span data-line="1" data-tilt="1">Generations of elegance</span></span><span style="display:block;overflow:hidden;padding:0 .14em .14em 0;margin-bottom:-.14em"><span data-line="1" data-tilt="1" data-delay="100"><em>bridging past and future.</em></span></span></h2>
+    <span style="font:500 clamp(11px,0.2vw + 9.6px,15.2px)/1.4 'Hanken Grotesk';letter-spacing:.24em;text-transform:uppercase;color:#bdb4a4">Trascina per esplorare →</span>
+  </div>
+  <div ref="{{ atHost }}" data-cursor="Trascina" style="position:relative;height:clamp(340px,62svh,900px)">
+    <div ref="{{ atFallback }}" style="display:flex;gap:12px;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 clamp(20px,4vw,80px);scrollbar-width:none">
+      <sc-for list="{{ gallery }}" as="g" hint-placeholder-count="4">
+        <div style="flex:none;width:min(64vw,26svh + 14vw,560px);height:100%;scroll-snap-align:center;overflow:hidden;background:#1d1b18"><img src="{{ g.src }}" alt="{{ g.title }}" style="width:100%;height:100%;object-fit:cover"></img></div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:clamp(16px,2vw,24px) clamp(20px,4vw,80px) 0">
+    <span ref="{{ atTitle }}" style="font:400 italic clamp(20px,min(1.6vw,3.2svh),32px)/1.2 'Instrument Serif',serif">Southern tailoring, proudly Made in Italy</span>
+    <span ref="{{ atCount }}" style="flex:none;font:500 clamp(11px,0.2vw + 9.6px,15.2px)/1 'Hanken Grotesk';letter-spacing:.2em;color:#c2a36b">01 / 08</span>
+  </div>
+</section>
+
+<section data-screen-label="10 Fatto a mano" style="padding:calc(clamp(72px,min(11vw,18svh),200px) * .6) 0;background:#ece5d6;color:#0c0b0a;overflow:hidden">
+  <div data-marquee="1" style="display:flex;width:max-content;white-space:nowrap;font:400 clamp(60px,min(11vw,20svh),192px)/1.05 'Instrument Serif',serif;will-change:transform">
+    <span style="display:flex;gap:clamp(24px,3vw,56px);padding-right:clamp(24px,3vw,56px)"><span>Fatto a mano.</span><em style="color:#7a5f2f">Fatto per te.</em><span>Fatto a mano.</span><em style="color:#7a5f2f">Fatto per te.</em></span>
+    <span aria-hidden="true" style="display:flex;gap:clamp(24px,3vw,56px);padding-right:clamp(24px,3vw,56px)"><span>Fatto a mano.</span><em style="color:#7a5f2f">Fatto per te.</em><span>Fatto a mano.</span><em style="color:#7a5f2f">Fatto per te.</em></span>
+  </div>
+</section>
+
+<section id="contatti" data-screen-label="11 Contatti" style="position:relative;min-height:{{ contactMinH }};display:flex;flex-direction:column;justify-content:space-between;overflow:hidden">
+  <div style="position:absolute;inset:0;overflow:hidden"><img data-speed="0.15" data-zoom="1.25" src="assets/g/insta.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 60%;filter:grayscale(1)"></img><div style="position:absolute;inset:0;background:rgba(12,11,10,.82)"></div></div>
+  <div style="position:relative;padding:clamp(96px,min(12vw,20svh),220px) clamp(20px,4vw,80px) 0;display:flex;flex-direction:column;align-items:center;gap:clamp(20px,2.4vw,28px);text-align:center">
+    <img data-fade="1" src="assets/brand/logo.png" alt="" style="width:clamp(120px,min(14vw,22svh),260px);height:auto"></img>
+    <h2 style="margin:0;font:400 clamp(48px,min(9vw,16svh),160px)/.92 'Instrument Serif',serif"><span style="display:block;overflow:hidden;padding:0 .14em .14em 0;margin-bottom:-.14em"><span data-line="1" data-tilt="1">Il tuo stile,</span></span><span style="display:block;overflow:hidden;padding:0 .14em .14em 0;margin-bottom:-.14em"><span data-line="1" data-tilt="1" data-delay="100"><em>la nostra storia.</em></span></span></h2>
+    <span data-fade="1" style="font:400 italic clamp(20px,min(1.6vw,3.2svh),32px)/1.4 'Instrument Serif',serif;color:#e3dccd">Francavilla in Sinni, Basilicata – ITALY</span>
+  </div>
+  <div style="position:relative;padding:clamp(48px,7vw,88px) clamp(20px,4vw,80px) calc(clamp(20px,2.4vw,28px) + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:clamp(24px,3vw,32px)">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:1px;background:rgba(236,229,214,.2);border:1px solid rgba(236,229,214,.2)">
+      <a href="tel:+393318531941" style="display:flex;flex-direction:column;gap:10px;padding:clamp(18px,2vw,24px);background:rgba(12,11,10,.6);backdrop-filter:blur(12px);transition:background .3s" style-hover="background:rgba(194,163,107,.18)"><span style="font:500 clamp(11px,0.2vw + 9.6px,15.2px)/1 'Hanken Grotesk';letter-spacing:.2em;text-transform:uppercase;color:#c2a36b">Telefono</span><span style="font:400 clamp(22px,min(2vw,4svh),36px)/1.1 'Instrument Serif',serif;overflow-wrap:anywhere">+39 331 853 1941</span></a>
+      <a href="mailto:info@baratto1948.com" style="display:flex;flex-direction:column;gap:10px;padding:clamp(18px,2vw,24px);background:rgba(12,11,10,.6);backdrop-filter:blur(12px);transition:background .3s" style-hover="background:rgba(194,163,107,.18)"><span style="font:500 clamp(11px,0.2vw + 9.6px,15.2px)/1 'Hanken Grotesk';letter-spacing:.2em;text-transform:uppercase;color:#c2a36b">Email</span><span style="font:400 clamp(22px,min(2vw,4svh),36px)/1.1 'Instrument Serif',serif;overflow-wrap:anywhere">info@baratto1948.com</span></a>
+      <a href="http://www.baratto1948.com" style="display:flex;flex-direction:column;gap:10px;padding:clamp(18px,2vw,24px);background:rgba(12,11,10,.6);backdrop-filter:blur(12px);transition:background .3s" style-hover="background:rgba(194,163,107,.18)"><span style="font:500 clamp(11px,0.2vw + 9.6px,15.2px)/1 'Hanken Grotesk';letter-spacing:.2em;text-transform:uppercase;color:#c2a36b">Web</span><span style="font:400 clamp(22px,min(2vw,4svh),36px)/1.1 'Instrument Serif',serif;overflow-wrap:anywhere">www.baratto1948.com</span></a>
+      <a href="https://www.instagram.com/baratto1948/" style="display:flex;flex-direction:column;gap:10px;padding:clamp(18px,2vw,24px);background:rgba(12,11,10,.6);backdrop-filter:blur(12px);transition:background .3s" style-hover="background:rgba(194,163,107,.18)"><span style="font:500 clamp(11px,0.2vw + 9.6px,15.2px)/1 'Hanken Grotesk';letter-spacing:.2em;text-transform:uppercase;color:#c2a36b">Instagram</span><span style="font:400 clamp(22px,min(2vw,4svh),36px)/1.1 'Instrument Serif',serif;overflow-wrap:anywhere">@baratto1948</span></a>
+    </div>
+    <footer style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px 12px;font:400 clamp(11px,0.2vw + 9.6px,15.2px)/1.5 'Hanken Grotesk';color:#bdb4a4">
+      <span>© 2026 Baratto 1948 · Sartoria Artigianale</span>
+      <span>Southern tailoring, proudly Made in Italy</span>
+    </footer>
+  </div>
+</section>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;intro&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;threeEffects&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;smoothScroll&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;webglHover&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;cursor&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;motion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;}}">
+const G = n => 'assets/g/' + n + '.jpg';
+const GALLERY = [
+  { src: G('insta'), title: 'Southern tailoring, proudly Made in Italy' },
+  { src: G('spalla'), title: 'La spalla · La fondazione dello stile' },
+  { src: G('fodera'), title: 'Le fodere custom · Il tuo racconto privato' },
+  { src: G('pant'), title: 'Il pantalone · Versatilità su misura' },
+  { src: G('giacca2'), title: 'Il rever · Il volto della giacca' },
+  { src: G('pant2'), title: 'Modelli signature' },
+  { src: G('denim1'), title: "Denim giapponese · L'anima del selvedge" },
+  { src: G('giacca'), title: "L'impuntura · La firma visibile" }
+];
+// near-straight rest; tilted entry that settles; covered card leans back as it gives way
+const PILE = [
+  { r: -0.4, x: -4, er: -3.5, ex: -60, t: 108, tm: 70 },
+  { r: 0.5, x: 6, er: 4, ex: 70, t: 124, tm: 80 },
+  { r: -0.3, x: -2, er: -3, ex: -50, t: 140, tm: 90 },
+  { r: 0.4, x: 5, er: 3.5, ex: 60, t: 156, tm: 100 }
+];
+class Component extends DCLogic {
+  startPile() {
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v)), ease = t => 1 - Math.pow(1 - t, 3);
+    const tick = () => {
+      if (this._dead) return;
+      const cards = [].slice.call(document.querySelectorAll('[data-pile]')), vh = window.innerHeight;
+      const prog = cards.map(c => {
+        const top = parseFloat(c.style.top) || 0, y = c.parentElement ? c.getBoundingClientRect().top : 0;
+        return ease(clamp(1 - (y - top) / (vh * 0.85), 0, 1));
+      });
+      cards.forEach((c, i) => {
+        const [r, x, er, ex] = c.getAttribute('data-pile').split(',').map(Number);
+        const p = prog[i], under = prog[i + 1] || 0;
+        const lean = (r >= 0 ? 1 : -1) * 1.6 * under;
+        const rot = er + (r - er) * p + lean, tx = ex + (x - ex) * p;
+        c.style.transform = 'translate3d(' + tx.toFixed(1) + 'px,' + (-10 * under).toFixed(1) + 'px,0) rotate(' + rot.toFixed(2) + 'deg) scale(' + (1 - 0.05 * under).toFixed(4) + ')';
+        const dim = c.querySelector('[data-pile-dim]'); if (dim) dim.style.opacity = (0.55 * under).toFixed(3);
+        const img = c.querySelector('[data-pile-img]'); if (img) img.style.transform = 'scale(' + (1.14 - 0.14 * p).toFixed(4) + ')';
+      });
+      this._pileRaf = requestAnimationFrame(tick);
+    };
+    tick();
+  }
+  startColl() {
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v)), sm = t => t * t * (3 - 2 * t);
+    const BASE = 'saturate(.6) sepia(.14) contrast(1.06) brightness(.9)', EASE = 'cubic-bezier(.19,1,.22,1)';
+    const tick = () => {
+      if (this._dead) return;
+      this._collRaf = requestAnimationFrame(tick);
+      const sec = document.querySelector('[data-coll]'), track = sec && sec.querySelector('[data-coll-track]');
+      if (!track) return;
+      const cards = [].slice.call(track.querySelectorAll('[data-coll-card]')), n = cards.length;
+      if (n < 2) return;
+      const focus = false;
+      if (focus !== this._collFocus) { this._collFocus = focus; this._collAct = -1; }
+      const r = sec.getBoundingClientRect(), total = sec.offsetHeight - window.innerHeight;
+      const p = clamp(-r.top / Math.max(1, total), 0, 1);
+      let seg = p * (n - 1);
+      if (focus) { const i = Math.min(n - 2, Math.floor(seg)); seg = i + sm(clamp((seg - i - 0.3) / 0.4, 0, 1)); }
+      const dist = Math.max(0, track.scrollWidth - track.parentElement.clientWidth);
+      track.style.transform = 'translate3d(' + (-(seg / (n - 1)) * dist).toFixed(1) + 'px,0,0)';
+      const bar = sec.querySelector('[data-coll-bar]'); if (bar) bar.style.transform = 'scaleX(' + (seg / (n - 1)).toFixed(4) + ')';
+      const act = Math.round(seg);
+      const ctr = sec.querySelector('[data-coll-ctr]'); if (ctr) ctr.textContent = String(act + 1).padStart(2, '0');
+      if (!focus) {
+        cards.forEach((c, i) => {
+          const d = clamp(i - seg, -1.2, 1.2), a = Math.min(1, Math.abs(d));
+          c.style.transition = 'none'; c.style.transform = 'scale(' + (1 - 0.1 * a).toFixed(4) + ')';
+          const img = c.querySelector('[data-coll-img]'); img.style.transition = 'none'; img.style.filter = BASE;
+          img.style.transform = 'translate3d(' + (-d * 7).toFixed(2) + '%,0,0) scale(' + (1.04 + 0.08 * a).toFixed(4) + ')';
+          const dim = c.querySelector('[data-coll-dim]'); dim.style.transition = 'none'; dim.style.opacity = (0.6 * a).toFixed(3);
+          const body = c.querySelector('[data-coll-body]'); body.style.opacity = (1 - 0.85 * a).toFixed(3); body.style.transform = 'translate3d(' + (d * 24).toFixed(1) + 'px,0,0)';
+          c.querySelectorAll('[data-coll-line]').forEach(l => { l.style.transition = 'none'; l.style.opacity = ''; l.style.transform = ''; });
+        });
+        return;
+      }
+      if (act === this._collAct) return;
+      this._collAct = act;
+      cards.forEach((c, i) => {
+        const on = i === act;
+        c.style.transition = 'transform 1.1s ' + EASE; c.style.transform = 'scale(' + (on ? 1 : 0.86) + ')';
+        const img = c.querySelector('[data-coll-img]');
+        img.style.transition = 'transform 1.8s ' + EASE + ', filter 1s ' + EASE;
+        img.style.transform = 'translate3d(0,0,0) scale(' + (on ? 1 : 1.16) + ')';
+        img.style.filter = on ? BASE : BASE + ' grayscale(.5) blur(5px)';
+        const dim = c.querySelector('[data-coll-dim]'); dim.style.transition = 'opacity 1s ' + EASE; dim.style.opacity = on ? '0' : '0.55';
+        const body = c.querySelector('[data-coll-body]'); body.style.opacity = '1'; body.style.transform = 'none';
+        c.querySelectorAll('[data-coll-line]').forEach((l, j) => {
+          l.style.transition = 'opacity .9s ' + EASE + ' ' + (on ? 0.3 + j * 0.12 : 0) + 's, transform 1.1s ' + EASE + ' ' + (on ? 0.3 + j * 0.12 : 0) + 's';
+          l.style.opacity = on ? '1' : '0'; l.style.transform = on ? 'none' : 'translate3d(0,28px,0)';
+        });
+      });
+    };
+    tick();
+  }
+  startColumn() {
+    const sec = document.querySelector('[data-column]'); if (!sec) return;
+    const box = sec.querySelector('[data-col-box]'), vid = sec.querySelector('[data-col-video]'), dim = sec.querySelector('[data-col-dim]');
+    const h2 = sec.querySelector('[data-col-title]'), fn = sec.querySelector('[data-col-foot="n"]'), fp = sec.querySelector('[data-col-foot="p"]');
+    const w = k => sec.querySelector('[data-col-w="' + k + '"]');
+    const words = { l1: w('l1'), r1: w('r1'), l2: w('l2'), r2: w('r2') };
+    vid.muted = true; vid.play && vid.play().catch(() => {});
+    const cl = v => Math.max(0, Math.min(1, v)), ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    const tick = () => {
+      if (this._dead) return;
+      this._colRaf = requestAnimationFrame(tick);
+      const vh = window.innerHeight, vw = window.innerWidth, r = sec.getBoundingClientRect();
+      if (r.bottom < -50 || r.top > vh + 50) return;
+      const p = cl(-r.top / Math.max(1, sec.offsetHeight - vh)), e = ease(cl(p / .55));
+      const r2 = cl((p - .5) / .18), ft = cl((p - .78) / .12), narrow = vw < vh * 1.05;
+      const bh = vh * (.56 + .44 * e), bw0 = Math.min(bh * 9 / 16, vw * .72), bw = narrow ? bw0 + (vw - bw0) * e : bh * 9 / 16;
+      box.style.width = bw + 'px'; box.style.height = bh + 'px'; box.style.borderRadius = (4 * (1 - e)).toFixed(2) + 'px';
+      vid.style.transform = 'scale(' + (1.12 - .12 * e).toFixed(4) + ')';
+      if (narrow) {
+        const e1 = ease(cl(p / .5)), mw0 = Math.min(vw * .56, vh * .5 * 9 / 16), mh0 = mw0 * 16 / 9;
+        const mw = mw0 + (vw - mw0) * e1, mh = mh0 + (vh - mh0) * e1, bT = (vh - mh) / 2;
+        const mk = ease(cl((p - .5) / .2)), g = cl((p - .64) / .14), mid = vh * .36;
+        box.style.width = mw + 'px'; box.style.height = mh + 'px'; box.style.borderRadius = (6 * (1 - e1)).toFixed(2) + 'px';
+        vid.style.transform = 'scale(' + (1.12 - .12 * e1).toFixed(4) + ')';
+        dim.style.opacity = cl((p - .22) / .2).toFixed(3);
+        const fs = Math.min(56, vw * .144); h2.style.fontSize = fs + 'px';
+        const y1 = Math.max(bT - 14, 96), y2 = Math.min(bT + mh + 14, vh - 96);
+        const pos = { l1: [y1 + (mid - y1) * mk, '-100%', 1], r1: [y2 + (mid - y2) * mk, '0px', 1], l2: [mid + fs + 12, (1 - g) * 24 + 'px', g], r2: [mid + 2 * fs + 12, (1 - g) * 24 + 'px', g] };
+        Object.keys(pos).forEach(k => {
+          const el = words[k], [t, ty, o] = pos[k];
+          el.style.left = '50%'; el.style.right = 'auto'; el.style.top = t + 'px';
+          el.style.opacity = (+o).toFixed(3); el.style.transform = 'translate(-50%,' + ty + ')';
+        });
+        fn.style.opacity = '0';
+        fp.style.left = '28px'; fp.style.right = '28px'; fp.style.bottom = '48px'; fp.style.maxWidth = 'none'; fp.style.textAlign = 'center'; fp.style.color = '#e3dccd';
+        fp.style.opacity = cl((p - .8) / .12).toFixed(3);
+        return;
+      }
+      dim.style.opacity = '0';
+      const gap = Math.max(24, vw * .028), pad = Math.max(20, vw * .04), sideEnd = (vw - vh * 9 / 16) / 2 - gap - pad;
+      h2.style.fontSize = Math.max(40, Math.min(112, vh * .093, sideEnd / 4.8)) + 'px';
+      const edge = 'calc(50% + ' + (bw / 2 + gap).toFixed(1) + 'px)', edgeEnd = 'calc(50% + ' + (vh * 9 / 32 + gap).toFixed(1) + 'px)';
+      const row1 = (50 - 6 * r2) + '%';
+      [['l1', row1, 1, 0], ['r1', row1, 1, 0], ['l2', '56%', r2, 1], ['r2', '56%', r2, 1]].forEach(([k, top, o, two]) => {
+        const el = words[k], left = k[0] === 'l';
+        el.style.top = top; el.style.left = left ? 'auto' : edge; el.style.right = left ? edge : 'auto';
+        el.style.opacity = o.toFixed(3); el.style.transform = 'translateY(calc(-50% + ' + (two ? (1 - o) * 30 : 0).toFixed(1) + 'px))';
+      });
+      fn.style.right = edgeEnd; fp.style.left = edgeEnd; fp.style.right = 'auto'; fp.style.bottom = fn.style.bottom = '64px';
+      fp.style.maxWidth = Math.min(336, sideEnd) + 'px'; fp.style.textAlign = 'left'; fp.style.color = '#bdb4a4';
+      fn.style.opacity = fp.style.opacity = ft.toFixed(3);
+    };
+    tick();
+  }
+  state = { mobile: window.innerWidth < 760, menu: false };
+  heroHost = React.createRef(); heroImg = React.createRef();
+  atHost = React.createRef(); atTitle = React.createRef(); atCount = React.createRef(); atFallback = React.createRef();
+  componentDidMount() {
+    this._onR = () => { const m = window.innerWidth < 760; if (m !== this.state.mobile) this.setState({ mobile: m }); };
+    window.addEventListener('resize', this._onR);
+    const p = this.props;
+    const start = () => {
+      if (!window.BarattoMotion3) return setTimeout(start, 50);
+      const images = ['hero', 'her1', 'her2', 'founder', 'oggi', 'tess', 'proc1', 'proc2', 'dettagli', 'giacca3'].map(G);
+      this._stop = window.BarattoMotion3.init({
+        motion: p.motion ?? true, smooth: p.smoothScroll ?? true, webgl: p.webglHover ?? true, cursor: p.cursor ?? true,
+        hoverPreview: false, sans: "'Hanken Grotesk',sans-serif", accentDark: '#7a5f2f',
+        loader: (p.intro ?? true) ? { images, bg: '#0c0b0a', fg: '#ece5d6', accent: '#c2a36b', serif: "'Instrument Serif',serif", sans: "'Hanken Grotesk',sans-serif", label: 'Baratto 1948 — Sartoria Artigianale', word: 'Il tuo stile, la nostra storia.' } : null
+      });
+    };
+    setTimeout(start, 60);
+    if (p.motion ?? true) this.startPile();
+    this.startColl();
+    this.startColumn();
+    if ((p.threeEffects ?? true) && (p.motion ?? true)) {
+      import(new URL('baratto-three.js', document.baseURI).href).then(mod => {
+        if (this._dead) return;
+        this._three = [];
+        if (this.heroHost.current && this.heroImg.current) this._three.push(mod.hero(this.heroHost.current, this.heroImg.current, { posY: 0.4 }));
+        if (this.atHost.current) this._three.push(mod.atelier(this.atHost.current, GALLERY, { title: this.atTitle.current, count: this.atCount.current, fallback: this.atFallback.current }));
+      }).catch(e => console.warn('three.js effects unavailable', e));
+    }
+  }
+  componentWillUnmount() {
+    this._dead = true; cancelAnimationFrame(this._pileRaf); cancelAnimationFrame(this._collRaf); cancelAnimationFrame(this._colRaf);
+    window.removeEventListener('resize', this._onR);
+    this._stop && this._stop(); (this._three || []).forEach(f => f && f());
+    document.documentElement.style.overflow = '';
+  }
+  setMenu(open) {
+    this.setState({ menu: open });
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+    const l = this._stop && this._stop.lenis; if (l) open ? l.stop() : l.start();
+  }
+  toggleMenu = () => this.setMenu(!this.state.menu);
+  onNav = (e) => {
+    const href = e.currentTarget.getAttribute('href');
+    e.preventDefault();
+    this.setMenu(false);
+    const t = document.querySelector(href); if (!t) return;
+    setTimeout(() => {
+      const l = this._stop && this._stop.lenis;
+      if (l) l.scrollTo(t, { force: true, duration: 1.6 }); else window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY, behavior: 'smooth' });
+    }, 350);
+  };
+  renderVals() {
+    const m = this.state.mobile, open = this.state.menu;
+    const steps = [
+      { n: '01', t1: 'Consulenza &', t2: 'visione', img: G('oggi'), body: "Incontro con il maestro sarto. Ascoltiamo il tuo stile, il tuo corpo, il tuo modo di vivere. Sketches, mood board, direzione estetica. Non è una semplice misurazione: è un dialogo sulla tua identità." },
+      { n: '02', t1: 'Selezione dei', t2: 'tessuti', img: G('tess'), body: "Accedi alla collezione di tessuti d'eccellenza. Lane merinos, cashmere puro, lini italiani ed europei. Ogni tessuto è scelto per qualità, durabilità, feel. Tocchi, senti, lasciati guidare dai nostri consigli." },
+      { n: '03', t1: 'Costruzione del', t2: 'cartamodello', img: G('proc1'), body: "Dal corpo alla carta. Misuriamo, draftiamo, creiamo il cartamodello esclusivo su tua misura. Ogni linea è precisa, ogni proporzione calibrata. Questo è il tuo abito, matematica trasformata in stile." },
+      { n: '04', t1: 'Cucitura &', t2: 'rifinitura', img: G('proc2'), body: "Le mani del maestro interpretano il cartamodello. Cuciture a mano, rinforzi invisibili, fodere che respirano. Ogni dettaglio – dal rever al filo – è calibrato per durare una vita. E oltre. Il risultato non è un capo: è tuo." }
+    ].map((s, i) => {
+      const P = PILE[i], k = m ? 0.5 : 1;
+      return { ...s, alt: s.t1 + ' ' + s.t2, top: (m ? P.tm : P.t) + 'px', pile: [P.r, P.x * k, P.er, P.ex * k].join(','), tf: 'translate3d(' + P.x * k + 'px,0,0) rotate(' + P.r + 'deg)' };
+    });
+    return {
+      isMobile: m, isDesktop: !m,
+      toggleMenu: this.toggleMenu, onNav: this.onNav,
+      menuLabel: open ? 'Chiudi' : 'Menu',
+      burgerTop: open ? 'translateY(3.5px) rotate(45deg)' : 'none',
+      burgerBot: open ? 'translateY(-3.5px) rotate(-45deg)' : 'none',
+      menuClip: open ? 'inset(0 0 0 0)' : 'inset(0 0 100% 0)',
+      menuPE: open ? 'auto' : 'none',
+      menuLinkT: open ? 'none' : 'translateY(110%)',
+      menuLinks: [['#radici', 'Radici'], ['#processo', 'Processo'], ['#giacca', 'Giacca'], ['#pantalone', 'Pantalone'], ['#tessuti', 'Tessuti'], ['#contatti', 'Contatti']].map(([href, label], i) => ({ href, label, n: '0' + (i + 1), delay: (open ? 0.25 + i * 0.06 : 0) + 's' })),
+      heroH: m ? '100svh' : '100vh',
+      manMinH: m ? '118svh' : '100svh', manPad: 'calc(clamp(72px,min(11vw,18svh),200px) * ' + (m ? 2 : 1.5) + ')', manTextMax: m ? 'min(clamp(20rem,32vw,36rem),30ch)' : 'clamp(20rem,32vw,36rem)',
+      d1: m ? { l: '-18vw', t: '0', w: '60vw' } : { l: '-4vw', t: '4%', w: '28vw' },
+      d2: m ? { r: '-20vw', t: '40%', w: '54vw' } : { r: '-5vw', t: '26%', w: '26vw' },
+      d3: m ? { l: '2vw', b: '-4%', w: '46vw' } : { l: '20vw', b: '-6%', w: '22vw' },
+      zrClip: m ? 'inset(24% 14% 24% 14%)' : 'inset(22% 34% 22% 34%)',
+      founderOrder: m ? '1' : '0',
+      zrH: m ? '230vh' : '300vh', zrDir: m ? 'column' : 'row', zrPad: m ? '15vh 24px' : '0 clamp(20px,4vw,80px)', zrTextMax: m ? '80vw' : '24vw',
+      procPos: m ? 'relative' : 'sticky',
+      colH: m ? '280vh' : '260vh',
+      hsH: m ? '280vh' : '320vh',
+      panelW: m ? '84vw' : 'min(76vw,1500px)', panelH: m ? 'min(74svh,640px)' : 'min(68svh,60vw,900px)',
+      panelDir: m ? 'column' : 'row', panelImgFlex: m ? '0 0 34%' : '0 0 48%',
+      panelGap: m ? '12px' : 'clamp(16px,2vw,32px)', panelPad: 'clamp(20px,4vw,80px)',
+      contactMinH: m ? '0px' : '100vh',
+      heroHost: this.heroHost, heroImg: this.heroImg, atHost: this.atHost, atTitle: this.atTitle, atCount: this.atCount, atFallback: this.atFallback,
+      gallery: GALLERY,
+      steps,
+      chapters: [
+        { id: 'giacca', n: '01', kicker: 'IL CUORE DELLA SARTORIA', t1: 'La', t2: 'giacca', img: G('giacca3'), body: "La giacca Baratto non è un indumento. È un'architettura. Ogni componente – il rever, la spalla, l'impuntura – è una decisione consapevole che riflette il tuo carattere.", extra: "Affidiamo al cliente la libertà di scelta: scopri come personalizzare ogni elemento della tua giacca." },
+        { id: 'pantalone', n: '02', kicker: 'VERSATILITÀ SU MISURA', t1: 'Il', t2: 'pantalone', img: G('pant3'), body: "Se la giacca è architettura, il pantalone è identità. Dai classici intramontabili ai modelli contemporanei: ogni scelta è una dichiarazione del tuo stile.", extra: "Filicudi · Neapolis · Parthenophe · Vesuvius · Contemporary" },
+        { id: 'tessuti', n: '03', kicker: 'Natura, Tracciabilità, Innovazione', t1: 'Il', t2: 'materiale', img: G('denim2'), body: "Ogni fibra scelta da Baratto racconta una storia di natura e qualità. Lino, seta, cotone, lana o il nostro Re-Nylon: selezioniamo solo materiali tracciabili, resistenti e di altissimo pregio.", extra: "I Nostri Partner: Eccellenza Tessile Mondiale" }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

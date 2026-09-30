@@ -54,9 +54,12 @@ const total = pad(c.chapters.length);
   :global(.m) .stage { position: sticky; top: 0; height: 100vh; overflow: hidden; padding-bottom: 0; }
 
   .top { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 0 var(--gutter); }
-  .top .kicker { margin: 0; font-weight: 500; }
-  .ctr { display: flex; align-items: baseline; gap: 6px; flex: none; font: 400 var(--fs-h3)/1 var(--serif); }
-  .ctr span:first-child { color: var(--gold); }
+  .top .kicker { margin: 0; }
+  .ctr {
+    display: flex; align-items: baseline; gap: 6px; flex: none;
+    font: var(--w-thin) var(--fs-h3)/1 var(--sans); font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
+  }
+  .ctr span:first-child { color: var(--gold); font-weight: var(--w-bold); }
   .of { color: var(--dim); }
 
   /* Without motion the track is a native horizontal scroller. */
@@ -94,13 +97,13 @@ const total = pad(c.chapters.length);
     display: flex; flex-direction: column; justify-content: space-between; gap: 16px;
     padding: clamp(20px, 2.8vw, 44px);
   }
-  .n { font: 500 var(--fs-micro)/1 var(--sans); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .n { font: var(--w-bold) var(--fs-micro)/1 var(--sans); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
   .main { display: flex; flex-direction: column; gap: clamp(12px, 1.4vw, 18px); }
-  .k { font: 500 var(--fs-micro)/1.4 var(--sans); letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
-  .h { font: 400 clamp(2.5rem, min(4.6vw, 9svh), 6rem)/0.92 var(--serif); }
-  .b { font: 400 var(--fs-small)/1.6 var(--sans); color: var(--muted); }
+  .k { font: var(--w-bold) var(--fs-micro)/1.4 var(--sans); letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
+  .h { font: 400 clamp(2.75rem, min(5vw, 9.8svh), 6.5rem)/0.92 var(--serif); }
+  .b { font: var(--w-light) var(--fs-body)/1.6 var(--sans); color: var(--muted); }
   .x { font: 400 italic var(--fs-quote)/1.35 var(--serif); color: var(--fg-2); }
-  .go { display: flex; align-items: center; gap: 10px; font: 600 var(--fs-micro)/1 var(--sans); letter-spacing: 0.2em; text-transform: uppercase; }
+  .go { display: flex; align-items: center; gap: 10px; font: var(--w-bold) var(--fs-micro)/1 var(--sans); letter-spacing: 0.2em; text-transform: uppercase; }
   .go::after { content: ''; position: absolute; inset: 0; z-index: 3; }
   .go span[aria-hidden] { color: var(--gold); }
 

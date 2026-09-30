@@ -45,7 +45,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
     padding: 0 var(--gutter); margin-bottom: clamp(24px, 3vw, 40px);
   }
   .title { max-width: 14em; font: 400 var(--fs-h2)/0.98 var(--serif); }
-  .hint { font: 500 var(--fs-micro)/1.4 var(--sans); letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); }
+  .hint { font: var(--w-bold) var(--fs-micro)/1.4 var(--sans); letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); }
   .host { position: relative; height: clamp(340px, 62svh, 900px); }
   .host :global(canvas) { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: pan-y; cursor: grab; opacity: 0; transition: opacity 0.8s ease; }
   .list {
@@ -61,5 +61,5 @@ const pad = (n: number) => String(n).padStart(2, '0');
     padding: clamp(16px, 2vw, 24px) var(--gutter) 0;
   }
   .caption { font: 400 italic var(--fs-quote)/1.2 var(--serif); }
-  .count { flex: none; font: 500 var(--fs-micro)/1 var(--sans); letter-spacing: 0.2em; color: var(--gold); }
+  .count { flex: none; font: var(--w-bold) var(--fs-micro)/1 var(--sans); letter-spacing: 0.2em; color: var(--gold); }
 </style>

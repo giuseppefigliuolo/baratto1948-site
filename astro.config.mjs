@@ -39,9 +39,10 @@ export default defineConfig({
     },
     {
       provider: fontProviders.google(),
-      name: 'Hanken Grotesk',
+      name: 'Roboto',
       cssVariable: '--font-sans',
-      weights: [400, 500, 600],
+      // Variable axis: one file covers the thin (100–300) / bold (700) contrast.
+      weights: ['100 900'],
       styles: ['normal'],
       subsets: ['latin'],
       fallbacks: ['Helvetica Neue', 'Arial', 'sans-serif']

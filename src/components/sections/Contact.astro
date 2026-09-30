@@ -59,7 +59,7 @@ const web = s.website.replace(/^https?:\/\//, '');
   }
   .cards {
     font-style: normal;
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    display: grid; grid-template-columns: 1fr;
     gap: 1px; background: rgba(236, 229, 214, 0.2); border: 1px solid rgba(236, 229, 214, 0.2);
   }
   .card {
@@ -68,10 +68,16 @@ const web = s.website.replace(/^https?:\/\//, '');
     background: rgba(12, 11, 10, 0.6);
     -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
     transition: background 0.3s;
+    container-type: inline-size;
   }
   @media (hover: hover) { .card:hover { background: rgba(194, 163, 107, 0.18); color: var(--fg); } }
-  .k { font: 500 var(--fs-micro)/1 var(--sans); letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
-  .v { font: 400 clamp(1.375rem, min(2vw, 4svh), 2.25rem)/1.1 var(--serif); overflow-wrap: anywhere; }
+  .k { font: var(--w-bold) var(--fs-micro)/1 var(--sans); letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
+  /* Capped at 10cqi so the email (~10em in Roboto Thin) stays on one line. */
+  .v {
+    font: var(--w-thin) min(clamp(1.375rem, min(2.6vw, 4.8svh), 2.75rem), 10cqi)/1.1 var(--sans);
+    letter-spacing: -0.01em; overflow-wrap: anywhere;
+  }
   .foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 12px; font: 400 var(--fs-micro)/1.5 var(--sans); color: var(--muted); }
+  @media (min-width: 600px) { .cards { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 759px) { .contact { min-height: 0; } }
 </style>

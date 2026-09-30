@@ -1,32 +1,96 @@
 ---
+/**
+ * 07 Dettagli — "Colonna". A 9:16 video grows from a small centred window to full
+ * height while the title, split either side of it, reads row by row (scroll-fx.ts column()).
+ * Without motion (no JS / reduced motion) the final state is shown, with the photo instead of the video.
+ */
 import type { Home } from '../../lib/content';
+import { plain, rich } from '../../lib/rich';
+import { basePath } from '../../lib/url';
 import Img from '../ui/Img.astro';
-import Lines from '../ui/Lines.astro';
 
 interface Props { home: Home }
 const { home } = Astro.props;
 const d = home.details;
+const [[l1, r1], [l2, r2]] = d.split;
+// Paths in content are site-root relative; prefix the deploy base (github.io/<repo>/).
+const video = basePath + d.video.src.replace(/^\//, '');
+const words = [['l1', l1], ['r1', r1], ['l2', l2], ['r2', r2]];
 ---
 
-<section class="details" aria-labelledby="dettagli-title">
-  <div class="media frame" data-clip>
-    <Img src={d.image.src} alt={d.image.alt} sizes="(max-width: 759px) 92vw, 94vw" data-gl data-speed="0.1" data-zoom="1.14" />
-  </div>
-  <div class="row">
-    <h2 id="dettagli-title" class="title"><Lines lines={d.title} step={100} /></h2>
-    <p class="body-copy text" data-fade>{d.body}</p>
+<section id="dettagli" class="details" data-column aria-labelledby="dettagli-title">
+  <div class="stage">
+    <div class="box" data-col-box>
+      <Img src={d.image.src} alt={d.image.alt} sizes="(max-aspect-ratio: 105/100) 100vw, 57vh" class="cover-img poster" />
+      <video class="video" data-col-video src={video} autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
+      <div class="dim" data-col-dim></div>
+    </div>
+    <h2 id="dettagli-title" class="title" data-col-title aria-label={d.title.map(plain).join(' ')}>
+      {words.map(([k, s]) => <span class:list={['w', k]} data-col-w={k} aria-hidden="true" set:html={rich(s)} />)}
+    </h2>
+    <span class="foot fn" data-col-foot="n">07</span>
+    <p class="foot fp" data-col-foot="p">{d.body}</p>
   </div>
 </section>
 
 <style>
-  .details {
-    padding: 0 var(--gutter) calc(var(--sp-section) * 0.7);
-    display: flex; flex-direction: column; gap: clamp(32px, 5vw, 72px);
+  /* Base = final state (no JS / reduced motion). `.m` = starting state, then column() drives it. */
+  .details { position: relative; }
+  .stage { position: relative; height: 100vh; height: 100svh; overflow: hidden; }
+  :global(.m) .details { height: 260vh; }
+  :global(.m) .stage { position: sticky; top: 0; }
+
+  .box {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: calc(100vh * 9 / 16); height: 100%;
+    overflow: hidden; background: var(--bg-3);
   }
-  .frame { aspect-ratio: 21 / 9; }
-  .row { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 24px 48px; }
-  .title { font: 400 var(--fs-h1)/0.96 var(--serif); }
-  .title :global(em) { color: var(--gold); }
-  .text { max-width: var(--measure); }
-  @media (max-width: 759px) { .frame { aspect-ratio: 4 / 5; } }
+  :global(.m) .box { width: calc(56vh * 9 / 16); height: 56vh; border-radius: 4px; }
+  .video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  :global(.m) .video { transform: scale(1.12); will-change: transform; }
+  /* The photo stands in for the video without motion, or when the video fails (column() sets .no-video). */
+  :global(html.m) .box :global(.poster), :global(html:not(.m)) .video, .no-video .video { display: none; }
+  :global(html.m) .no-video .box :global(.poster) { display: block; }
+  .dim { position: absolute; inset: 0; background: rgba(12, 11, 10, 0.55); opacity: 0; }
+
+  .title {
+    margin: 0;
+    font: 400 clamp(40px, min(5.8vw, 9.3vh), 112px)/1 var(--serif);
+    letter-spacing: -0.01em;
+  }
+  .w { position: absolute; white-space: nowrap; transform: translateY(-50%); }
+  .l1, .l2 { right: calc(50% + 100vh * 9 / 32 + max(24px, 2.8vw)); }
+  .r1, .r2 { left: calc(50% + 100vh * 9 / 32 + max(24px, 2.8vw)); }
+  .l1, .r1 { top: 44%; }
+  .l2, .r2 { top: 56%; color: var(--gold); }
+  :global(.m) :is(.l1, .l2) { right: calc(50% + 28vh * 9 / 16 + 40px); }
+  :global(.m) :is(.r1, .r2) { left: calc(50% + 28vh * 9 / 16 + 40px); }
+  :global(.m) :is(.l1, .r1) { top: 50%; }
+  :global(.m) :is(.l2, .r2) { opacity: 0; }
+
+  .foot { position: absolute; bottom: 64px; margin: 0; color: var(--muted); }
+  :global(.m) .foot { opacity: 0; }
+  .fn { right: calc(50% + 100vh * 9 / 32 + max(24px, 2.8vw)); font: var(--w-bold) 13px/1 var(--sans); letter-spacing: 0.2em; }
+  .fp { left: calc(50% + 100vh * 9 / 32 + max(24px, 2.8vw)); max-width: 21rem; font: var(--w-light) var(--fs-body)/1.65 var(--sans); text-wrap: pretty; }
+
+  @media (max-width: 759px) {
+    :global(.m) .details { height: 280vh; }
+  }
+
+  /* Portrait / narrow ("Respiro"): full-screen darkened video, title halves meet at 36%, gold rows below. */
+  @media (max-aspect-ratio: 105/100) {
+    .box { width: 100%; }
+    :global(.m) .box { width: min(56vw, calc(50vh * 9 / 16)); height: auto; aspect-ratio: 9 / 16; border-radius: 6px; }
+    .dim { opacity: 1; }
+    :global(.m) .dim { opacity: 0; }
+    .title { font-size: min(56px, 14.4vw); }
+    .w, :global(.m) .w { left: 50%; right: auto; transform: translateX(-50%); }
+    /* With motion, l1/r1 start positions come from column() on the first frame. */
+    .l1, :global(.m) .l1 { top: 36%; transform: translate(-50%, -100%); }
+    .r1, :global(.m) .r1 { top: 36%; }
+    .l2 { top: calc(36% + 1em + 12px); }
+    .r2 { top: calc(36% + 2em + 12px); }
+    .fn { display: none; }
+    .fp { left: 28px; right: 28px; bottom: 48px; max-width: none; text-align: center; color: var(--fg-2); }
+  }
 </style>

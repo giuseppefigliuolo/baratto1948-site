@@ -49,6 +49,7 @@ baratto/
     astro.config.mjs        site URL, fonts, image breakpoints, i18n (it only)
     .github/workflows/deploy.yml  build + GitHub Pages deploy, INDEXABLE flag
     public/admin/           Decap CMS (index.html + config.yml)
+    public/video/           videos served as-is (no pipeline), e.g. dettagli.mp4
     src/
       content/              home.json + site.json  ← every editable string and image
       content.config.ts     Zod schema for both files
@@ -122,7 +123,7 @@ Order in [index.astro](../src/pages/index.astro). Everything after Hero sits ins
 | 04 | `sections/Today.astro` | `today` | — | `[data-phrases]` |
 | 05 | `sections/Quote.astro` | `quote` | — | `[data-zoomreveal]`: 300vh sticky, clip-path opens to full-bleed, quote fades in |
 | 06 | `sections/Process.astro` | `process` | `#processo` | `<ol>` of sticky cards, `[data-pile]` tilt-in / lean-back stack |
-| 07 | `sections/Details.astro` | `details` | — | clip wipe, parallax, hover liquid |
+| 07 | `sections/Details.astro` | `details` | `#dettagli` | sticky 260vh (280vh mobile), video 9:16, `[data-column]`: landscape "Colonna" (title split either side), portrait "Respiro" (halves ride the box edges, then close in at 36vh) |
 | 08 | `sections/Collection.astro` | `collection` | `#collezione`, `#giacca`, `#pantalone`, `#tessuti` | 320vh sticky; vertical scroll → horizontal track, velocity skew, counter, progress bar |
 | 09 | `sections/Atelier.astro` | `atelier` | — | DOM list fallback replaced by curved draggable WebGL gallery |
 | 10 | `sections/Marquee.astro` | `marquee` | — | infinite band; speed/direction follow scroll velocity |
@@ -143,19 +144,20 @@ Markup and scripts are coupled only through these attributes. Rename one and you
 |---|---|---|---|
 | `data-line`, `data-tilt` | Lines, Wordmark, Hero | `features/reveal.ts` + CSS | slide up (optionally tilted) out of `.mask`; the **parent** is observed |
 | `data-fade` | many | `reveal.ts` + CSS | fade + rise |
-| `data-clip` / `data-clip="c"` | Heritage, Details | `reveal.ts` + CSS | clip wipe from bottom / from centre; parent observed |
+| `data-clip` / `data-clip="c"` | Heritage | `reveal.ts` + CSS | clip wipe from bottom / from centre; parent observed |
 | `--d` (CSS var) | inline style | CSS transitions | per-element reveal delay |
 | `data-speed`, `data-zoom` | images, decor layers | `scroll-fx.ts parallax()` | translateY ∝ distance from viewport centre; constant scale |
 | `data-phrases` > `data-phrase` | Manifesto, Today | `scroll-fx.ts phrases()` | phrases un-blur one after another |
 | `data-cover`, `data-cover-inner` | Hero | `scroll-fx.ts cover()` | hero shrinks, drops, fades, rounds corners |
 | `data-progress` | Header | `scroll-fx.ts progress()` | top gold progress bar |
 | `data-zoomreveal`, `data-zr-box/img/dim/text` | Quote | `scroll-fx.ts zoomReveal()` | clip-path inset → 0, quote appears |
+| `data-column`, `data-col-box/video/dim/title/w/foot` | Details | `scroll-fx.ts column()` | landscape: 9:16 video grows to full height, title split either side; portrait (`vw < vh·1.05`): video grows to full screen and darkens, the title halves ride its top/bottom edges (≥ 96px from the viewport edge) then close in at 36vh, gold rows and body follow; video pauses off screen; `.no-video` shows the photo if the video fails |
 | `data-pile="r,x,er,ex"`, `data-pile-dim`, `data-pile-img` | Process | `features/pile.ts` | resting rot/x, entry rot/x; dim + scale of covered card |
 | `data-coll`, `data-coll-viewport/track/card/img/dim/body/bar/ctr`, `data-skew` | Collection | `features/collection.ts`, `core/smooth.ts` | horizontal scroll track; `data-skew` also marks anchorable chapters |
 | `data-marquee` | Marquee | `features/marquee.ts` | must contain two identical halves (loops at `scrollWidth / 2`) |
 | `data-cursor="Label"` | Collection card, Atelier host, `[data-gl]` hosts | `features/cursor.ts` | big labelled cursor |
 | `data-magnetic` | Header pill | `cursor.ts` | follows pointer |
-| `data-gl` | Heritage ×2, Details | `gl/liquid.ts` | hover "liquid fabric" shader |
+| `data-gl` | Heritage ×2 | `gl/liquid.ts` | hover "liquid fabric" shader |
 | `data-hero-host` + `.hero-img` | Hero | `gl/liquid.ts` (hero mode) | always-on liquid shader, then hides the `<img>` |
 | `data-atelier`, `data-items` (JSON), `data-atelier-fallback/title/count` | Atelier | `gl/atelier.ts` | WebGL gallery; hides fallback after first texture |
 | `data-intro-el/frame/img/count/fade` | Intro | `features/intro.ts` | intro overlay |
@@ -235,6 +237,7 @@ Fixed cardinalities are baked into the layout. Changing any of them needs code c
 | `collection.chapters` | exactly 3, `id ∈ {giacca, pantalone, tessuti}` | anchors are hard-coded in `Header.astro` menu/nav |
 | `manifesto.decor` | exactly 3 | three positioned `.decor` slots (`d1`–`d3`) |
 | `atelier.gallery` | ≥ 3 | WebGL gallery bails out below 3 |
+| `details.split` | exactly 2 rows × [left, right] | four `data-col-w` slots `l1 r1 l2 r2`; row 2 is gold |
 | `seo.title` / `seo.description` | ≤ 70 / ≤ 170 chars | SERP limits |
 
 **Text conventions** ([`lib/rich.ts`](../src/lib/rich.ts)):
@@ -271,6 +274,8 @@ Image paths in JSON are relative to the JSON file (`../../assets/images/x.jpg`).
 - The last intro frame uses the hero's exact `srcset`, so it reuses the cached LCP file.
 - `picture { display: contents }` means the `<picture>` wrapper has no box. `hostOf()` in `core/dom.ts` skips it
   to find the real layout container for parallax and WebGL.
+- Videos are not processed. `public/video/dettagli.mp4` is encoded by hand: 1080×1920, H.264 High, yuv420p, 30 fps,
+  no audio, `+faststart`, ~2.2 Mbit/s (≈ 3.7 MB for 13 s). `details.image` stays as the intro frame and the no-motion / error fallback.
 
 ## 12. SEO / GEO outputs
 

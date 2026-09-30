@@ -56,7 +56,14 @@ const pages = defineCollection({
           .array(z.object({ title: z.string(), titleAccent: z.string(), body: z.string(), image: pic }))
           .length(4)
       }),
-      details: z.object({ title: lines, body: z.string(), image: pic }),
+      details: z.object({
+        title: lines,
+        body: z.string(),
+        image: pic,
+        video: z.object({ src: z.string() }),
+        // row × side (left, right) of the title split around the video
+        split: z.array(z.tuple([z.string(), z.string()])).length(2)
+      }),
       collection: z.object({
         kicker: z.string(),
         chapters: z

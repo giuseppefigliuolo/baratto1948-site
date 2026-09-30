@@ -114,7 +114,15 @@ collections:
             fields:
               - { label: Titolo, name: title, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
               - { label: Testo, name: body, widget: text }
-              - { label: Immagine, name: image, widget: object, collapsed: true, fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
+              - { label: Immagine (loader + fallback senza video), name: image, widget: object, collapsed: true, fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
+              - { label: Video, name: video, widget: object, collapsed: true, fields: [{ label: 'Percorso (es. /video/dettagli.mp4, 9:16)', name: src, widget: string }] }
+              - label: Titolo ai lati del video
+                name: split
+                widget: list
+                hint: 'Due righe: [sinistra, destra]. La seconda riga è in oro. *parola* = corsivo.'
+                min: 2
+                max: 2
+                field: { label: Riga, name: row, widget: list, min: 2, max: 2, field: { label: Lato, name: side, widget: string } }
           - label: Collezione
             name: collection
             widget: object

@@ -66,9 +66,9 @@ const h = home.hero;
     pointer-events: none;
   }
   .row { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px 24px; }
-  .head { display: flex; flex-direction: column; gap: 12px; max-width: 620px; }
+  .head { display: flex; flex-direction: column; gap: 12px; max-width: 32rem; }
   .head > .mask:first-child { padding: 0 0 0.1em; margin-bottom: -0.1em; }
-  .title { font: 400 clamp(36px, 4vw, 64px)/1.02 var(--serif); }
-  .tagline { font: 400 italic 22px/1.3 var(--serif); color: var(--fg-2); }
+  .title { font: 400 clamp(2.25rem, min(4vw, 7.5svh), 5rem)/1.02 var(--serif); }
+  .tagline { font: 400 italic var(--fs-quote)/1.3 var(--serif); color: var(--fg-2); }
   @media (max-width: 759px) { .tagline { display: none; } }
 </style>

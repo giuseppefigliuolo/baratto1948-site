@@ -64,16 +64,16 @@ const frames = await Promise.all(
 
   .label {
     position: absolute; left: var(--gutter); top: 24px;
-    font: 500 11px/1.4 var(--sans); letter-spacing: 0.26em; text-transform: uppercase;
+    font: 500 var(--fs-micro)/1.4 var(--sans); letter-spacing: 0.26em; text-transform: uppercase;
   }
   .count {
     position: absolute; right: var(--gutter); bottom: 8px;
-    font: 400 clamp(72px, 14vw, 220px)/1 var(--serif); color: var(--gold);
+    font: 400 clamp(72px, min(14vw, 26svh), 260px)/1 var(--serif); color: var(--gold);
     font-variant-numeric: tabular-nums;
   }
   .word {
     position: absolute; left: var(--gutter); bottom: 24px;
-    font: 400 italic clamp(28px, 4vw, 56px)/1 var(--serif);
+    font: 400 italic clamp(1.75rem, min(4vw, 7svh), 4rem)/1 var(--serif);
   }
   [data-intro-fade] { transition: opacity 0.4s; }
   .is-done [data-intro-fade] { opacity: 0; }

@@ -26,7 +26,7 @@ const q = home.quote;
 
 <style>
   .quote { position: relative; }
-  .stage { position: relative; height: 100vh; overflow: hidden; }
+  .stage { position: relative; height: 100vh; height: 100svh; overflow: hidden; }
   :global(.m) .quote { height: 300vh; }
   :global(.m) .stage { position: sticky; top: 0; }
 
@@ -34,7 +34,7 @@ const q = home.quote;
     position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 var(--gutter); text-align: center;
-    font: 400 italic clamp(24px, 3vw, 48px)/1.1 var(--serif); color: var(--muted);
+    font: 400 italic var(--fs-h3)/1.1 var(--serif); color: var(--muted);
   }
   .sides span { max-width: 24vw; }
   .box { position: absolute; inset: 0; overflow: hidden; }
@@ -51,8 +51,8 @@ const q = home.quote;
   }
   :global(.m) .text { opacity: 0; }
   blockquote { margin: 0; }
-  blockquote p { font: 400 italic clamp(46px, 9vw, 160px)/0.94 var(--serif); letter-spacing: -0.01em; }
-  figcaption { font: 500 11px/1 var(--sans); letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); }
+  blockquote p { font: 400 italic clamp(2.875rem, min(9vw, 17svh), 11rem)/0.94 var(--serif); letter-spacing: -0.01em; }
+  figcaption { font: 500 var(--fs-micro)/1 var(--sans); letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); }
 
   @media (max-width: 759px) {
     :global(.m) .quote { height: 230vh; }

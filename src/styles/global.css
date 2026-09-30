@@ -19,7 +19,23 @@
   --line-2: rgba(236, 229, 214, 0.3);
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-io: cubic-bezier(0.76, 0, 0.24, 1);
-  --gutter: clamp(20px, 4vw, 56px);
+  --gutter: clamp(20px, 4vw, 80px);
+
+  /* Fluid type scale. Each step follows the smaller of viewport width and
+     height, so short/wide and tall/narrow screens both stay in proportion. */
+  --fs-micro: clamp(0.6875rem, 0.2vw + 0.6rem, 0.95rem);
+  --fs-small: clamp(0.8125rem, 0.2vw + 0.7rem, 1.0625rem);
+  --fs-body: clamp(0.9375rem, 0.3vw + 0.82rem, 1.375rem);
+  --fs-lead: clamp(1.375rem, min(2.2vw, 4.2svh), 2.75rem);
+  --fs-quote: clamp(1.25rem, min(1.6vw, 3.2svh), 2rem);
+  --fs-h3: clamp(1.75rem, min(3vw, 5.4svh), 3.5rem);
+  --fs-h2: clamp(2.5rem, min(5.2vw, 9.5svh), 6.5rem);
+  --fs-h1: clamp(2.75rem, min(6.4vw, 11.5svh), 8rem);
+  --fs-display: clamp(3rem, min(9vw, 16svh), 10rem);
+  --fs-mega: clamp(3.75rem, min(11vw, 20svh), 12rem);
+  --fs-year: clamp(5rem, min(14vw, 26svh), 15rem);
+  --measure: clamp(20rem, 32vw, 36rem);
+  --sp-section: clamp(72px, min(11vw, 18svh), 200px);
   --serif: var(--font-serif), 'Times New Roman', serif;
   --sans: var(--font-sans), 'Helvetica Neue', Arial, sans-serif;
   color-scheme: dark;
@@ -42,6 +58,7 @@ body {
   color: var(--fg);
   font-family: var(--sans);
   font-size: 16px;
+  font-size: var(--fs-body);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -71,25 +88,25 @@ a { color: var(--fg); text-decoration: none; transition: color 0.3s; }
 .skip {
   position: fixed; left: 12px; top: 12px; z-index: 100;
   padding: 12px 18px; background: var(--fg); color: var(--bg);
-  font: 600 12px/1 var(--sans); letter-spacing: 0.14em; text-transform: uppercase;
+  font: 600 var(--fs-micro)/1 var(--sans); letter-spacing: 0.14em; text-transform: uppercase;
   transform: translateY(-200%);
 }
 .skip:focus { transform: none; }
 
 /* ---------- Typography primitives ---------- */
 .kicker {
-  font: 500 11px/1.4 var(--sans);
+  font: 500 var(--fs-micro)/1.4 var(--sans);
   letter-spacing: 0.26em;
   text-transform: uppercase;
   color: var(--gold);
 }
 .body-copy {
-  font: 400 16px/1.7 var(--sans);
+  font: 400 var(--fs-body)/1.7 var(--sans);
   color: var(--muted);
   text-wrap: pretty;
 }
 .lead {
-  font: 400 clamp(22px, 2.2vw, 32px)/1.3 var(--serif);
+  font: 400 var(--fs-lead)/1.28 var(--serif);
   text-wrap: pretty;
 }
 .serif { font-family: var(--serif); font-weight: 400; }
@@ -118,7 +135,7 @@ a { color: var(--fg); text-decoration: none; transition: color 0.3s; }
   overflow: hidden;
   border-top: 1px solid var(--line-2);
   padding: 6px 0 0.14em;
-  font: 400 clamp(44px, 12.6vw, 240px)/0.84 'Gloom', var(--serif);
+  font: 400 clamp(44px, 12.6vw, 380px)/0.84 'Gloom', var(--serif);
   letter-spacing: -0.02em;
 }
 .wordmark .yr { font-style: normal; color: var(--gold); padding-right: 0.12em; }

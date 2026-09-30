@@ -39,14 +39,14 @@ const pad = (n: number) => String(n).padStart(2, '0');
 </section>
 
 <style>
-  .atelier { padding: clamp(72px, 9vw, 140px) 0; border-top: 1px solid rgba(236, 229, 214, 0.1); }
+  .atelier { padding: var(--sp-section) 0; border-top: 1px solid rgba(236, 229, 214, 0.1); }
   .head {
     display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px 24px;
     padding: 0 var(--gutter); margin-bottom: clamp(24px, 3vw, 40px);
   }
-  .title { max-width: 820px; font: 400 clamp(38px, 5vw, 88px)/0.98 var(--serif); }
-  .hint { font: 500 11px/1.4 var(--sans); letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); }
-  .host { position: relative; height: clamp(340px, 62vh, 620px); }
+  .title { max-width: 14em; font: 400 var(--fs-h2)/0.98 var(--serif); }
+  .hint { font: 500 var(--fs-micro)/1.4 var(--sans); letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); }
+  .host { position: relative; height: clamp(340px, 62svh, 900px); }
   .host :global(canvas) { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: pan-y; cursor: grab; opacity: 0; transition: opacity 0.8s ease; }
   .list {
     list-style: none; margin: 0;
@@ -55,11 +55,11 @@ const pad = (n: number) => String(n).padStart(2, '0');
     padding: 0 var(--gutter);
   }
   .list::-webkit-scrollbar { display: none; }
-  .item { flex: none; width: min(64vw, 360px); height: 100%; scroll-snap-align: center; }
+  .item { flex: none; width: min(64vw, 26svh + 14vw, 560px); height: 100%; scroll-snap-align: center; }
   .foot {
     display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
     padding: clamp(16px, 2vw, 24px) var(--gutter) 0;
   }
-  .caption { font: 400 italic clamp(20px, 2vw, 28px)/1.2 var(--serif); }
-  .count { flex: none; font: 500 11px/1 var(--sans); letter-spacing: 0.2em; color: var(--gold); }
+  .caption { font: 400 italic var(--fs-quote)/1.2 var(--serif); }
+  .count { flex: none; font: 500 var(--fs-micro)/1 var(--sans); letter-spacing: 0.2em; color: var(--gold); }
 </style>

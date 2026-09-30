@@ -55,7 +55,7 @@ const total = pad(c.chapters.length);
 
   .top { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 0 var(--gutter); }
   .top .kicker { margin: 0; font-weight: 500; }
-  .ctr { display: flex; align-items: baseline; gap: 6px; flex: none; font: 400 clamp(24px, 3vw, 48px)/1 var(--serif); }
+  .ctr { display: flex; align-items: baseline; gap: 6px; flex: none; font: 400 var(--fs-h3)/1 var(--serif); }
   .ctr span:first-child { color: var(--gold); }
   .of { color: var(--dim); }
 
@@ -73,7 +73,7 @@ const total = pad(c.chapters.length);
 
   .card {
     position: relative; display: flex;
-    width: min(76vw, 1180px); height: min(68vh, 640px);
+    width: min(76vw, 1500px); height: min(68svh, 60vw, 900px);
     border: 1px solid rgba(236, 229, 214, 0.16); background: var(--bg-2); overflow: hidden;
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
     transform-origin: 50% 50%;
@@ -94,13 +94,13 @@ const total = pad(c.chapters.length);
     display: flex; flex-direction: column; justify-content: space-between; gap: 16px;
     padding: clamp(20px, 2.8vw, 44px);
   }
-  .n { font: 500 10px/1 var(--sans); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .n { font: 500 var(--fs-micro)/1 var(--sans); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
   .main { display: flex; flex-direction: column; gap: clamp(12px, 1.4vw, 18px); }
-  .k { font: 500 11px/1.4 var(--sans); letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
-  .h { font: 400 clamp(40px, 4.6vw, 80px)/0.92 var(--serif); }
-  .b { font: 400 clamp(13px, 1vw, 15px)/1.6 var(--sans); color: var(--muted); }
-  .x { font: 400 italic 18px/1.35 var(--serif); color: var(--fg-2); }
-  .go { display: flex; align-items: center; gap: 10px; font: 600 11px/1 var(--sans); letter-spacing: 0.2em; text-transform: uppercase; }
+  .k { font: 500 var(--fs-micro)/1.4 var(--sans); letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
+  .h { font: 400 clamp(2.5rem, min(4.6vw, 9svh), 6rem)/0.92 var(--serif); }
+  .b { font: 400 var(--fs-small)/1.6 var(--sans); color: var(--muted); }
+  .x { font: 400 italic var(--fs-quote)/1.35 var(--serif); color: var(--fg-2); }
+  .go { display: flex; align-items: center; gap: 10px; font: 600 var(--fs-micro)/1 var(--sans); letter-spacing: 0.2em; text-transform: uppercase; }
   .go::after { content: ''; position: absolute; inset: 0; z-index: 3; }
   .go span[aria-hidden] { color: var(--gold); }
 

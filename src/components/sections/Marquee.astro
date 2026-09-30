@@ -17,10 +17,10 @@ const { a, b } = home.marquee;
 </section>
 
 <style>
-  .band { padding: clamp(40px, 7vw, 96px) 0; background: var(--fg); color: var(--bg); overflow: hidden; }
+  .band { padding: calc(var(--sp-section) * 0.6) 0; background: var(--fg); color: var(--bg); overflow: hidden; }
   .track {
     display: flex; width: max-content; white-space: nowrap;
-    font: 400 clamp(60px, 11vw, 190px)/1.05 var(--serif);
+    font: 400 var(--fs-mega)/1.05 var(--serif);
   }
   :global(.m) .track { will-change: transform; }
   .set { display: flex; gap: clamp(24px, 3vw, 56px); padding-right: clamp(24px, 3vw, 56px); }

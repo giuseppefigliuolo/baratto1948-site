@@ -59,5 +59,12 @@ const half = '(max-width: 759px) 92vw, 48vw';
     font: 400 italic var(--fs-year)/1 var(--serif); color: var(--gold);
   }
   .copy { display: flex; flex-direction: column; gap: clamp(16px, 2vw, 24px); max-width: var(--measure); }
-  @media (max-width: 759px) { .founder .copy { order: 1; } }
+  /* *parola* in the lead = the key word, in gold. */
+  .lead :global(em) { color: var(--gold); }
+  @media (max-width: 759px) {
+    .founder .copy { order: 1; }
+    .copy .kicker { font-size: 0.8125rem; }
+    .copy .lead { font-size: 1.75rem; line-height: 1.22; }
+    .copy .body-copy { font-size: 1.0625rem; }
+  }
 </style>

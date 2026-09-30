@@ -65,7 +65,7 @@ collections:
                 widget: object
                 fields:
                   - { label: Occhiello, name: kicker, widget: string }
-                  - { label: Frase d'apertura, name: lead, widget: text }
+                  - { label: Frase d'apertura, name: lead, widget: text, hint: '*parola* = parola chiave, in corsivo oro.' }
                   - { label: Testo, name: body, widget: text }
                   - { label: Immagine, name: image, widget: object, collapsed: true, fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
               - label: Founder
@@ -73,7 +73,7 @@ collections:
                 widget: object
                 fields:
                   - { label: Occhiello, name: kicker, widget: string }
-                  - { label: Frase d'apertura, name: lead, widget: text }
+                  - { label: Frase d'apertura, name: lead, widget: text, hint: '*parola* = parola chiave, in corsivo oro.' }
                   - { label: Testo, name: body, widget: text }
                   - { label: Immagine, name: image, widget: object, collapsed: true, fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
           - label: Oggi

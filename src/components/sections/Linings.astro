@@ -1,0 +1,77 @@
+---
+import type { Home } from '../../lib/content';
+import { rich } from '../../lib/rich';
+import Img from '../ui/Img.astro';
+
+interface Props { home: Home }
+const { home } = Astro.props;
+const l = home.linings;
+const last = l.phrases.length - 1;
+---
+
+<section id="fodere" class="linings" aria-labelledby="fodere-title">
+  <div class="statement-wrap">
+    <h2 id="fodere-title" class="kicker" set:html={rich(l.kicker)} />
+    <p class="statement" data-phrases>
+      {l.phrases.map((p, i) => <span data-phrase class:list={{ accent: i === last }} set:html={rich(p)} />)}
+    </p>
+  </div>
+
+  <div class="grid">
+    <div class="media ratio-45" data-clip="c">
+      <Img src={l.image.src} alt={l.image.alt} sizes="(max-width: 759px) 92vw, 48vw" data-gl data-speed="0.08" data-zoom="1.12" />
+    </div>
+    <div class="copy">
+      <p class="body-copy" data-fade>{l.body}</p>
+      <div class="custom" data-fade>
+        <h3 class="kicker">{l.groupsTitle}</h3>
+        <div class="groups">
+          {l.groups.map((g) => (
+            <div class="group">
+              <h4 class="gt">{g.title}</h4>
+              <ul class="gl">{g.items.map((it) => <li>{it}</li>)}</ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .linings {
+    padding: clamp(96px, min(14vw, 22svh), 260px) var(--gutter) var(--sp-section);
+    display: flex; flex-direction: column; gap: clamp(56px, 9vw, 144px);
+  }
+  .statement-wrap { display: flex; flex-direction: column; align-items: center; gap: clamp(24px, 3vw, 40px); text-align: center; }
+  .statement {
+    max-width: 18em;
+    font: 400 clamp(2.25rem, min(5.4vw, 10svh), 7rem)/1.04 var(--serif);
+    letter-spacing: -0.01em; text-wrap: balance;
+  }
+  .accent { color: var(--gold); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+    gap: clamp(40px, 6vw, 96px); align-items: center;
+  }
+  .ratio-45 { aspect-ratio: 4 / 5; max-height: 80svh; }
+  .copy { display: flex; flex-direction: column; gap: clamp(32px, 4vw, 56px); }
+  .copy .body-copy { max-width: var(--measure); }
+  .custom { display: flex; flex-direction: column; gap: clamp(16px, 2vw, 24px); }
+  /* Rules are cell borders, not a coloured 1px gap: a wrapped row would show an empty grey cell. */
+  .groups {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+    column-gap: clamp(16px, 2vw, 32px);
+    border-bottom: 1px solid var(--line);
+  }
+  .group { display: flex; flex-direction: column; gap: 14px; padding: clamp(18px, 2vw, 28px) 0; border-top: 1px solid var(--line); }
+  .gt { margin: 0; font: 400 italic var(--fs-quote)/1.1 var(--serif); }
+  .gl {
+    margin: 0; padding: 0; list-style: none;
+    display: flex; flex-direction: column; gap: 8px;
+    font: var(--w-light) var(--fs-body)/1.5 var(--sans); color: var(--muted);
+  }
+</style>

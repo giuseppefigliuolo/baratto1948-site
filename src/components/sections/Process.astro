@@ -1,5 +1,6 @@
 ---
 import type { Home } from '../../lib/content';
+import { rich } from '../../lib/rich';
 import Img from '../ui/Img.astro';
 import Lines from '../ui/Lines.astro';
 
@@ -11,16 +12,23 @@ const PILE = [
   { r: -0.4, x: -4, er: -3.5, ex: -60, t: 108, tm: 70 },
   { r: 0.5, x: 6, er: 4, ex: 70, t: 124, tm: 80 },
   { r: -0.3, x: -2, er: -3, ex: -50, t: 140, tm: 90 },
-  { r: 0.4, x: 5, er: 3.5, ex: 60, t: 156, tm: 100 }
+  { r: 0.4, x: 5, er: 3.5, ex: 60, t: 156, tm: 100 },
+  { r: -0.2, x: -3, er: -3, ex: -55, t: 172, tm: 110 }
 ];
 const pad = (n: number) => String(n).padStart(2, '0');
+const last = p.phrases.length - 1;
 ---
 
-<section id="processo" class="process" aria-labelledby="processo-title">
+<section id="esperienza" class="process" aria-labelledby="esperienza-title">
+  <div class="lede">
+    <p class="phrases" data-phrases>
+      {p.phrases.map((ph, i) => <span data-phrase class:list={{ accent: i === last }} set:html={rich(ph)} />)}
+    </p>
+  </div>
   <div class="grid">
     <div class="intro">
       <span class="kicker">{p.kicker}</span>
-      <h2 id="processo-title" class="title"><Lines lines={p.title} step={100} /></h2>
+      <h2 id="esperienza-title" class="title"><Lines lines={p.title} step={100} /></h2>
       <p class="body-copy">{p.intro}</p>
     </div>
     <ol class="steps">
@@ -37,7 +45,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
               <Img src={s.image.src} alt={s.image.alt} sizes="(max-width: 759px) 92vw, 26vw" class="pile-img" data-pile-img />
             </div>
             <div class="txt">
-              <span class="kicker">Fase {pad(i + 1)} / {pad(p.steps.length)}</span>
+              <span class="kicker">Fase {pad(i + 1)} / {pad(p.steps.length)} · {s.kicker}</span>
               <h3 class="h">{s.title} <em>{s.titleAccent}</em></h3>
               <p class="b">{s.body}</p>
             </div>
@@ -49,7 +57,13 @@ const pad = (n: number) => String(n).padStart(2, '0');
 </section>
 
 <style>
-  .process { padding: var(--sp-section) var(--gutter); }
+  .process { padding: clamp(96px, min(14vw, 22svh), 260px) var(--gutter) var(--sp-section); }
+  .lede { display: flex; justify-content: center; padding-bottom: var(--sp-section); }
+  .phrases {
+    max-width: 22em; text-align: center; text-wrap: balance;
+    font: 400 clamp(1.75rem, min(3.4vw, 6.2svh), 4rem)/1.18 var(--serif);
+  }
+  .accent { color: var(--gold); }
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));

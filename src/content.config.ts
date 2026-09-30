@@ -29,18 +29,11 @@ const pages = defineCollection({
         tagline: z.string(),
         image: pic
       }),
-      manifesto: z.object({
-        phrases: lines,
-        body: z.string(),
-        bodyAccent: z.string(),
-        decor: z.array(image()).length(3)
-      }),
       heritage: z.object({
         title: lines,
         roots: z.object({ kicker: z.string(), lead: z.string(), body: z.string(), image: pic }),
         founder: z.object({ kicker: z.string(), lead: z.string(), body: z.string(), image: pic })
       }),
-      today: z.object({ phrases: lines }),
       quote: z.object({
         sideLeft: z.string(),
         sideRight: z.string(),
@@ -51,10 +44,11 @@ const pages = defineCollection({
       process: z.object({
         kicker: z.string(),
         title: lines,
+        phrases: lines,
         intro: z.string(),
         steps: z
-          .array(z.object({ title: z.string(), titleAccent: z.string(), body: z.string(), image: pic }))
-          .length(4)
+          .array(z.object({ kicker: z.string(), title: z.string(), titleAccent: z.string(), body: z.string(), image: pic }))
+          .length(5)
       }),
       details: z.object({
         title: lines,
@@ -75,10 +69,19 @@ const pages = defineCollection({
               titleAccent: z.string(),
               body: z.string(),
               extra: z.string(),
+              cta: z.string(),
               image: pic
             })
           )
           .length(3)
+      }),
+      linings: z.object({
+        kicker: z.string(),
+        phrases: lines,
+        body: z.string(),
+        image: pic,
+        groupsTitle: z.string(),
+        groups: z.array(z.object({ title: z.string(), items: z.array(z.string()).min(1) })).min(1)
       }),
       atelier: z.object({
         title: lines,

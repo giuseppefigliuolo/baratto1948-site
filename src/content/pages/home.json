@@ -10,12 +10,6 @@
     "tagline": "Fatto a mano. Fatto per te.",
     "image": { "src": "../../assets/images/hero.jpg", "alt": "Giacca doppiopetto Baratto 1948 su manichino" }
   },
-  "manifesto": {
-    "phrases": ["Su misura, ", "dalle mani di *maestri artigiani italiani*. ", "*Ogni filo racconta chi sei.*"],
-    "body": "BARATTO 1948 non è una collezione. È un sistema sartoriale dove la tradizione incontra la tua personalità.",
-    "bodyAccent": "Fatto a mano. Fatto per te.",
-    "decor": ["../../assets/images/giacca.jpg", "../../assets/images/spalla.jpg", "../../assets/images/denim1.jpg"]
-  },
   "heritage": {
     "title": ["Dal 1948:", "*una eredità di*", "*eccellenza artigianale.*"],
     "roots": {
@@ -31,14 +25,6 @@
       "image": { "src": "../../assets/images/founder.jpg", "alt": "Il banco di lavoro dell'atelier Baratto" }
     }
   },
-  "today": {
-    "phrases": [
-      "Oggi, BARATTO 1948 è il laboratorio dove la tradizione non è nostalgia, ma linguaggio vivo. ",
-      "*Qui, il filo diventa narrazione.* ",
-      "*La cucitura, identità.* ",
-      "*L'abito, autoritratto.*"
-    ]
-  },
   "quote": {
     "sideLeft": "Il filo diventa narrazione.",
     "sideRight": "La cucitura, identità.",
@@ -47,29 +33,40 @@
     "image": { "src": "../../assets/images/her2.jpg", "alt": "Etichetta ricamata Baratto 1948 Sartoria Artigianale" }
   },
   "process": {
-    "kicker": "Il processo",
-    "title": ["Dalla visione", "*alla creazione.*"],
-    "intro": "Ogni capo Baratto nasce da un dialogo profondo tra cliente e maestro artigiano. Quattro momenti che trasformano il tuo stile in realtà.",
+    "kicker": "L'esperienza Baratto",
+    "title": ["Dal primo incontro", "*al capolavoro.*"],
+    "phrases": [
+      "Ogni capo Baratto nasce da un dialogo profondo ",
+      "tra cliente e *maestro artigiano*. ",
+      "*Più che clienti, siete partner nel processo creativo.* ",
+      "*Ecco come accade la magia.*"
+    ],
+    "intro": "Cinque momenti che trasformano il tuo stile in realtà.",
     "steps": [
       {
-        "title": "Consulenza &", "titleAccent": "visione",
-        "body": "Incontro con il maestro sarto. Ascoltiamo il tuo stile, il tuo corpo, il tuo modo di vivere. Sketches, mood board, direzione estetica. Non è una semplice misurazione: è un dialogo sulla tua identità.",
-        "image": { "src": "../../assets/images/oggi.jpg", "alt": "Consulenza con il maestro sarto nell'atelier" }
+        "kicker": "La consultazione", "title": "Ascoltiamo", "titleAccent": "la tua storia",
+        "body": "Non è una vendita. È un dialogo. Capiamo il tuo stile, il tuo corpo, il tuo modo di vivere. Sketches, mood board, direzione estetica personale.",
+        "image": { "src": "../../assets/images/oggi.jpg", "alt": "La consultazione con il maestro sarto" }
       },
       {
-        "title": "Selezione dei", "titleAccent": "tessuti",
-        "body": "Accedi alla collezione di tessuti d'eccellenza. Lane merinos, cashmere puro, lini italiani ed europei. Ogni tessuto è scelto per qualità, durabilità, feel. Tocchi, senti, lasciati guidare dai nostri consigli.",
-        "image": { "src": "../../assets/images/tess.jpg", "alt": "Selezione dei tessuti in atelier" }
+        "kicker": "La scoperta dei tessuti", "title": "Tocchi, senti,", "titleAccent": "decidi",
+        "body": "Accedi alla collezione completa. Mani esperte guidano le tue scelte. Ogni tessuto è una possibilità.",
+        "image": { "src": "../../assets/images/tess.jpg", "alt": "La scoperta dei tessuti in atelier" }
       },
       {
-        "title": "Costruzione del", "titleAccent": "cartamodello",
-        "body": "Dal corpo alla carta. Misuriamo, draftiamo, creiamo il cartamodello esclusivo su tua misura. Ogni linea è precisa, ogni proporzione calibrata. Questo è il tuo abito, matematica trasformata in stile.",
+        "kicker": "Il cartamodello", "title": "La tua misura,", "titleAccent": "la tua perfezione",
+        "body": "Misuriamo con precisione artigianale. Il cartamodello è la promessa: questo capo sarà costruito esclusivamente per il tuo corpo.",
         "image": { "src": "../../assets/images/proc1.jpg", "alt": "Costruzione del cartamodello su misura" }
       },
       {
-        "title": "Cucitura &", "titleAccent": "rifinitura",
-        "body": "Le mani del maestro interpretano il cartamodello. Cuciture a mano, rinforzi invisibili, fodere che respirano. Ogni dettaglio – dal rever al filo – è calibrato per durare una vita. E oltre. Il risultato non è un capo: è tuo.",
-        "image": { "src": "../../assets/images/proc2.jpg", "alt": "Macchina da cucire per la rifinitura del capo" }
+        "kicker": "La creazione", "title": "Le mani del maestro", "titleAccent": "al lavoro",
+        "body": "Settimane di dedizione. Ogni cucitura è consapevole. Ogni rifinitura è una firma. Il risultato non è un capo: è tuo, completamente tuo.",
+        "image": { "src": "../../assets/images/proc2.jpg", "alt": "Le mani del maestro durante la cucitura" }
+      },
+      {
+        "kicker": "L'indossare", "title": "Quando l'abito", "titleAccent": "diventa te",
+        "body": "Il primo indosso è un momento privato di gloria. Scopri cosa significa vestirsi di consapevolezza, qualità e artigianalità pura.",
+        "image": { "src": "../../assets/images/giacca2.jpg", "alt": "Il primo indosso di una giacca Baratto" }
       }
     ]
   },
@@ -87,20 +84,40 @@
         "id": "giacca", "kicker": "Il cuore della sartoria", "title": "La", "titleAccent": "giacca",
         "body": "La giacca Baratto non è un indumento. È un'architettura. Ogni componente – il rever, la spalla, l'impuntura – è una decisione consapevole che riflette il tuo carattere.",
         "extra": "Affidiamo al cliente la libertà di scelta: scopri come personalizzare ogni elemento della tua giacca.",
+        "cta": "Scopri la giacca",
         "image": { "src": "../../assets/images/giacca3.jpg", "alt": "La giacca sartoriale Baratto su manichino" }
       },
       {
         "id": "pantalone", "kicker": "Versatilità su misura", "title": "Il", "titleAccent": "pantalone",
         "body": "Se la giacca è architettura, il pantalone è identità. Dai classici intramontabili ai modelli contemporanei: ogni scelta è una dichiarazione del tuo stile.",
-        "extra": "Filicudi · Neapolis · Parthenophe · Vesuvius · Contemporary",
+        "extra": "Filicudi · Neapolis · Parthenope · Vesuvius · Contemporary",
+        "cta": "Scopri il pantalone",
         "image": { "src": "../../assets/images/pant3.jpg", "alt": "Il pantalone su misura Baratto" }
       },
       {
-        "id": "tessuti", "kicker": "Natura, Tracciabilità, Innovazione", "title": "Il", "titleAccent": "materiale",
+        "id": "tessuti", "kicker": "Natura, tracciabilità, innovazione", "title": "Il", "titleAccent": "materiale",
         "body": "Ogni fibra scelta da Baratto racconta una storia di natura e qualità. Lino, seta, cotone, lana o il nostro Re-Nylon: selezioniamo solo materiali tracciabili, resistenti e di altissimo pregio.",
-        "extra": "I Nostri Partner: Eccellenza Tessile Mondiale",
+        "extra": "Fibre naturali · Re-Nylon · Denim giapponese",
+        "cta": "Scopri i tessuti",
         "image": { "src": "../../assets/images/denim2.jpg", "alt": "Tessuti e materiali selezionati da Baratto" }
       }
+    ]
+  },
+  "linings": {
+    "kicker": "Le fodere custom · Il tuo racconto privato",
+    "phrases": [
+      "La fodera è dove il tuo stile sussurra, ",
+      "*non grida.* ",
+      "Mentre il mondo vede l'abito, ",
+      "*la fodera racconta chi sei davvero.*"
+    ],
+    "body": "A Baratto, puoi personalizzare completamente la fodera della tua giacca e dei pantaloni con disegni, colori e materiali che narrano la tua storia personale.",
+    "image": { "src": "../../assets/images/fodera.jpg", "alt": "Fodera personalizzata di una giacca Baratto 1948" },
+    "groupsTitle": "Cosa puoi personalizzare",
+    "groups": [
+      { "title": "Disegni & Monogrammi", "items": ["Iniziali ricamate", "Simboli o icone significative", "Date importanti", "Frasi private (solo tu la leggi)"] },
+      { "title": "Pattern & Colori", "items": ["Scegli tra i nostri pattern esclusivi", "Colori personalizzati", "Combinazioni uniche"] },
+      { "title": "Materiali", "items": ["Seta italiana", "Cotone premium", "Lino naturale", "Velluto ricamato"] }
     ]
   },
   "atelier": {

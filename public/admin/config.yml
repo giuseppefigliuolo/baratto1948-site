@@ -44,17 +44,6 @@ collections:
               - { label: Titolo, name: title, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
               - { label: Sottotitolo, name: tagline, widget: string }
               - { label: Immagine, name: image, widget: object, collapsed: true, fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
-          - label: Manifesto
-            name: manifesto
-            widget: object
-            fields:
-              - { label: Frasi (l'ultima è in oro), name: phrases, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
-              - { label: Testo, name: body, widget: text }
-              - { label: Testo evidenziato, name: bodyAccent, widget: string }
-              - label: Immagini decorative (3)
-                name: decor
-                widget: list
-                field: { label: Immagine, name: img, widget: image }
           - label: Radici & Founder
             name: heritage
             widget: object
@@ -76,11 +65,6 @@ collections:
                   - { label: Frase d'apertura, name: lead, widget: text, hint: '*parola* = parola chiave, in corsivo oro.' }
                   - { label: Testo, name: body, widget: text }
                   - { label: Immagine, name: image, widget: object, collapsed: true, fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
-          - label: Oggi
-            name: today
-            widget: object
-            fields:
-              - { label: Frasi (l'ultima è in oro), name: phrases, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
           - label: Citazione
             name: quote
             widget: object
@@ -90,20 +74,22 @@ collections:
               - { label: Citazione (a capo = nuova riga), name: text, widget: text }
               - { label: Autore, name: author, widget: string }
               - { label: Immagine, name: image, widget: object, collapsed: true, fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
-          - label: Processo
+          - label: Esperienza
             name: process
             widget: object
             fields:
+              - { label: Frasi d'apertura (l'ultima è in oro), name: phrases, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
               - { label: Occhiello, name: kicker, widget: string }
               - { label: Titolo, name: title, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
               - { label: Introduzione, name: intro, widget: text }
-              - label: Fasi (4)
+              - label: Fasi (5)
                 name: steps
                 widget: list
-                min: 4
-                max: 4
-                summary: '{{fields.title}} {{fields.titleAccent}}'
+                min: 5
+                max: 5
+                summary: '{{fields.kicker}}'
                 fields:
+                  - { label: Nome della fase, name: kicker, widget: string }
                   - { label: Titolo, name: title, widget: string }
                   - { label: Titolo (corsivo), name: titleAccent, widget: string }
                   - { label: Testo, name: body, widget: text }
@@ -141,7 +127,25 @@ collections:
                   - { label: Titolo (corsivo), name: titleAccent, widget: string }
                   - { label: Testo, name: body, widget: text }
                   - { label: Nota (solo desktop), name: extra, widget: string }
+                  - { label: Testo del pulsante, name: cta, widget: string }
                   - { label: Immagine, name: image, widget: object, collapsed: true, fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
+          - label: Fodere
+            name: linings
+            widget: object
+            fields:
+              - { label: Occhiello, name: kicker, widget: string }
+              - { label: Frasi (l'ultima è in oro), name: phrases, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
+              - { label: Testo, name: body, widget: text }
+              - { label: Immagine, name: image, widget: object, collapsed: true, fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
+              - { label: Titolo personalizzazioni, name: groupsTitle, widget: string }
+              - label: Gruppi di personalizzazione
+                name: groups
+                widget: list
+                min: 1
+                summary: '{{fields.title}}'
+                fields:
+                  - { label: Titolo, name: title, widget: string }
+                  - { label: Voci, name: items, widget: list, min: 1, field: { label: Voce, name: item, widget: string } }
           - label: Atelier (galleria)
             name: atelier
             widget: object

@@ -31,15 +31,15 @@ ${s.brand} è una sartoria artigianale italiana fondata nel ${s.foundingYear} a 
 ${plain(h.heritage.roots.lead)} ${h.heritage.roots.body}
 ${plain(h.heritage.founder.lead)} ${h.heritage.founder.body}
 
-## Il processo su misura
-${h.process.steps.map((st, i) => `${i + 1}. ${st.title} ${st.titleAccent}: ${st.body}`).join('\n')}
+## L'esperienza su misura
+${h.process.steps.map((st, i) => `${i + 1}. ${st.kicker} (${st.title} ${st.titleAccent}): ${st.body}`).join('\n')}
 
 ## Cosa realizza
 ${h.collection.chapters.map((c) => `- ${c.title} ${c.titleAccent} (${c.kicker.toLowerCase()}): ${c.body}${c.id === 'pantalone' ? ` Modelli: ${c.extra}.` : ''}`).join('\n')}
 
 ## Filosofia
-${plain(h.manifesto.phrases.join(''))} ${h.manifesto.body}
-${plain(h.today.phrases.join(''))}
+${plain(h.process.phrases.join(''))} ${h.process.intro}
+${plain(h.linings.phrases.join(''))} ${h.linings.body}
 "${plain(h.quote.text)}" — ${h.quote.author}
 `;
   return new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });

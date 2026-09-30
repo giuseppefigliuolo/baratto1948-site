@@ -1,6 +1,6 @@
 ---
 /**
- * 07 Dettagli — "Colonna". A 9:16 video grows from a small centred window to full
+ * 05 Dettagli — "Colonna". A 9:16 video grows from a small centred window to full
  * height while the title, split either side of it, reads row by row (scroll-fx.ts column()).
  * Without motion (no JS / reduced motion) the final state is shown, with the photo instead of the video.
  */
@@ -28,7 +28,7 @@ const words = [['l1', l1], ['r1', r1], ['l2', l2], ['r2', r2]];
     <h2 id="dettagli-title" class="title" data-col-title aria-label={d.title.map(plain).join(' ')}>
       {words.map(([k, s]) => <span class:list={['w', k]} data-col-w={k} aria-hidden="true" set:html={rich(s)} />)}
     </h2>
-    <span class="foot fn" data-col-foot="n">07</span>
+    <span class="foot fn" data-col-foot="n">05</span>
     <p class="foot fp" data-col-foot="p">{d.body}</p>
   </div>
 </section>

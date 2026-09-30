@@ -3,13 +3,12 @@ import Base from '../layouts/Base.astro';
 import Intro from '../components/Intro.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/sections/Hero.astro';
-import Manifesto from '../components/sections/Manifesto.astro';
 import Heritage from '../components/sections/Heritage.astro';
-import Today from '../components/sections/Today.astro';
 import Quote from '../components/sections/Quote.astro';
 import Process from '../components/sections/Process.astro';
 import Details from '../components/sections/Details.astro';
 import Collection from '../components/sections/Collection.astro';
+import Linings from '../components/sections/Linings.astro';
 import Atelier from '../components/sections/Atelier.astro';
 import Marquee from '../components/sections/Marquee.astro';
 import Contact from '../components/sections/Contact.astro';
@@ -25,13 +24,12 @@ const settings = await getSettings();
   <main id="main">
     <Hero home={home} settings={settings} />
     <div class="sheet">
-      <Manifesto home={home} />
       <Heritage home={home} />
-      <Today home={home} />
       <Quote home={home} />
       <Process home={home} />
       <Details home={home} />
       <Collection home={home} settings={settings} />
+      <Linings home={home} />
       <Atelier home={home} />
       <Marquee home={home} />
       <Contact home={home} settings={settings} />

@@ -21,6 +21,7 @@ const h = home.hero;
       />
       <div class="seal-shadow" data-seal-shadow aria-hidden="true"></div>
       <div class="seal-host" data-seal-host></div>
+      <div class="seal-hit" data-seal-hit data-cursor="Ruota" aria-hidden="true"></div>
     </div>
     <div class="shade" aria-hidden="true"></div>
     <div class="content">
@@ -62,10 +63,21 @@ const h = home.hero;
   .frame :global(.hero-img) {
     position: absolute; inset: 0; width: 100%; height: 100%;
     filter: brightness(0.86);
+    pointer-events: none; /* no native image drag: drags belong to the seal */
   }
   /* Printed stamp: centre (900, 762), Ø 376 of 1800×1314. The host is a square 2.4× the stamp. */
   .seal-host { position: absolute; left: 24.93%; top: 23.65%; width: 50.13%; aspect-ratio: 1; pointer-events: none; }
   .seal-host :global(canvas) { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  /* Grab area over the coin at rest; live only once the seal is on screen (gl/seal.ts).
+     `pan-y`: on phones a horizontal swipe spins the coin, a vertical one still scrolls the page. */
+  .seal-hit {
+    position: absolute; left: 50%; top: 58%; width: 25%; aspect-ratio: 1;
+    transform: translate(-50%, -50%); border-radius: 50%;
+    pointer-events: none; touch-action: pan-y; user-select: none; -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .seal-hit:global(.is-live) { pointer-events: auto; cursor: grab; }
+  .seal-hit:global(.is-grabbing) { cursor: grabbing; }
   .seal-shadow {
     position: absolute; left: 50%; top: 58%; width: 21%; aspect-ratio: 1;
     transform: translate(-50%, -50%); border-radius: 50%; opacity: 0; pointer-events: none;

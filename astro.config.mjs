@@ -4,7 +4,7 @@ import sitemap from '@astrojs/sitemap';
 
 // SITE_URL: the canonical origin. On Netlify, URL is the primary site URL
 // (the *.netlify.app address until a custom domain is connected).
-const site = process.env.SITE_URL || process.env.URL || 'https://baratto1948.netlify.app';
+const site = process.env.SITE_URL || process.env.URL || 'https://baratto1948-collaudo.netlify.app';
 
 export default defineConfig({
   site,

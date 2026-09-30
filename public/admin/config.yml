@@ -13,8 +13,8 @@ backend:
 
 local_backend: true
 locale: it
-site_url: https://baratto1948.netlify.app
-display_url: https://baratto1948.netlify.app
+site_url: https://baratto1948-collaudo.netlify.app
+display_url: https://baratto1948-collaudo.netlify.app
 
 # Images are optimized at build time (AVIF/WebP, responsive sizes) — upload originals.
 media_folder: src/assets/images

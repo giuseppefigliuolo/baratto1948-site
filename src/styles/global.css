@@ -49,6 +49,8 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   background: var(--bg);
+  /* Mobile browsers widen the layout viewport to fit overflowing content; body alone doesn't stop it. */
+  overflow-x: clip;
 }
 html:not(.m) { scroll-behavior: smooth; }
 

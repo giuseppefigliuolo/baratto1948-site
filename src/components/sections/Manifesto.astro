@@ -27,6 +27,8 @@ const last = m.phrases.length - 1;
     padding: calc(var(--sp-section) * 1.4) var(--gutter);
     display: flex; flex-direction: column; align-items: center;
     gap: clamp(40px, 5vw, 72px);
+    /* The decor bleeds past the side edges; clip only x so d3 can still bleed below. */
+    overflow-x: clip;
   }
   .decor { position: absolute; pointer-events: none; }
   .layer {

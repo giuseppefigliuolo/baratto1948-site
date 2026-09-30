@@ -83,7 +83,7 @@ const total = pad(c.chapters.length);
   @media (hover: hover) { .card:hover { border-color: var(--gold); } }
   .pic { flex: 0 0 48%; }
   .pic :global(.coll-img) {
-    position: absolute; top: 0; left: -10%; width: 120%; height: 100%;
+    position: absolute; top: 0; left: -10%; width: 120%; max-width: none; height: 100%;
     object-fit: cover; object-position: 50% 30%;
     filter: saturate(0.6) sepia(0.14) contrast(1.06) brightness(0.9);
   }

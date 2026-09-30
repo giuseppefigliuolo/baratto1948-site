@@ -12,7 +12,9 @@ const VS = `attribute vec2 p;attribute vec2 uv;uniform mat4 uP;uniform float uX,
 void main(){vUv=uv;vec3 wp=vec3(p.x*uPW+uX,p.y*uPH,0.);float nx=wp.x/uW;
 wp.z-=nx*nx*uW*.55;wp.x+=sin(uv.y*3.14159)*uVel*uW*.035;wp.y+=sin(uv.x*3.14159)*abs(uVel)*uW*.01;wp.z+=uHover*50.;
 wp.z-=uCam;gl_Position=uP*vec4(wp,1.);}`;
-const FS = `precision mediump float;uniform sampler2D t;uniform vec2 uC;uniform float uVel,uFocus,uHover,uReady;varying vec2 vUv;
+// Uniforms shared with the vertex shader (uVel, uHover) must have the same precision in both stages,
+// otherwise linking fails silently. Vertex default is highp, so the fragment shader must be highp too.
+const FS = `#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\nuniform sampler2D t;uniform vec2 uC;uniform float uVel,uFocus,uHover,uReady;varying vec2 vUv;
 void main(){vec2 uv=(vUv-.5)*uC+.5;uv=(uv-.5)*(1.-.07*uHover)+.5;uv.y=1.-uv.y;float s=clamp(uVel,-1.,1.)*.025;
 vec3 c=vec3(texture2D(t,uv+vec2(s,0.)).r,texture2D(t,uv).g,texture2D(t,uv-vec2(s,0.)).b);
 float l=dot(c,vec3(.299,.587,.114));float f=clamp(uFocus+uHover,0.,1.);
@@ -91,8 +93,8 @@ export function atelier(host: HTMLElement) {
     cv.width = Math.round(W * d); cv.height = Math.round(H * d);
     cam = H / 2 / Math.tan((FOV * Math.PI) / 360);
     const mob = W < 700;
-    pw = mob ? W * 0.66 : clamp(W * 0.23, 220, 400);
-    ph = Math.min(pw * 1.28, H * 0.84);
+    pw = mob ? W * 0.72 : clamp(W * 0.23, 220, 400);
+    ph = Math.min(pw * 1.3, H * (mob ? 0.92 : 0.84));
     if (mob) pw = Math.min(pw, ph / 1.2);
     step = pw + (mob ? W * 0.07 : pw * 0.16);
     L = step * items.length;

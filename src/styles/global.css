@@ -102,6 +102,14 @@ a { color: var(--fg); text-decoration: none; transition: color 0.3s; }
   margin-bottom: -0.14em;
 }
 
+@font-face {
+  font-family: 'Gloom';
+  src: url('/fonts/Gloom.woff2') format('woff2'), url('/fonts/Gloom.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Giant "BARATTO 1948" wordmark row (hero + footer) */
 .wordmark {
   display: flex;
@@ -110,10 +118,10 @@ a { color: var(--fg); text-decoration: none; transition: color 0.3s; }
   overflow: hidden;
   border-top: 1px solid var(--line-2);
   padding: 6px 0 0.14em;
-  font: 400 clamp(44px, 12.6vw, 240px)/0.84 var(--serif);
+  font: 400 clamp(44px, 12.6vw, 240px)/0.84 'Gloom', var(--serif);
   letter-spacing: -0.02em;
 }
-.wordmark .yr { font-style: italic; color: var(--gold); padding-right: 0.12em; }
+.wordmark .yr { font-style: normal; color: var(--gold); padding-right: 0.12em; }
 
 /* Media frame: positioned box with a cover image */
 .media {

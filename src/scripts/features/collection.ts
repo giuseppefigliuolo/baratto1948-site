@@ -50,6 +50,8 @@ export function initCollection() {
     if (a !== act && ctr) { act = a; ctr.textContent = String(a + 1).padStart(2, '0'); }
     cards.forEach((it, i) => {
       const d = clamp(i - seg, -1.2, 1.2), m = Math.min(1, Math.abs(d));
+      // Pin the edge facing the active card so the shrink never opens a gap between cards.
+      setStyle(it.c, 'transform-origin', `${(50 - 50 * clamp(d * 2, -1, 1)).toFixed(1)}% 50%`);
       setStyle(it.c, 'transform', `scale(${(1 - 0.1 * m).toFixed(4)})`);
       setStyle(it.img, 'transform', `translate3d(${(-d * 7).toFixed(2)}%,0,0) scale(${(1.04 + 0.08 * m).toFixed(4)})`);
       setStyle(it.dim, 'opacity', (0.6 * m).toFixed(3));

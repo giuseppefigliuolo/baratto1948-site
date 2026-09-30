@@ -24,7 +24,7 @@ src/
     settings/site.json     ← brand, contacts, address, P.IVA, intro on/off
   content.config.ts        ← schema: a bad edit fails the build instead of breaking the page
   assets/images/           ← source photos (optimized at build: AVIF + WebP, responsive widths)
-  assets/brand/logo.svg    ← TEMPORARY vector seal, replace with the official logo
+  assets/brand/logo.png    ← official logo (cream on transparent)
   components/
     sections/*.astro       ← one file per page section, scoped CSS next to markup
     ui/                    ← Img (responsive <picture>), Lines (masked headings), Wordmark

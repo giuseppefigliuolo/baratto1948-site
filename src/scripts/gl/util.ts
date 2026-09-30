@@ -17,7 +17,10 @@ export function program(gl: GL, vs: string, fs: string) {
   gl.attachShader(p, sh(gl.VERTEX_SHADER, vs));
   gl.attachShader(p, sh(gl.FRAGMENT_SHADER, fs));
   gl.linkProgram(p);
-  if (!gl.getProgramParameter(p, gl.LINK_STATUS)) return null;
+  if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
+    console.warn('[gl] shader link failed:', gl.getProgramInfoLog(p));
+    return null;
+  }
   gl.useProgram(p);
   const u = (name: string) => gl.getUniformLocation(p, name);
   return { p, u };

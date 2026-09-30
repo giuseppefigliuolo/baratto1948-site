@@ -1,9 +1,8 @@
 ---
 import { getImage } from 'astro:assets';
 import type { Home, Settings } from '../../lib/content';
-import logo from '../../assets/brand/logo.svg';
+import logo from '../../assets/brand/logo.png';
 import Lines from '../ui/Lines.astro';
-import Wordmark from '../ui/Wordmark.astro';
 
 interface Props { home: Home; settings: Settings }
 const { home, settings: s } = Astro.props;
@@ -33,7 +32,6 @@ const web = s.website.replace(/^https?:\/\//, '');
       <a class="card" href={s.website}><span class="k">Web</span><span class="v">{web}</span></a>
       <a class="card" href={s.instagram} rel="noopener" target="_blank"><span class="k">Instagram</span><span class="v">{s.instagramHandle}</span></a>
     </address>
-    <Wordmark step={60} />
     <footer class="foot">
       <span>© {year} {s.brand} · Sartoria Artigianale{s.vatNumber && ` · P.IVA ${s.vatNumber}`}</span>
       <span lang="en">{c.footerTagline}</span>

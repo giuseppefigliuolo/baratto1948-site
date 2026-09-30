@@ -1,6 +1,6 @@
 /**
  * Scroll-linked effects driven from cached layout (no per-frame layout reads):
- *  parallax [data-speed], phrase focus [data-phrases], hero cover [data-cover],
+ *  parallax [data-speed], phrase focus [data-phrases], hero cover [data-cover] (+ header logo),
  *  progress bar [data-progress], zoom reveal [data-zoomreveal], video column [data-column].
  */
 import { $, $$, clamp, docTop, hostOf, lerp, setStyle } from '../core/dom';
@@ -62,9 +62,14 @@ function cover() {
   const sec = $('[data-cover]');
   const inner = sec && $('[data-cover-inner]', sec);
   if (!inner) return;
+  // The seal stands in for the header logo while the hero is full screen.
+  const hdr = $('.hdr');
+  let past: boolean | null = null;
   subscribe((f) => {
-    if (!f.changed || f.y > f.vh * 1.5) return;
+    if (!f.changed) return;
     const p = clamp(f.y / f.vh, 0, 1);
+    if ((p > 0.15) !== past) { past = p > 0.15; hdr?.classList.toggle('is-past-hero', past); }
+    if (f.y > f.vh * 1.5) return;
     setStyle(inner, 'transform', `scale(${(1 - 0.1 * p).toFixed(4)}) translateY(${(p * 10).toFixed(2)}vh)`);
     setStyle(inner, 'opacity', (1 - 0.7 * p).toFixed(3));
     setStyle(inner, 'border-radius', `${(p * 24).toFixed(1)}px`);

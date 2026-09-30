@@ -2,16 +2,21 @@
   "seo": {
     "title": "Baratto 1948 · Sartoria artigianale su misura dal 1948",
     "description": "Abiti su misura cuciti a mano da maestri sarti italiani. Giacche, pantaloni e tessuti d'eccellenza da Francavilla in Sinni, Basilicata. Dal 1948.",
-    "ogImage": "../../assets/images/hero.jpg"
+    "ogImage": "../../assets/images/banco.jpg"
   },
   "hero": {
     "kicker": "Sartoria Artigianale · Dal 1948",
     "title": ["Il tuo stile,", "*la nostra storia.*"],
     "tagline": "Fatto a mano. Fatto per te.",
-    "image": { "src": "../../assets/images/hero.jpg", "alt": "Giacca doppiopetto Baratto 1948 su manichino" }
+    "image": { "src": "../../assets/images/banco.jpg", "alt": "Banco di lavoro della sartoria con il timbro Baratto 1948 sulla tela" }
+  },
+  "manifesto": {
+    "phrases": ["Dal 1948, ", "un'eredità di *eccellenza artigianale*. ", "*Ogni filo racconta chi sei.*"],
+    "body": "Su misura, dalle mani di maestri artigiani italiani: un sistema sartoriale dove la tradizione incontra la tua personalità.",
+    "bodyAccent": "Fatto a mano. Fatto per te.",
+    "decor": ["../../assets/images/giacca.jpg", "../../assets/images/spalla.jpg", "../../assets/images/denim1.jpg"]
   },
   "heritage": {
-    "title": ["Dal 1948:", "*una eredità di*", "*eccellenza artigianale.*"],
     "roots": {
       "kicker": "Radici",
       "lead": "Tutto inizia in *Basilicata*, nel cuore di Francavilla in Sinni.",
@@ -22,7 +27,7 @@
       "kicker": "Founder",
       "lead": "*Mario Mele*, formatosi all'Istituto Marangoni di Milano, porta la sartoria italiana alle più grandi piattaforme mondiali.",
       "body": "Pitti Immagine, le fiere d'eccellenza: Baratto racconta l'Italia attraverso il gesto della mano, la precisione del dettaglio.",
-      "image": { "src": "../../assets/images/founder.jpg", "alt": "Il banco di lavoro dell'atelier Baratto" }
+      "image": { "src": "../../assets/images/founder.jpg", "alt": "Il fondatore Mario Mele in abito scuro sartoriale, a passeggio in città" }
     }
   },
   "quote": {

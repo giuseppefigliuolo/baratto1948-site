@@ -2,13 +2,15 @@
  * Entry point. Loading order is tuned for Core Web Vitals:
  *  1. menu + anchors (work with or without motion)
  *  2. motion core: one rAF loop, scroll effects, reveals, intro
- *  3. WebGL effects, lazily, once the page is idle and only on capable devices
+ *  3. hero seal (three.js) right after the intro, so its timeline starts with the Ken Burns
+ *  4. WebGL effects, lazily, once the page is idle and only on capable devices
  */
 import { fine } from './core/dom';
 import { start } from './core/loop';
 import { initSmooth } from './core/smooth';
 import { initCollection } from './features/collection';
 import { initCursor } from './features/cursor';
+import { initHeader } from './features/header';
 import { runIntro } from './features/intro';
 import { initMarquee } from './features/marquee';
 import { initMenu } from './features/menu';
@@ -21,6 +23,7 @@ const motion = html.classList.contains('m');
 
 initSmooth(motion);
 initMenu();
+initHeader();
 
 if (motion) {
   const ready = runIntro();
@@ -31,7 +34,48 @@ if (motion) {
   initMarquee();
   if (fine()) initCursor();
   start();
-  ready.then(() => idle(loadGL));
+  // The seal is built meanwhile, but its timeline (and the Ken Burns) waits for the photo on screen:
+  // first the printed stamp, then the bronze coin rising out of it.
+  const photoIn = ready.then(heroPhoto).then(() => { kenBurns(); return performance.now(); });
+  ready.then(() => {
+    loadSeal({ start: photoIn });
+    idle(loadGL);
+  });
+} else {
+  loadSeal({ start: heroPhoto().then(() => 0), still: true });
+}
+
+/** Resolves once the hero photo is decoded (or failed: the page must not wait forever). */
+function heroPhoto(): Promise<void> {
+  const img = document.querySelector<HTMLImageElement>('[data-seal-frame] img');
+  if (!img) return Promise.resolve();
+  const load = img.complete && img.naturalWidth
+    ? Promise.resolve()
+    : new Promise<void>((res) => {
+      img.addEventListener('load', () => res(), { once: true });
+      img.addEventListener('error', () => res(), { once: true });
+    });
+  return load.then(() => img.decode().catch(() => {}));
+}
+
+/** Hero photo (and the seal canvas inside the same frame) settles from 1.12 to 1 over 8 s. */
+function kenBurns() {
+  document.querySelector<HTMLElement>('[data-seal-frame]')?.animate(
+    { scale: ['1.12', '1'] },
+    { duration: 8000, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', fill: 'both' }
+  );
+}
+
+async function loadSeal(opts: { start: Promise<number>; still?: boolean }) {
+  const frame = document.querySelector<HTMLElement>('[data-seal-frame]');
+  if (!frame || !capable()) return;
+  try {
+    const { seal } = await import('./gl/seal');
+    await seal(frame, opts);
+  } catch (e) {
+    // The printed stamp in the photo stands on its own.
+    console.warn('[seal] unavailable', e);
+  }
 }
 
 function idle(fn: () => void) {
@@ -50,9 +94,6 @@ function capable() {
 async function loadGL() {
   if (!capable()) return;
   const [{ liquid }, { atelier }] = await Promise.all([import('./gl/liquid'), import('./gl/atelier')]);
-  const heroImg = document.querySelector<HTMLImageElement>('.hero-img');
-  const heroHost = document.querySelector<HTMLElement>('[data-hero-host]');
-  if (heroImg && heroHost) liquid(heroImg, heroHost, { hero: true, posY: 0.4 });
   document.querySelectorAll<HTMLImageElement>('img[data-gl]').forEach((img) => liquid(img));
   const at = document.querySelector<HTMLElement>('[data-atelier]');
   if (at) atelier(at);

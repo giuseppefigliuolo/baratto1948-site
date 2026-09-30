@@ -38,6 +38,7 @@ ${h.process.steps.map((st, i) => `${i + 1}. ${st.kicker} (${st.title} ${st.title
 ${h.collection.chapters.map((c) => `- ${c.title} ${c.titleAccent} (${c.kicker.toLowerCase()}): ${c.body}${c.id === 'pantalone' ? ` Modelli: ${c.extra}.` : ''}`).join('\n')}
 
 ## Filosofia
+${plain(h.manifesto.phrases.join(''))} ${plain(h.manifesto.body)} ${h.manifesto.bodyAccent}
 ${plain(h.process.phrases.join(''))} ${h.process.intro}
 ${plain(h.linings.phrases.join(''))} ${h.linings.body}
 "${plain(h.quote.text)}" — ${h.quote.author}

@@ -2,7 +2,6 @@
 import type { Home, Settings } from '../../lib/content';
 import { rich } from '../../lib/rich';
 import Img from '../ui/Img.astro';
-import Wordmark from '../ui/Wordmark.astro';
 
 interface Props { home: Home; settings: Settings }
 const { home } = Astro.props;
@@ -11,30 +10,29 @@ const h = home.hero;
 
 <section id="top" class="hero" data-cover aria-labelledby="hero-title">
   <div class="inner" data-cover-inner>
-    <div class="host" data-hero-host>
+    <div class="frame" data-seal-frame>
       <Img
         src={h.image.src}
         alt={h.image.alt}
-        sizes="100vw"
+        sizes="(max-aspect-ratio: 1800/1314) 146vh, 100vw"
         widths={[768, 1080, 1440, 1920]}
         priority
         class="hero-img"
       />
+      <div class="seal-shadow" data-seal-shadow aria-hidden="true"></div>
+      <div class="seal-host" data-seal-host></div>
     </div>
     <div class="shade" aria-hidden="true"></div>
     <div class="content">
-      <div class="row">
-        <div class="head">
-          <span class="mask"><span class="kicker" data-line>{h.kicker}</span></span>
-          <h1 id="hero-title" class="title">
-            {h.title.map((line, i) => (
-              <span class="mask"><span data-line style={`--d:${80 * (i + 1)}ms`} set:html={rich(line)} /></span>
-            ))}
-          </h1>
-        </div>
-        <p class="tagline" data-fade style="--d:300ms">{h.tagline}</p>
+      <div class="head">
+        <span class="mask"><span class="kicker" data-line style="--d:4200ms">{h.kicker}</span></span>
+        <h1 id="hero-title" class="title">
+          {h.title.map((line, i) => (
+            <span class="mask"><span data-line style={`--d:${4350 + 150 * i}ms`} set:html={rich(line)} /></span>
+          ))}
+        </h1>
       </div>
-      <Wordmark delayStart={120} step={50} />
+      <p class="tagline" data-fade style="--d:4750ms">{h.tagline}</p>
     </div>
   </div>
 </section>
@@ -48,27 +46,61 @@ const h = home.hero;
   @media (min-width: 760px) { .hero { height: 100vh; } }
   .inner { position: absolute; inset: 0; overflow: hidden; transform-origin: 50% 100%; }
   :global(.m) .inner { will-change: transform, opacity; }
-  .host { position: absolute; inset: 0; overflow: hidden; }
-  .host :global(.hero-img) {
-    position: absolute; inset: 0; width: 100%; height: 100%;
-    object-fit: cover; object-position: 50% 40%;
-    transform: scale(1.1);
+
+  /* Box in the photo's proportions, so the seal can be placed in % of the photo.
+     `translate` centres it, `scale` is the Ken Burns (main.ts), both independent of `transform`. */
+  .frame {
+    position: absolute; left: 0; top: 50%; width: 100%;
+    aspect-ratio: 1800 / 1314; translate: 0 -50%;
+    transform-origin: 50% 58%;
   }
-  .host :global(canvas) { position: absolute; inset: 0; width: 100%; height: 100%; }
+  :global(.m) .frame { scale: 1.12; }
+  /* Portrait / narrow: the stamp rises into the upper half, clear of the text. */
+  @media (max-aspect-ratio: 1800/1314) {
+    .frame { left: 50%; top: 46.7%; width: auto; height: 106.7%; translate: -50% -50%; }
+  }
+  .frame :global(.hero-img) {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    filter: brightness(0.86);
+  }
+  /* Printed stamp: centre (900, 762), Ø 376 of 1800×1314. The host is a square 2.4× the stamp. */
+  .seal-host { position: absolute; left: 24.93%; top: 23.65%; width: 50.13%; aspect-ratio: 1; pointer-events: none; }
+  .seal-host :global(canvas) { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .seal-shadow {
+    position: absolute; left: 50%; top: 58%; width: 21%; aspect-ratio: 1;
+    transform: translate(-50%, -50%); border-radius: 50%; opacity: 0; pointer-events: none;
+    background: radial-gradient(closest-side, rgba(20, 12, 6, 0.75) 55%, rgba(20, 12, 6, 0) 100%);
+  }
+
   .shade {
     position: absolute; inset: 0; pointer-events: none;
-    background: linear-gradient(180deg, rgba(12, 11, 10, 0.55) 0%, rgba(12, 11, 10, 0) 28%, rgba(12, 11, 10, 0.1) 55%, rgba(12, 11, 10, 0.94) 100%);
+    background:
+      radial-gradient(110% 85% at 50% 55%, rgba(12, 11, 10, 0) 50%, rgba(12, 11, 10, 0.55) 100%),
+      linear-gradient(180deg, rgba(12, 11, 10, 0.6) 0%, rgba(12, 11, 10, 0) 22%, rgba(12, 11, 10, 0) 62%, rgba(12, 11, 10, 0.92) 100%);
   }
   .content {
-    position: absolute; left: 0; right: 0; bottom: 0;
-    padding: 0 var(--gutter) clamp(18px, 3vw, 40px);
-    display: flex; flex-direction: column; gap: clamp(14px, 2.4vw, 32px);
+    position: absolute; left: var(--gutter); right: var(--gutter); bottom: clamp(28px, 3.6vw, 56px);
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 24px;
     pointer-events: none;
   }
-  .row { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px 24px; }
-  .head { display: flex; flex-direction: column; gap: 12px; max-width: 32rem; }
+  .head { display: flex; flex-direction: column; gap: 14px; max-width: 32rem; }
   .head > .mask:first-child { padding: 0 0 0.1em; margin-bottom: -0.1em; }
-  .title { font: 400 clamp(2.25rem, min(4vw, 7.5svh), 5rem)/1.02 var(--serif); }
-  .tagline { font: 400 italic var(--fs-quote)/1.3 var(--serif); color: var(--fg-2); }
-  @media (max-width: 759px) { .tagline { display: none; } }
+  .title { font: 400 clamp(2.75rem, min(4.4vw, 7.1svh), 5rem)/1.02 var(--serif); }
+  .tagline { margin-bottom: 8px; font: 400 italic var(--fs-quote)/1.3 var(--serif); color: var(--fg-2); }
+
+  @media (max-width: 759px) {
+    .shade {
+      background:
+        radial-gradient(120% 70% at 50% 45%, rgba(12, 11, 10, 0) 45%, rgba(12, 11, 10, 0.5) 100%),
+        linear-gradient(180deg, rgba(12, 11, 10, 0.55) 0%, rgba(12, 11, 10, 0) 16%, rgba(12, 11, 10, 0) 64%, rgba(12, 11, 10, 0.94) 86%);
+    }
+    .content {
+      left: 20px; right: 20px; bottom: calc(36px + env(safe-area-inset-bottom));
+      flex-direction: column; align-items: stretch; gap: 12px;
+    }
+    .head { gap: 12px; }
+    .kicker { font-size: 11px; }
+    .title { font-size: min(44px, 11.3vw); }
+    .tagline { margin: 4px 0 0; font-size: 20px; }
+  }
 </style>

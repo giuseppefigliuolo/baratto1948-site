@@ -25,6 +25,8 @@
      height, so short/wide and tall/narrow screens both stay in proportion. */
   --fs-micro: clamp(0.75rem, 0.22vw + 0.65rem, 1.025rem);
   --fs-body: clamp(0.875rem, 0.22vw + 0.76rem, 1.15rem);
+  /* Running prose (.body-copy): larger than --fs-body, which stays for cards, lists and UI. */
+  --fs-copy: clamp(1.0625rem, 0.45vw + 0.8rem, 1.5rem);
   --fs-lead: clamp(1.375rem, min(2.2vw, 4.2svh), 2.75rem);
   --fs-quote: clamp(1.25rem, min(1.6vw, 3.2svh), 2rem);
   --fs-h3: clamp(1.9375rem, min(3.3vw, 6svh), 3.875rem);
@@ -106,7 +108,7 @@ a { color: var(--fg); text-decoration: none; transition: color 0.3s; }
   color: var(--gold);
 }
 .body-copy {
-  font: var(--w-light) var(--fs-body)/1.7 var(--sans);
+  font: var(--w-light) var(--fs-copy)/1.7 var(--sans);
   color: var(--muted);
   text-wrap: pretty;
 }
@@ -123,27 +125,6 @@ a { color: var(--fg); text-decoration: none; transition: color 0.3s; }
   padding: 0 0.14em 0.14em 0;
   margin-bottom: -0.14em;
 }
-
-@font-face {
-  font-family: 'Gloom';
-  src: url('/fonts/Gloom.woff2') format('woff2'), url('/fonts/Gloom.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* Giant "BARATTO 1948" wordmark row (hero + footer) */
-.wordmark {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  overflow: hidden;
-  border-top: 1px solid var(--line-2);
-  padding: 6px 0 0.14em;
-  font: 400 clamp(44px, 12.6vw, 380px)/0.84 'Gloom', var(--serif);
-  letter-spacing: -0.02em;
-}
-.wordmark .yr { font-style: normal; color: var(--gold); padding-right: 0.12em; }
 
 /* Media frame: positioned box with a cover image */
 .media {

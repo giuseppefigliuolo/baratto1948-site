@@ -29,8 +29,13 @@ const pages = defineCollection({
         tagline: z.string(),
         image: pic
       }),
+      manifesto: z.object({
+        phrases: lines,
+        body: z.string(),
+        bodyAccent: z.string(),
+        decor: z.array(image()).length(3)
+      }),
       heritage: z.object({
-        title: lines,
         roots: z.object({ kicker: z.string(), lead: z.string(), body: z.string(), image: pic }),
         founder: z.object({ kicker: z.string(), lead: z.string(), body: z.string(), image: pic })
       }),

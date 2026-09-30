@@ -44,11 +44,21 @@ collections:
               - { label: Titolo, name: title, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
               - { label: Sottotitolo, name: tagline, widget: string }
               - { label: Immagine, name: image, widget: object, collapsed: true, fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
+          - label: Manifesto
+            name: manifesto
+            widget: object
+            fields:
+              - { label: Frasi (l'ultima è in oro), name: phrases, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
+              - { label: Testo, name: body, widget: text }
+              - { label: Testo evidenziato, name: bodyAccent, widget: string }
+              - label: Immagini decorative (3)
+                name: decor
+                widget: list
+                field: { label: Immagine, name: img, widget: image }
           - label: Radici & Founder
             name: heritage
             widget: object
             fields:
-              - { label: Titolo, name: title, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
               - label: Radici
                 name: roots
                 widget: object

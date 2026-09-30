@@ -117,23 +117,23 @@ Order in [index.astro](../src/pages/index.astro). Everything after Hero sits ins
 |---|---|---|---|---|
 | — | `Intro.astro` | `settings.intro`, 6 images from home | — | image flicker, counter 0→100, frame opens to full hero (`features/intro.ts`) |
 | — | `Header.astro` | `settings` | — | `mix-blend-mode: difference`; progress bar; mobile burger → fullscreen menu |
-| 01 | `sections/Hero.astro` | `hero` | `#top` | sticky, `[data-cover]` scale/fade on scroll, WebGL liquid on photo, wordmark letters |
-| 02 | `sections/Heritage.astro` | `heritage` | `#radici` | first section of the sheet; line reveals, clip wipes, hover liquid on both photos |
-| 03 | `sections/Quote.astro` | `quote` | — | `[data-zoomreveal]`: 300vh sticky, clip-path opens to full-bleed, quote fades in |
-| 04 | `sections/Process.astro` | `process` | `#esperienza` | "Esperienza": centred `[data-phrases]` intro, then an `<ol>` of 5 sticky cards, `[data-pile]` tilt-in / lean-back stack |
-| 05 | `sections/Details.astro` | `details` | `#dettagli` | sticky 260vh (280vh mobile), video 9:16, `[data-column]`: landscape "Colonna" (title split either side), portrait "Respiro" (halves ride the box edges, then close in at 36vh) |
-| 06 | `sections/Collection.astro` | `collection` | `#collezione`, `#giacca`, `#pantalone`, `#tessuti` | 320vh sticky; vertical scroll → horizontal track, velocity skew, counter, progress bar |
-| 07 | `sections/Linings.astro` | `linings` | `#fodere` | "Fodere": `[data-phrases]` statement, `data-clip="c"` + `data-gl` photo, `data-fade` body and customisation groups |
-| 08 | `sections/Atelier.astro` | `atelier` | — | DOM list fallback replaced by curved draggable WebGL gallery |
-| 09 | `sections/Marquee.astro` | `marquee` | — | infinite band; speed/direction follow scroll velocity |
-| 10 | `sections/Contact.astro` | `contact` + `settings` | `#contatti` | parallax background, `<address>` cards, footer wordmark |
+| 01 | `sections/Hero.astro` | `hero` | `#top` | sticky, `[data-cover]` scale/fade on scroll, 3D seal (`gl/seal.ts`) on the stamp printed in the `banco.jpg` photo, Ken Burns 1.12→1; the header logo stays hidden until the cover starts shrinking |
+| 02 | `sections/Manifesto.astro` | `manifesto` | — | 3 masked decor images parallax, `[data-phrases]` blur→focus |
+| 03 | `sections/Heritage.astro` | `heritage` | `#radici` | no title of its own (the Manifesto statement introduces it); clip wipes, hover liquid on both photos |
+| 04 | `sections/Quote.astro` | `quote` | — | `[data-zoomreveal]`: 300vh sticky, clip-path opens to full-bleed, quote fades in |
+| 05 | `sections/Process.astro` | `process` | `#esperienza` | "Esperienza": centred `[data-phrases]` intro, then an `<ol>` of 5 sticky cards, `[data-pile]` tilt-in / lean-back stack |
+| 06 | `sections/Details.astro` | `details` | `#dettagli` | sticky 260vh (280vh mobile), video 9:16, `[data-column]`: landscape "Colonna" (title split either side), portrait "Respiro" (halves ride the box edges, then close in at 36vh) |
+| 07 | `sections/Collection.astro` | `collection` | `#collezione`, `#giacca`, `#pantalone`, `#tessuti` | 320vh sticky; vertical scroll → horizontal track, velocity skew, counter, progress bar |
+| 08 | `sections/Linings.astro` | `linings` | `#fodere` | "Fodere": `[data-phrases]` statement, `data-clip="c"` + `data-gl` photo, `data-fade` body and customisation groups |
+| 09 | `sections/Atelier.astro` | `atelier` | — | DOM list fallback replaced by curved draggable WebGL gallery |
+| 10 | `sections/Marquee.astro` | `marquee` | — | infinite band; speed/direction follow scroll velocity |
+| 11 | `sections/Contact.astro` | `contact` + `settings` | `#contatti` | parallax background, `<address>` cards, footer wordmark |
 
 Shared UI:
 
 - `ui/Img.astro` wraps `<Picture>` with AVIF + WebP output. It filters the width list to the source width, sets explicit dimensions,
   and passes `data-*`/`class` through to the `<img>`. `priority` sets eager + `fetchpriority=high`.
 - `ui/Lines.astro` renders a heading as a list of `.mask > [data-line]` spans, staggered by `step` ms through `--d`.
-- `ui/Wordmark.astro` renders the giant `B A R A T T O 1948` row, one `[data-line]` per letter (Hero and Contact).
 
 ## 6. The `data-*` contract
 
@@ -141,13 +141,14 @@ Markup and scripts are coupled only through these attributes. Rename one and you
 
 | Attribute | Placed in | Read by | Effect |
 |---|---|---|---|
-| `data-line`, `data-tilt` | Lines, Wordmark, Hero | `features/reveal.ts` + CSS | slide up (optionally tilted) out of `.mask`; the **parent** is observed |
+| `data-line`, `data-tilt` | Lines, Hero | `features/reveal.ts` + CSS | slide up (optionally tilted) out of `.mask`; the **parent** is observed |
 | `data-fade` | many | `reveal.ts` + CSS | fade + rise |
 | `data-clip` / `data-clip="c"` | Heritage, Linings | `reveal.ts` + CSS | clip wipe from bottom / from centre; parent observed |
 | `--d` (CSS var) | inline style | CSS transitions | per-element reveal delay |
 | `data-speed`, `data-zoom` | images, decor layers | `scroll-fx.ts parallax()` | translateY ∝ distance from viewport centre; constant scale |
-| `data-phrases` > `data-phrase` | Process, Linings | `scroll-fx.ts phrases()` | phrases un-blur one after another |
-| `data-cover`, `data-cover-inner` | Hero | `scroll-fx.ts cover()` | hero shrinks, drops, fades, rounds corners |
+| `data-phrases` > `data-phrase` | Manifesto, Process, Linings | `scroll-fx.ts phrases()` | phrases un-blur one after another |
+| `data-cover`, `data-cover-inner` | Hero | `scroll-fx.ts cover()` | hero shrinks, drops, fades, rounds corners; sets `.hdr.is-past-hero` (shows the header logo) once `p > 0.15` |
+| `data-seal-frame`, `data-seal-host`, `data-seal-shadow` | Hero | `gl/seal.ts`, `main.ts kenBurns()` | bronze 3D seal in register with the printed stamp: fades in, lifts (+18%), follows pointer / device tilt, shadow follows; the frame is the photo's own 1800/1314 box, so positions are % of the photo |
 | `data-progress` | Header | `scroll-fx.ts progress()` | top gold progress bar |
 | `data-zoomreveal`, `data-zr-box/img/dim/text` | Quote | `scroll-fx.ts zoomReveal()` | clip-path inset → 0, quote appears |
 | `data-column`, `data-col-box/video/dim/title/w/foot` | Details | `scroll-fx.ts column()` | landscape: 9:16 video grows to full height, title split either side; portrait (`vw < vh·1.05`): video grows to full screen and darkens, the title halves ride its top/bottom edges (≥ 96px from the viewport edge) then close in at 36vh, gold rows and body follow; video pauses off screen; `.no-video` shows the photo if the video fails |
@@ -157,7 +158,6 @@ Markup and scripts are coupled only through these attributes. Rename one and you
 | `data-cursor="Label"` | Collection card, Atelier host, `[data-gl]` hosts | `features/cursor.ts` | big labelled cursor |
 | `data-magnetic` | Header pill | `cursor.ts` | follows pointer |
 | `data-gl` | Heritage ×2, Linings | `gl/liquid.ts` | hover "liquid fabric" shader |
-| `data-hero-host` + `.hero-img` | Hero | `gl/liquid.ts` (hero mode) | always-on liquid shader, then hides the `<img>` |
 | `data-atelier`, `data-items` (JSON), `data-atelier-fallback/title/count` | Atelier | `gl/atelier.ts` | WebGL gallery; hides fallback after first texture |
 | `data-intro-el/frame/img/count/fade` | Intro | `features/intro.ts` | intro overlay |
 | `data-menu`, `data-menu-toggle`, `data-menu-label`, `data-menu-link` | Header | `features/menu.ts` | menu; `data-menu-link` opts out of the global anchor handler |
@@ -211,13 +211,16 @@ Plain WebGL1 with no dependencies. Helpers live in [`gl/util.ts`](../src/scripts
 
 **Loaded only if** motion is on, the intro has finished, the browser is idle, `saveData` is off,
 `deviceMemory >= 4` (when reported) and a WebGL context can be created. Otherwise the plain images stay.
+The hero seal has the same device gate but loads right after the intro (not on idle), because its timeline
+starts with the Ken Burns; without motion it renders once, in its final pose.
 
 | Module | Used on | Notes |
 |---|---|---|
-| `gl/liquid.ts` | hero (always alive, follows mouse, darkens and zooms on scroll); `img[data-gl]` (on hover on desktop, ambient drift on touch) | one small canvas per image, created lazily; draws only while visible and active; object-fit cover handled by `uC`/`uO` uniforms; chromatic split from scroll velocity |
+| `gl/liquid.ts` | `img[data-gl]` (on hover on desktop, ambient drift on touch) | one small canvas per image, created lazily; draws only while visible and active; object-fit cover handled by `uC`/`uO` uniforms; chromatic split from scroll velocity |
+| `gl/seal.ts` | Hero | **three.js** (the only module that uses it). Logo alpha (`assets/brand/logo.png`, blurred) → 440² relief plane trimmed to a disc + rim + back; patinated bronze `MeshStandardMaterial` with procedural colour/bump maps and a small PMREM studio env. Camera fov 18° at `2.4 / tan 9°`, so at z=0 the coin matches the printed stamp. Timeline from the intro: fade 0.6–3.2 s, lift 1.8–7.6 s to z=2.31 (+18%); rotation follows the pointer (desktop) or `deviceorientation` (touch; iOS asks on first tap); the key light follows too. Drawn by the shared loop until the sheet covers the hero (`y ≥ vh`). On any failure the photo's printed stamp remains |
 | `gl/atelier.ts` | Atelier gallery | 24×24 grid per panel, bent along z; infinite wrap; drag (pointer), horizontal wheel, autoplay drift + scroll velocity; screen-space hover hit test; textures fetched from the 800 px WebP URLs in `data-items`, staggered 60 ms apart |
 
-The DOM remains the source of truth. The hero `<img>` stays in the page (it's the LCP element) and is hidden only after the canvas has faded in.
+The DOM remains the source of truth. The hero `<img>` stays in the page (it's the LCP element); the seal canvas only sits on top of it.
 The Atelier `<ul>` stays for SEO and no-JS, and is only set to `visibility: hidden`.
 
 ## 10. Content model and CMS
@@ -234,6 +237,7 @@ Fixed cardinalities are baked into the layout. Changing any of them needs code c
 |---|---|---|
 | `process.steps` | exactly 5 | `PILE` array in `Process.astro` has 5 entries |
 | `collection.chapters` | exactly 3, `id ∈ {giacca, pantalone, tessuti}` | anchors are hard-coded in `Header.astro` menu/nav |
+| `manifesto.decor` | exactly 3 | three positioned `.decor` slots (`d1`–`d3`) |
 | `atelier.gallery` | ≥ 3 | WebGL gallery bails out below 3 |
 | `details.split` | exactly 2 rows × [left, right] | four `data-col-w` slots `l1 r1 l2 r2`; row 2 is gold |
 | `seo.title` / `seo.description` | ≤ 70 / ≤ 170 chars | SERP limits |
@@ -245,8 +249,8 @@ Fixed cardinalities are baked into the layout. Changing any of them needs code c
 - `plain()` strips the markup, for meta tags, JSON-LD and `llms.txt`.
 - Heading fields are **arrays of lines**. Each line becomes its own masked reveal.
 - In `phrases` arrays the **last** item is rendered in gold (`.accent`), and trailing spaces inside items are significant.
-- Only some fields go through `rich()`: hero/heritage/process/details/atelier/contact titles (via `Lines`),
-  `hero.title`, heritage `lead`s, `process.phrases`, `linings.phrases`, `linings.kicker` and `quote.text`. Everything else is plain text, so `*` shows literally.
+- Only some fields go through `rich()`: hero/process/details/atelier/contact titles (via `Lines`),
+  `hero.title`, heritage `lead`s, `manifesto.phrases`, `process.phrases`, `linings.phrases`, `linings.kicker` and `quote.text`. Everything else is plain text, so `*` shows literally.
 
 **Hard-coded strings.** These don't come from content, so change them in code: header nav labels, "Contatti" pill,
 "Fase NN / NN", "Telefono/Email/Web/Instagram" labels, the `data-cursor` labels, JSON-LD `knowsAbout`/`alternateName`,
@@ -264,6 +268,7 @@ Image paths in JSON are relative to the JSON file (`../../assets/images/x.jpg`).
 | Where | Size | Why |
 |---|---|---|
 | `Intro.astro` frames | 360 w WebP q55 | flicker thumbnails, lazy, never fetched by returning visitors |
+| `Manifesto.astro` decor | 480 w WebP q50 | masked, filtered, 32–42 % opacity |
 | `Atelier.astro` textures | 800 w WebP q70 | WebGL panels are ≤ 400 css px |
 | `Contact.astro` background | 1280 w WebP q45 | grayscale under an 82 % veil |
 | `Seo.astro` OG image | 1200×630 JPG q78 | social cards |
@@ -296,7 +301,7 @@ Semantics: one `h1` (hero), one `h2` per section, `h3` for step and chapter titl
 | Inline styles, `{{ }}` bindings, React-like `Component` | Astro components with scoped CSS; zero framework runtime |
 | `isMobile` = JS state `innerWidth < 760`, re-rendered on resize | CSS `@media (max-width: 759px)`; same 760 threshold in TS |
 | `baratto-motion-v4.js` + Lenis 1.1.13 from unpkg | own modules in `src/scripts/`, `lenis` 1.3 from npm |
-| `baratto-three.js` (three.js, ~150 KB) | hand-written WebGL in `src/scripts/gl/` (~5 KB) |
+| `baratto-three.js` (three.js, ~150 KB) | hand-written WebGL in `src/scripts/gl/` (~5 KB); the one exception is the hero seal (`gl/seal.ts`, `three` from npm, ~130 KB gz, own chunk loaded after the intro) |
 | Google Fonts `<link>` | Astro `fonts` API, self-hosted and subset, with metric fallbacks |
 | Props `collezioneMotion` A/B, `cardStyle` A/B | **only A shipped** ("Parallasse morbida", "Editoriale"); B variants not ported |
 | Props `intro`, `motion`, `smoothScroll`, `threeEffects`, `webglHover`, `cursor` | `intro` → `site.json`; `motion` → `prefers-reduced-motion`; the rest always on, gated by device capability |

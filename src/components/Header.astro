@@ -69,7 +69,10 @@ const menuLinks = [
     flex: 1; display: flex; flex-wrap: wrap; gap: 6px 22px;
     font: var(--w-bold) var(--fs-micro)/1 var(--sans); letter-spacing: 0.22em; text-transform: uppercase;
   }
-  .hdr-logo { display: block; flex: none; }
+  .hdr-logo { display: block; flex: none; transition: opacity 0.5s var(--ease), visibility 0.5s; }
+  .hdr-logo:global(.is-hidden) { opacity: 0; visibility: hidden; }
+  /* During the hero the seal is the logo; it appears once the cover starts shrinking (scroll-fx cover()). */
+  :global(.m) .hdr:not(:global(.is-past-hero)) .hdr-logo { opacity: 0; visibility: hidden; }
   .hdr-logo img { width: clamp(46px, 4.4vw, 84px); height: clamp(46px, 4.4vw, 84px); }
   .hdr-cta { flex: 1; display: flex; justify-content: flex-end; }
   .pill {

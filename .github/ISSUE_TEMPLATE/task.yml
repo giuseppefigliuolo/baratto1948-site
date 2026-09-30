@@ -1,0 +1,20 @@
+name: Task per Claude
+description: Un task che Claude può prendere e implementare
+labels: ["claude", "todo"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: Cosa fare
+      description: Descrivi il risultato voluto, non i passaggi.
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Criteri di completamento
+      description: Come capiamo che è finito (es. "il menu è visibile su mobile").
+  - type: textarea
+    id: notes
+    attributes:
+      label: Note / file coinvolti

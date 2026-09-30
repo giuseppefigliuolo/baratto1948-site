@@ -1,0 +1,37 @@
+name: Claude
+
+# Esecuzione remota: parte quando la issue riceve la label "claude" o si menziona @claude.
+# Richiede il secret ANTHROPIC_API_KEY (Settings → Secrets and variables → Actions)
+# e l'app https://github.com/apps/claude installata sul repo.
+
+on:
+  issues:
+    types: [labeled]
+  issue_comment:
+    types: [created]
+
+jobs:
+  claude:
+    if: |
+      (github.event_name == 'issues' && github.event.label.name == 'claude') ||
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          label_trigger: claude
+          prompt: |
+            Implementa la issue #${{ github.event.issue.number }} seguendo .claude/skills/next-task/SKILL.md.
+            Non fare merge.

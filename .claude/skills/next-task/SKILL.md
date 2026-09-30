@@ -1,13 +1,13 @@
 ---
 name: next-task
-description: Prende la prossima issue GitHub con label "claude" e "todo", la implementa su un branch e apre una PR. Usare quando l'utente chiede di prendere/fare il prossimo task, o passa un numero di issue.
+description: Prende la prossima issue dalla colonna Ready della board GitHub, la implementa su un branch e apre una PR. Usare quando l'utente chiede di prendere/fare il prossimo task, o passa un numero di issue.
 ---
 
 # next-task
 
-Argomento opzionale: numero di issue. Senza argomento, prendi la più vecchia con label `todo`.
+Argomento opzionale: numero di issue. Senza argomento, prendi la prima card (dall'alto) della colonna **Ready** della board: le card in Backlog non sono ancora pronte.
 
-1. Scegli la issue: `gh issue list --label claude --label todo --state open --search "sort:created-asc" --limit 1 --json number,title,body` (oppure `gh issue view <N>`). Se non ce ne sono, dillo e fermati.
+1. Scegli la issue: `.claude/skills/next-task/ready.sh` stampa le issue in Ready (numero e titolo, in ordine di colonna). Leggila con `gh issue view <N> --json number,title,body,comments`. Scarica e guarda le immagini allegate (`curl -sL -H "Authorization: token $(gh auth token)" -o <scratchpad>/x.png <url>`). Se Ready è vuota, dillo e fermati.
 2. Se la descrizione è ambigua in modo sostanziale, commenta sulla issue con la domanda (`gh issue comment`) e fermati; non indovinare.
 3. Segna come in corso: `gh issue edit <N> --add-label doing --remove-label todo` e sposta la card: `.claude/skills/next-task/move-card.sh <N> "In progress"`.
 4. Parti da main aggiornato: `git switch main && git pull --ff-only && git switch -c task/<N>-<slug-breve>`.

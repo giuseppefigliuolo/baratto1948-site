@@ -1,7 +1,7 @@
 # Baratto 1948 — sito
 
 One-page site for Baratto 1948 Sartoria Artigianale, implemented from the Claude Design file
-`Baratto Home v6.dc.html`. Static [Astro](https://astro.build) build, hosted on Netlify,
+`Baratto Home v6.dc.html`. Static [Astro](https://astro.build) build, hosted on GitHub Pages,
 content editable through Decap CMS (prepared, not yet switched on).
 
 ```
@@ -11,6 +11,9 @@ npm run build      # → dist/
 npm run preview    # serve dist/
 npm run check      # type + content-schema check
 ```
+
+How it works inside (boot sequence, animation loop, `data-*` contract, content model, design deltas):
+see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## Structure
 
@@ -39,7 +42,7 @@ src/
     gl/                    ← WebGL effects (hero liquid, hover liquid, Atelier gallery)
   styles/global.css        ← tokens, primitives, motion initial states
 public/admin/              ← Decap CMS (config.yml)
-netlify.toml               ← build, cache + security headers, INDEXABLE flag
+.github/workflows/deploy.yml ← build + deploy to GitHub Pages on every push to main
 ```
 
 ### Text conventions (CMS)
@@ -64,13 +67,19 @@ netlify.toml               ← build, cache + security headers, INDEXABLE flag
 - JSON-LD graph: `ClothingStore`/`Organization` (founder, founding date/place, contacts, offers),
   `WebSite`, `WebPage`. Built from `settings/site.json` — fill in street address and P.IVA there.
 - `/llms.txt`, `/sitemap-index.xml`, `/robots.txt`, canonical + `hreflang` (IT now, EN-ready).
-- **Collaudo is `noindex`.** At launch set `INDEXABLE=true` and `SITE_URL=https://www.baratto1948.com`
-  in Netlify → Site configuration → Environment variables, then redeploy.
+- **Collaudo is `noindex`.** At launch: connect the custom domain in GitHub → Settings → Pages
+  (the workflow then builds for the domain root automatically), add the repo variable
+  `INDEXABLE=true` (Settings → Secrets and variables → Actions → Variables) and re-run the deploy.
 
-## Deploy (Netlify)
-Manual deploy from this folder: `npx netlify-cli deploy --build --prod`.
-Recommended next step: push to GitHub and link the repo in Netlify so every push deploys
-(and each branch/PR gets its own preview URL).
+## Deploy (GitHub Pages)
+Every push to `main` builds and deploys via `.github/workflows/deploy.yml`
+(also runnable by hand from the Actions tab). Collaudo: https://giuseppefigliuolo.github.io/baratto1948-site/
+
+The site lives under `/baratto1948-site/` on github.io: the workflow passes `SITE_URL` and
+`BASE_PATH` from `actions/configure-pages`, so every internal URL must go through
+`import.meta.env.BASE_URL` / `src/lib/url.ts`, never a hard-coded `/…`.
+GitHub Pages can't set custom HTTP headers: long-cache for `/_astro/*` and the security
+headers from the old Netlify setup are gone (move behind Cloudflare if they're needed).
 
 ## Turning on the CMS (Decap)
 Try it locally now, no account needed:
@@ -79,10 +88,10 @@ npm run cms     # terminal 1 (local Decap proxy)
 npm run dev     # terminal 2 → http://localhost:4321/admin/
 ```
 Online editing for the client:
-1. Push this folder to a GitHub repo and link it in Netlify.
-2. In `public/admin/config.yml` set `backend.repo: <owner>/<repo>`.
-3. Netlify → Site configuration → Access & security → OAuth → Install provider → GitHub
-   (create a GitHub OAuth app with callback `https://api.netlify.com/auth/done`).
+1. GitHub Pages can't run the OAuth handshake, so deploy a small OAuth proxy
+   (e.g. [decap-proxy](https://github.com/sterlingwes/decap-proxy) on Cloudflare Workers, free).
+2. Create a GitHub OAuth app whose callback points to that proxy.
+3. In `public/admin/config.yml` set `backend.base_url` to the proxy URL (`repo` is already set).
 4. Editors log in at `https://<site>/admin/` with GitHub; each save is a commit → auto-deploy.
 
 ## Adding English later

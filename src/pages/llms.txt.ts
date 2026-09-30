@@ -5,13 +5,14 @@
 import type { APIRoute } from 'astro';
 import { getHome, getSettings } from '../lib/content';
 import { plain } from '../lib/rich';
+import { rootUrl } from '../lib/url';
 
 export const GET: APIRoute = async ({ site }) => {
   const h = await getHome();
   const s = await getSettings();
   const a = s.address;
   const where = [a.street, `${a.postalCode} ${a.locality} (${a.province})`, a.region, 'Italia'].filter(Boolean).join(', ');
-  const url = new URL('/', site).href;
+  const url = rootUrl(site!);
 
   const body = `# ${s.brand}
 

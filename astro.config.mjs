@@ -2,12 +2,14 @@
 import { defineConfig, fontProviders } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-// SITE_URL: the canonical origin. On Netlify, URL is the primary site URL
-// (the *.netlify.app address until a custom domain is connected).
-const site = process.env.SITE_URL || process.env.URL || 'https://baratto1948-collaudo.netlify.app';
+// SITE_URL / BASE_PATH: canonical origin and sub-path. The GitHub Pages workflow sets both from
+// actions/configure-pages (github.io/<repo>/ now; custom domain at root once connected).
+const site = process.env.SITE_URL || 'https://giuseppefigliuolo.github.io';
+const base = process.env.BASE_PATH || '/';
 
 export default defineConfig({
   site,
+  base,
   trailingSlash: 'ignore',
   build: {
     // Single landing page: inlining all CSS removes a render-blocking request.

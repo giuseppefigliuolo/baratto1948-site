@@ -1,20 +1,20 @@
 # Decap CMS — ready, not yet active.
 # Local editing (no account needed):  npm run cms  +  npm run dev  → http://localhost:4321/admin/
-# Online editing: push the repo to GitHub, set `repo` below, enable Netlify's GitHub
-# OAuth provider (Site configuration → Access & security → OAuth). See README.
+# Online editing needs a GitHub OAuth proxy (GitHub Pages can't run one): deploy one
+# (e.g. decap-proxy on Cloudflare Workers) and set `base_url` below to it. See README.
 backend:
   name: github
-  repo: OWNER/baratto1948-site # TODO: set when the GitHub repo exists
+  repo: giuseppefigliuolo/baratto1948-site
   branch: main
-  base_url: https://api.netlify.com
+  # base_url: https://<oauth-proxy>  # TODO: set when the OAuth proxy exists
   commit_messages:
     update: 'Contenuti: aggiorna {{collection}} “{{slug}}”'
     uploadMedia: 'Media: carica “{{path}}”'
 
 local_backend: true
 locale: it
-site_url: https://baratto1948-collaudo.netlify.app
-display_url: https://baratto1948-collaudo.netlify.app
+site_url: https://giuseppefigliuolo.github.io/baratto1948-site/
+display_url: https://giuseppefigliuolo.github.io/baratto1948-site/
 
 # Images are optimized at build time (AVIF/WebP, responsive sizes) — upload originals.
 media_folder: src/assets/images

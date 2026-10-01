@@ -51,7 +51,7 @@
               "text": "Bustino alto 4,5cm con asole, elegante fibbia laterale, 2 pence francesi",
               "note": "Adatto a: Chi ama vintage ricercato",
               "image": {
-                "src": "../../assets/images/DSC_0576.jpg",
+                "src": "../../assets/images/DSC_0472.jpg",
                 "alt": "Pantalone Parthenope"
               }
             },
@@ -61,7 +61,7 @@
               "text": "Bustino 5cm, fibbie laterali, 1 pence",
               "note": "Adatto a: Stile minimalista",
               "image": {
-                "src": "../../assets/images/DSC_0472.jpg",
+                "src": "../../assets/images/DSC_0576.jpg",
                 "alt": "Pantalone Vesuvius"
               }
             },
@@ -92,37 +92,58 @@
             {
               "name": "Senza Pence",
               "text": "La modernità assoluta. Linea pulita e minimalista, da gamba diretta. Per chi ama l'eleganza contemporanea senza compromessi formali. Il pantalone che sussurra, non grida.",
-              "image": null
+              "image": {
+                "src": "../../assets/images/catalogo/pence-senza-pence.jpg",
+                "alt": "Pantalone Senza Pence"
+              }
             },
             {
               "name": "1 Pence Inglese",
               "text": "La comodità consapevole. Una pence nel bacino garantisce spazio naturale senza sacrificare l'eleganza. Versatile, classico, perfetto per chi non vuole scegliere tra comfort e stile.",
-              "image": null
+              "image": {
+                "src": "../../assets/images/catalogo/pence-1-pence-inglese.jpg",
+                "alt": "Pantalone 1 Pence Inglese"
+              }
             },
             {
               "name": "2 Pence Inglesi",
               "text": "Il classico italiano per eccellenza. Due pence nel bacino che scendono sulla gamba con generosità. Massima comodità, massima sofisticatezza. La scelta di chi capisce la sartoria tradizionale.",
-              "image": null
+              "image": {
+                "src": "../../assets/images/catalogo/pence-2-pence-inglesi.jpg",
+                "alt": "Pantalone 2 Pence Inglesi"
+              }
             },
             {
               "name": "1 Pence Francese",
               "text": "Il dettaglio ricercato. Una pence girata verso l'interno, quasi invisibile. Per chi ama i segreti costruttivi: eleganza pura nascosta sotto la superficie. Vintage, raffinato, intimo.",
-              "image": null
+              "image": {
+                "src": "../../assets/images/catalogo/pence-1-pence-francese.jpg",
+                "alt": "Pantalone 1 Pence Francese"
+              }
             },
             {
               "name": "2 Pence Francesi",
               "text": "L'adorazione del vintage. Due pence girate, aperte verso l'interno. Comfort storico, stile nostalgico consapevole. Per cultori dell'autenticità che sanno riconoscere la qualità oltre l'apparenza.",
-              "image": null
+              "image": {
+                "src": "../../assets/images/catalogo/pence-2-pence-francesi.jpg",
+                "alt": "Pantalone 2 Pence Francesi"
+              }
             },
             {
               "name": "Pantalaccio",
               "text": "La libertà moderna. Elastico interno, chiusura semplificata, fibbie laterali. Comfort assoluto senza rinunciare al carattere. Perfetto per chi vive il pantalone, non lo indossa.",
-              "image": null
+              "image": {
+                "src": "../../assets/images/catalogo/pence-pantalaccio.jpg",
+                "alt": "Pantalone Pantalaccio"
+              }
             },
             {
               "name": "Gurka",
               "text": "La sofisticazione militare. Chiusura a due cinte con asole eleganti e fibbie ai lati del bustino. Una regolazione superiore che combina stile vintage e praticità moderna. Esclusivo, caratterizzato, indimenticabile.",
-              "image": null
+              "image": {
+                "src": "../../assets/images/catalogo/pence-gurka.jpg",
+                "alt": "Pantalone Gurka"
+              }
             }
           ]
         }

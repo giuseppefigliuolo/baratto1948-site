@@ -117,7 +117,7 @@ Order in [index.astro](../src/pages/index.astro). Everything after Hero sits ins
 |---|---|---|---|---|
 | — | `Intro.astro` | `settings.intro`, 6 images from home | — | image flicker, counter 0→100, frame opens to full hero (`features/intro.ts`) |
 | — | `Header.astro` | `settings` | — | `mix-blend-mode: difference`; progress bar; mobile burger → fullscreen menu |
-| 01 | `sections/Hero.astro` | `hero` | `#top` | sticky, `[data-cover]` scale/fade on scroll, 3D seal (`gl/seal.ts`) on the stamp printed in the `banco.jpg` photo, Ken Burns 1.12→1; the header logo stays hidden until the cover starts shrinking |
+| 01 | `sections/Hero.astro` | `hero` | `#top` | sticky, `[data-cover]` scale/fade on scroll, 3D seal (`gl/seal.ts`) on the stamp printed in the `banco.jpg` photo (portrait phones: `banco-mobile.jpg`, imported in code, not in the CMS), Ken Burns 1.12→1; the header logo stays hidden until the cover starts shrinking |
 | 02 | `sections/Manifesto.astro` | `manifesto` | — | 3 masked decor images parallax, `[data-phrases]` blur→focus |
 | 03 | `sections/Heritage.astro` | `heritage` | `#radici` | no title of its own (the Manifesto statement introduces it); clip wipes, hover liquid on both photos |
 | 04 | `sections/Quote.astro` | `quote` | — | `[data-zoomreveal]`: 300vh sticky, clip-path opens to full-bleed, quote fades in |
@@ -133,6 +133,7 @@ Shared UI:
 
 - `ui/Img.astro` wraps `<Picture>` with AVIF + WebP output. It filters the width list to the source width, sets explicit dimensions,
   and passes `data-*`/`class` through to the `<img>`. `priority` sets eager + `fetchpriority=high`.
+  `art` adds art direction (another photo for a media query) with a hand-built `<picture>`, since Astro's `<Picture>` has no media sources.
 - `ui/Lines.astro` renders a heading as a list of `.mask > [data-line]` spans, staggered by `step` ms through `--d`.
 
 ## 6. The `data-*` contract
@@ -148,7 +149,7 @@ Markup and scripts are coupled only through these attributes. Rename one and you
 | `data-speed`, `data-zoom` | images, decor layers | `scroll-fx.ts parallax()` | translateY ∝ distance from viewport centre; constant scale |
 | `data-phrases` > `data-phrase` | Manifesto, Process, Linings | `scroll-fx.ts phrases()` | phrases un-blur one after another |
 | `data-cover`, `data-cover-inner` | Hero | `scroll-fx.ts cover()` | hero shrinks, drops, fades, rounds corners; sets `.hdr.is-past-hero` (shows the header logo) once `p > 0.15` |
-| `data-seal-frame`, `data-seal-host`, `data-seal-shadow`, `data-seal-hit` | Hero | `gl/seal.ts`, `main.ts kenBurns()` | bronze 3D seal in register with the printed stamp: fades in, lifts (+14.5%), follows pointer / device tilt, shadow follows; `data-seal-hit` (circle over the coin, `touch-action: pan-y`) spins it by drag with momentum, then it settles face-on; the frame is the photo's own 1800/1314 box, so positions are % of the photo |
+| `data-seal-frame`, `data-seal-host`, `data-seal-shadow`, `data-seal-hit` | Hero | `gl/seal.ts`, `main.ts kenBurns()` | bronze 3D seal in register with the printed stamp: fades in, lifts (+14.5%), follows pointer / device tilt, shadow follows; `data-seal-hit` (circle over the coin, `touch-action: pan-y`) spins it by drag with momentum, then it settles face-on; the frame (global `.hero-frame`, shared with the Intro's last frame) is the photo's own box; `--ar`, `--sx`, `--sy`, `--sd` hold the measured stamp per photo/breakpoint, so **replacing either hero photo means re-measuring the stamp** |
 | `data-progress` | Header | `scroll-fx.ts progress()` | top gold progress bar |
 | `data-zoomreveal`, `data-zr-box/img/dim/text` | Quote | `scroll-fx.ts zoomReveal()` | clip-path inset → 0, quote appears |
 | `data-column`, `data-col-box/video/dim/title/w/foot` | Details | `scroll-fx.ts column()` | landscape: 9:16 video grows to full height, title split either side; portrait (`vw < vh·1.05`): video grows to full screen and darkens, the title halves ride its top/bottom edges (≥ 96px from the viewport edge) then close in at 36vh, gold rows and body follow; video pauses off screen; `.no-video` shows the photo if the video fails |

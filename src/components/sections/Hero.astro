@@ -2,20 +2,24 @@
 import type { Home, Settings } from '../../lib/content';
 import { rich } from '../../lib/rich';
 import Img from '../ui/Img.astro';
+import mobilePhoto from '../../assets/images/banco-mobile.jpg';
 
 interface Props { home: Home; settings: Settings }
 const { home } = Astro.props;
 const h = home.hero;
+// Portrait phones get a portrait take of the same bench (stamp calibrated in global.css `.hero-frame`).
+const HERO_MOBILE = '(max-width: 759px) and (max-aspect-ratio: 1/1)';
 ---
 
 <section id="top" class="hero" data-cover aria-labelledby="hero-title">
   <div class="inner" data-cover-inner>
-    <div class="frame" data-seal-frame>
+    <div class="frame hero-frame" data-seal-frame>
       <Img
         src={h.image.src}
         alt={h.image.alt}
         sizes="(max-aspect-ratio: 1800/1314) 146vh, 100vw"
         widths={[768, 1080, 1440, 1920]}
+        art={{ src: mobilePhoto, media: HERO_MOBILE, sizes: '(max-aspect-ratio: 768/1376) 56vh, 100vw' }}
         priority
         class="hero-img"
       />
@@ -48,30 +52,24 @@ const h = home.hero;
   .inner { position: absolute; inset: 0; overflow: hidden; transform-origin: 50% 100%; }
   :global(.m) .inner { will-change: transform, opacity; }
 
-  /* Box in the photo's proportions, so the seal can be placed in % of the photo.
+  /* Geometry and stamp position come from the global `.hero-frame` (shared with the Intro).
      `translate` centres it, `scale` is the Ken Burns (main.ts), both independent of `transform`. */
-  .frame {
-    position: absolute; left: 0; top: 50%; width: 100%;
-    aspect-ratio: 1800 / 1314; translate: 0 -50%;
-    transform-origin: 50% 58%;
-  }
   :global(.m) .frame { scale: 1.12; }
-  /* Portrait / narrow: the stamp rises into the upper half, clear of the text. */
-  @media (max-aspect-ratio: 1800/1314) {
-    .frame { left: 50%; top: 46.7%; width: auto; height: 106.7%; translate: -50% -50%; }
-  }
   .frame :global(.hero-img) {
     position: absolute; inset: 0; width: 100%; height: 100%;
     filter: brightness(0.86);
     pointer-events: none; /* no native image drag: drags belong to the seal */
   }
-  /* Printed stamp: centre (900, 762), Ø 376 of 1800×1314. The host is a square 2.4× the stamp. */
-  .seal-host { position: absolute; left: 24.93%; top: 23.65%; width: 50.13%; aspect-ratio: 1; pointer-events: none; }
+  /* The canvas host is a square 2.4× the stamp, centred on it: at z=0 the coin covers the print exactly. */
+  .seal-host {
+    position: absolute; aspect-ratio: 1; pointer-events: none;
+    left: calc(var(--sx) - 1.2 * var(--sd)); top: calc(var(--sy) - 1.2 * var(--sd) * var(--ar)); width: calc(2.4 * var(--sd));
+  }
   .seal-host :global(canvas) { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
   /* Grab area over the coin at rest; live only once the seal is on screen (gl/seal.ts).
      `pan-y`: on phones a horizontal swipe spins the coin, a vertical one still scrolls the page. */
   .seal-hit {
-    position: absolute; left: 50%; top: 58%; width: 25%; aspect-ratio: 1;
+    position: absolute; left: var(--sx); top: var(--sy); width: calc(1.2 * var(--sd)); aspect-ratio: 1;
     transform: translate(-50%, -50%); border-radius: 50%;
     pointer-events: none; touch-action: pan-y; user-select: none; -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
@@ -79,7 +77,7 @@ const h = home.hero;
   .seal-hit:global(.is-live) { pointer-events: auto; cursor: grab; }
   .seal-hit:global(.is-grabbing) { cursor: grabbing; }
   .seal-shadow {
-    position: absolute; left: 50%; top: 58%; width: 21%; aspect-ratio: 1;
+    position: absolute; left: var(--sx); top: var(--sy); width: var(--sd); aspect-ratio: 1;
     transform: translate(-50%, -50%); border-radius: 50%; opacity: 0; pointer-events: none;
     background: radial-gradient(closest-side, rgba(20, 12, 6, 0.75) 55%, rgba(20, 12, 6, 0) 100%);
   }

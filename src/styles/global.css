@@ -142,6 +142,29 @@ a { color: var(--fg); text-decoration: none; transition: color 0.3s; }
   object-fit: cover;
 }
 
+/* Hero photo box (Hero + the Intro's last frame): the photo's own proportions, covering the viewport,
+   so the 3D seal can be registered on the stamp printed in it. Per photo, measured on the files:
+   --ar = width / height, --sx/--sy = stamp centre, --sd = stamp diameter (% of the box width).
+   Desktop banco.jpg: centre (1183, 1003), Ø 495 of 2368×1728. Mobile banco-mobile.jpg: centre (382, 695), Ø 270 of 768×1376.
+   Keep the mobile media query in sync with HERO_MOBILE in Hero.astro / Intro.astro. */
+.hero-frame {
+  --ar: 1.3699; --sx: 50%; --sy: 58%; --sd: 20.89%;
+  position: absolute; left: 0; top: 50%; width: 100%;
+  aspect-ratio: 1800 / 1314; translate: 0 -50%;
+  transform-origin: var(--sx) var(--sy);
+}
+/* Portrait / narrow, landscape photo: the stamp rises into the upper half, clear of the text. */
+@media (max-aspect-ratio: 1800/1314) {
+  .hero-frame { left: 50%; top: 46.7%; width: auto; height: 106.7%; translate: -50% -50%; }
+}
+/* Phones in portrait: the portrait photo, full height (or full width if the screen is wider than it). */
+@media (max-width: 759px) and (max-aspect-ratio: 1/1) {
+  .hero-frame { --ar: 0.5581; --sx: 49.75%; --sy: 50.49%; --sd: 35.16%; aspect-ratio: 768 / 1376; top: 50%; height: 100%; }
+}
+@media (max-width: 759px) and (max-aspect-ratio: 1/1) and (min-aspect-ratio: 768/1376) {
+  .hero-frame { width: 100%; height: auto; }
+}
+
 /* ---------- Motion: initial states (only when motion is on) ---------- */
 .m [data-line] {
   display: inline-block;

@@ -8,9 +8,11 @@
 import { getImage } from 'astro:assets';
 import type { Home, Settings } from '../lib/content';
 import Img from './ui/Img.astro';
+import mobilePhoto from '../assets/images/banco-mobile.jpg';
 
 interface Props { home: Home; settings: Settings }
 const { home, settings } = Astro.props;
+const HERO_MOBILE = '(max-width: 759px) and (max-aspect-ratio: 1/1)'; // same as Hero.astro
 
 const frames = await Promise.all(
   [
@@ -30,8 +32,12 @@ const frames = await Promise.all(
       {frames.map((f, i) => (
         <img src={f.src} width={f.attributes.width} height={f.attributes.height} alt="" loading="lazy" decoding="async" data-intro-img style={i ? 'opacity:0' : undefined} />
       ))}
-      <div class="hero-box">
-        <Img src={home.hero.image.src} alt="" sizes="(max-aspect-ratio: 1800/1314) 146vh, 100vw" widths={[768, 1080, 1440, 1920]} priority class="frame-hero" data-intro-img style="opacity:0" />
+      <div class="hero-box hero-frame">
+        <Img
+          src={home.hero.image.src} alt="" sizes="(max-aspect-ratio: 1800/1314) 146vh, 100vw" widths={[768, 1080, 1440, 1920]}
+          art={{ src: mobilePhoto, media: HERO_MOBILE, sizes: '(max-aspect-ratio: 768/1376) 56vh, 100vw' }}
+          priority class="frame-hero" data-intro-img style="opacity:0"
+        />
       </div>
     </div>
     <div class="label" data-intro-fade>{settings.intro.label}</div>
@@ -62,15 +68,8 @@ const frames = await Promise.all(
   .frame :global(img) {
     position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
   }
-  /* Same box as the Hero `.frame` at the start of its Ken Burns, so the intro opens onto it without a jump. */
-  .hero-box {
-    position: absolute; left: 0; top: 50%; width: 100%;
-    aspect-ratio: 1800 / 1314; translate: 0 -50%;
-    transform-origin: 50% 58%; scale: 1.12;
-  }
-  @media (max-aspect-ratio: 1800/1314) {
-    .hero-box { left: 50%; top: 46.7%; width: auto; height: 106.7%; translate: -50% -50%; }
-  }
+  /* Same box as the Hero `.frame` (global `.hero-frame`) at the start of its Ken Burns, so the intro opens onto it without a jump. */
+  .hero-box { scale: 1.12; }
   .frame :global(.frame-hero) { filter: brightness(0.86); }
 
   .label {

@@ -8,3 +8,4 @@ dist/
 # Source material, not part of the site build
 /assets/
 /source-photos/
+git_ignore/

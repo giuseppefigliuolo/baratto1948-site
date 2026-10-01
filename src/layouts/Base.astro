@@ -9,12 +9,16 @@ import favicon from '../assets/brand/logo.png?url';
 interface Props {
   home: Home;
   settings: Settings;
+  /** Title/description of an inner page (the home's own when omitted). */
+  page?: { title: string; description: string };
+  /** The first-visit intro belongs to the home only. */
+  intro?: boolean;
 }
 
-const { home, settings } = Astro.props;
+const { home, settings, page, intro: withIntro = true } = Astro.props;
 // Collaudo / preview builds stay out of search engines until INDEXABLE=true.
 const indexable = process.env.INDEXABLE === 'true';
-const intro = settings.intro.enabled;
+const intro = withIntro && settings.intro.enabled;
 ---
 
 <!doctype html>
@@ -43,7 +47,7 @@ const intro = settings.intro.enabled;
     <Font cssVariable="--font-sans" preload={[{ weight: 400 }]} />
     <link rel="icon" href={favicon} type="image/png" />
     <link rel="sitemap" href={`${basePath}sitemap-index.xml`} />
-    <Seo home={home} settings={settings} indexable={indexable} />
+    <Seo home={home} settings={settings} indexable={indexable} page={page} />
   </head>
   <body>
     <a class="skip" href="#main">Vai al contenuto</a>

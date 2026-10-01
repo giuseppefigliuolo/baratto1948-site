@@ -1,0 +1,132 @@
+{
+  "seo": {
+    "title": "Il pantalone su misura · Baratto 1948",
+    "description": "Se la giacca è architettura, il pantalone è identità. Modelli signature e pence."
+  },
+  "hero": {
+    "kicker": "Il pantalone",
+    "title": [
+      "Il *pantalone*"
+    ],
+    "subtitle": "Versatilità su misura",
+    "intro": "Se la giacca è architettura, il pantalone è identità. Dai classici intramontabili ai modelli contemporanei: ogni scelta è una dichiarazione del tuo stile.",
+    "image": {
+      "src": "../../assets/images/pant3.jpg",
+      "alt": "Pantalone Baratto 1948"
+    }
+  },
+  "categories": [
+    {
+      "id": "signature",
+      "kicker": "Il pantalone",
+      "title": [
+        "Modelli *signature*"
+      ],
+      "groups": [
+        {
+          "items": [
+            {
+              "name": "Filicudi",
+              "sub": "Elegante, senza tempo",
+              "text": "Classico con passanti, 1 pence, tasche a pallina e taschino per orologio",
+              "note": "Adatto a: Outfit formali e business",
+              "image": {
+                "src": "../../assets/images/DSC_0264.jpg",
+                "alt": "Pantalone Filicudi"
+              }
+            },
+            {
+              "name": "Neapolis",
+              "sub": "Icona vintage-contemporanea",
+              "text": "Bustino alto 6cm, cintura prolungata biforcuta, fibbie laterali, 2 pence inglesi",
+              "note": "Adatto a: Trasmetti personalità",
+              "image": {
+                "src": "../../assets/images/DSC_0389.jpg",
+                "alt": "Pantalone Neapolis"
+              }
+            },
+            {
+              "name": "Parthenope",
+              "sub": "Comfort + stile vintage",
+              "text": "Bustino alto 4,5cm con asole, elegante fibbia laterale, 2 pence francesi",
+              "note": "Adatto a: Chi ama vintage ricercato",
+              "image": {
+                "src": "../../assets/images/DSC_0576.jpg",
+                "alt": "Pantalone Parthenope"
+              }
+            },
+            {
+              "name": "Vesuvius",
+              "sub": "Pulito, lineare, sottile",
+              "text": "Bustino 5cm, fibbie laterali, 1 pence",
+              "note": "Adatto a: Stile minimalista",
+              "image": {
+                "src": "../../assets/images/DSC_0472.jpg",
+                "alt": "Pantalone Vesuvius"
+              }
+            },
+            {
+              "name": "Contemporary",
+              "sub": "Moderno, contemporaneo",
+              "text": "Bustino 3,5cm, chiusura stondata, fibbie, 2 pence francesi",
+              "note": "Adatto a: Outfit casual-smart",
+              "image": {
+                "src": "../../assets/images/DSC_0529.jpg",
+                "alt": "Pantalone Contemporary"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pence",
+      "kicker": "La Pence",
+      "title": [
+        "Il dettaglio che distingue *i pantaloni Baratto*"
+      ],
+      "intro": "Una pence non è solo un dettaglio costruttivo. È la scelta tra comfort, stile e carattere personale.",
+      "groups": [
+        {
+          "items": [
+            {
+              "name": "Senza Pence",
+              "text": "La modernità assoluta. Linea pulita e minimalista, da gamba diretta. Per chi ama l'eleganza contemporanea senza compromessi formali. Il pantalone che sussurra, non grida.",
+              "image": null
+            },
+            {
+              "name": "1 Pence Inglese",
+              "text": "La comodità consapevole. Una pence nel bacino garantisce spazio naturale senza sacrificare l'eleganza. Versatile, classico, perfetto per chi non vuole scegliere tra comfort e stile.",
+              "image": null
+            },
+            {
+              "name": "2 Pence Inglesi",
+              "text": "Il classico italiano per eccellenza. Due pence nel bacino che scendono sulla gamba con generosità. Massima comodità, massima sofisticatezza. La scelta di chi capisce la sartoria tradizionale.",
+              "image": null
+            },
+            {
+              "name": "1 Pence Francese",
+              "text": "Il dettaglio ricercato. Una pence girata verso l'interno, quasi invisibile. Per chi ama i segreti costruttivi: eleganza pura nascosta sotto la superficie. Vintage, raffinato, intimo.",
+              "image": null
+            },
+            {
+              "name": "2 Pence Francesi",
+              "text": "L'adorazione del vintage. Due pence girate, aperte verso l'interno. Comfort storico, stile nostalgico consapevole. Per cultori dell'autenticità che sanno riconoscere la qualità oltre l'apparenza.",
+              "image": null
+            },
+            {
+              "name": "Pantalaccio",
+              "text": "La libertà moderna. Elastico interno, chiusura semplificata, fibbie laterali. Comfort assoluto senza rinunciare al carattere. Perfetto per chi vive il pantalone, non lo indossa.",
+              "image": null
+            },
+            {
+              "name": "Gurka",
+              "text": "La sofisticazione militare. Chiusura a due cinte con asole eleganti e fibbie ai lati del bustino. Una regolazione superiore che combina stile vintage e praticità moderna. Esclusivo, caratterizzato, indimenticabile.",
+              "image": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

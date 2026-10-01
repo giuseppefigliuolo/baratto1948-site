@@ -51,11 +51,11 @@ baratto/
     public/admin/           Decap CMS (index.html + config.yml)
     public/video/           videos served as-is (no pipeline), e.g. dettagli.mp4
     src/
-      content/              home.json + site.json  ← every editable string and image
-      content.config.ts     Zod schema for both files
+      content/              pages/{home,giacca,pantalone,tessuti}.json + settings/site.json  ← every editable string and image
+      content.config.ts     Zod schemas (home, catalogue pages, tessuti, settings)
       lib/                  content loaders, rich-text helper
       layouts/Base.astro    <html>, <head>, motion flag script, fonts, main.ts
-      pages/                index.astro, robots.txt.ts, llms.txt.ts
+      pages/                index.astro, giacca.astro, pantalone.astro, tessuti.astro, robots.txt.ts, llms.txt.ts
       components/           Header, Intro, Seo, sections/*, ui/*
       scripts/              client JS: core/, features/, gl/
       styles/global.css     tokens, primitives, motion initial states, cursor
@@ -94,8 +94,8 @@ pages/robots.txt.ts, pages/llms.txt.ts → text files built from the same conten
    Without `.m` every section is a normal readable block, and Collection becomes a native horizontal scroller.
 3. **`scripts/main.ts`** (one module bundle, deferred):
    - always: `initSmooth(motion)` (click-to-anchor handling; Lenis only with motion) and `initMenu()`;
-   - with motion: `runIntro()` returns a promise, then `initReveal(ready)` (reveals wait for the intro),
-     `initScrollFx`, `initPile`, `initCollection`, `initMarquee`, `initCursor` (fine pointer only),
+   - with motion: `runIntro()` returns a promise (on the inner pages `data-intro` is `0`, so it resolves at once), then `initReveal(ready)` (reveals wait for the intro),
+     `initScrollFx`, `initPile`, `initHpile`, `initCollection`, `initMarquee`, `initCursor` (fine pointer only),
      then `start()` starts the single rAF loop;
    - after the intro, on idle: `loadGL()` checks device capability and dynamically imports `gl/liquid` + `gl/atelier`.
 
@@ -123,11 +123,26 @@ Order in [index.astro](../src/pages/index.astro). Everything after Hero sits ins
 | 04 | `sections/Quote.astro` | `quote` | — | `[data-zoomreveal]`: 300vh sticky, clip-path opens to full-bleed, quote fades in |
 | 05 | `sections/Process.astro` | `process` | `#esperienza` | "Esperienza": centred `[data-phrases]` intro, then an `<ol>` of 5 sticky cards, `[data-pile]` tilt-in / lean-back stack |
 | 06 | `sections/Details.astro` | `details` | `#dettagli` | sticky 260vh (280vh mobile), video 9:16, `[data-column]`: landscape "Colonna" (title split either side), portrait "Respiro" (halves ride the box edges, then close in at 36vh) |
-| 07 | `sections/Collection.astro` | `collection` | `#collezione`, `#giacca`, `#pantalone`, `#tessuti` | 320vh sticky; vertical scroll → horizontal track, velocity skew, counter, progress bar |
+| 07 | `sections/Collection.astro` | `collection` | `#collezione` | 320vh sticky; vertical scroll → horizontal track, velocity skew, counter, progress bar; each chapter card links to `/giacca`, `/pantalone`, `/tessuti` |
 | 08 | `sections/Linings.astro` | `linings` | `#fodere` | "Fodere": `[data-phrases]` statement, `data-clip="c"` + `data-gl` photo, `data-fade` body and customisation groups |
 | 09 | `sections/Atelier.astro` | `atelier` | — | DOM list fallback replaced by curved draggable WebGL gallery |
 | 10 | `sections/Marquee.astro` | `marquee` | — | infinite band; speed/direction follow scroll velocity |
 | 11 | `sections/Contact.astro` | `contact` + `settings` | `#contatti` | parallax background, `<address>` cards, footer wordmark |
+
+### Inner pages
+
+`/giacca`, `/pantalone` and `/tessuti` use the same `Base` (with `intro={false}` and the page's own `seo`), `Header inner`
+(the logo is always visible and leads to `url('/')`; Radici/Esperienza go through the home), then:
+
+| Page | Order |
+|---|---|
+| `giacca.astro` | `PageHero` · `Category` ×5 (modelli, spalla, rever, impuntura, tasche: the last has two groups, Taschino and Tasche) · `LinkRow` (rimando alle fodere, `/#fodere`) · `PageCta` · `Contact` |
+| `pantalone.astro` | `PageHero` · `Category` ×2 (signature with photos, pence) · `PageCta` · `Contact` |
+| `tessuti.astro` | `PageHero` · `Fibres` (native horizontal strip) · `Renylon` · `Partners` · `Denim` · `PageCta` · `Contact`. No catalogue |
+
+`Category` renders its groups with `ui/Catalog.astro`, the **horizontal pile**: `[data-hpile]` is `100vh × (1 + 0.62 × (N − 1))` tall,
+its sticky child pins, and `features/hpile.ts` deals the cards (see §6). Items without `image` show a dashed "Render da fornire"
+placeholder (remove when the renders arrive). Without motion the pile is a static column.
 
 Shared UI:
 
@@ -144,7 +159,7 @@ Markup and scripts are coupled only through these attributes. Rename one and you
 |---|---|---|---|
 | `data-line`, `data-tilt` | Lines, Hero | `features/reveal.ts` + CSS | slide up (optionally tilted) out of `.mask`; the **parent** is observed |
 | `data-fade` | many | `reveal.ts` + CSS | fade + rise |
-| `data-clip` / `data-clip="c"` | Heritage, Linings | `reveal.ts` + CSS | clip wipe from bottom / from centre; parent observed |
+| `data-clip` / `data-clip="c"` | Heritage, Linings, PageHero, Denim | `reveal.ts` + CSS | clip wipe from bottom / from centre; parent observed |
 | `--d` (CSS var) | inline style | CSS transitions | per-element reveal delay |
 | `data-speed`, `data-zoom` | images, decor layers | `scroll-fx.ts parallax()` | translateY ∝ distance from viewport centre; constant scale |
 | `data-phrases` > `data-phrase` | Manifesto, Process, Linings | `scroll-fx.ts phrases()` | phrases un-blur one after another |
@@ -155,10 +170,11 @@ Markup and scripts are coupled only through these attributes. Rename one and you
 | `data-column`, `data-col-box/video/dim/title/w/foot` | Details | `scroll-fx.ts column()` | landscape: 9:16 video grows to full height, title split either side; portrait (`vw < vh·1.05`): video grows to full screen and darkens, the title halves ride its top/bottom edges (≥ 96px from the viewport edge) then close in at 36vh, gold rows and body follow; video pauses off screen; `.no-video` shows the photo if the video fails |
 | `data-pile="r,x,er,ex"`, `data-pile-dim`, `data-pile-img` | Process | `features/pile.ts` | resting rot/x, entry rot/x; dim + scale of covered card |
 | `data-coll`, `data-coll-viewport/track/card/img/dim/body/bar/ctr`, `data-skew` | Collection | `features/collection.ts`, `core/smooth.ts` | horizontal scroll track; `data-skew` also marks anchorable chapters |
+| `data-hpile`, `data-hpile-stage`, `data-hpile-card="r,x,er"`, `data-hpile-dim/img/ctr/bar` | Catalog | `features/hpile.ts` | horizontal pile: cards enter from the right and overlap. `r,x,er` = resting rotation (deg), resting x (px, halved under 760), entry rotation; the values cycle by index (`i mod 5`) |
 | `data-marquee` | Marquee | `features/marquee.ts` | must contain two identical halves (loops at `scrollWidth / 2`) |
-| `data-cursor="Label"` | Collection card, Atelier host, `[data-gl]` hosts | `features/cursor.ts` | big labelled cursor |
+| `data-cursor="Label"` | Collection card, Atelier host, Fibres strip, PageCta, `[data-gl]` hosts | `features/cursor.ts` | big labelled cursor |
 | `data-magnetic` | Header pill | `cursor.ts` | follows pointer |
-| `data-gl` | Heritage ×2, Linings | `gl/liquid.ts` | hover "liquid fabric" shader |
+| `data-gl` | Heritage ×2, Linings, PageHero, Fibres, Denim | `gl/liquid.ts` | hover "liquid fabric" shader |
 | `data-atelier`, `data-items` (JSON), `data-atelier-fallback/title/count` | Atelier | `gl/atelier.ts` | WebGL gallery; hides fallback after first texture |
 | `data-intro-el/frame/img/count/fade` | Intro | `features/intro.ts` | intro overlay |
 | `data-menu`, `data-menu-toggle`, `data-menu-label`, `data-menu-link` | Header | `features/menu.ts` | menu; `data-menu-link` opts out of the global anchor handler |
@@ -199,9 +215,8 @@ so they can ease back to rest.
 
 - Lenis (`lerp 0.085`, wheel only, `autoRaf: false`) is driven by the shared loop. Touch scrolling stays native.
 - A single delegated click handler catches every `a[href^="#"]` (except `data-menu-link`) and calls `scrollToHash`.
-- **Collection anchors** (`#giacca`, `#pantalone`, `#tessuti`) don't scroll to the element. They resolve to the
-  vertical scroll position where that chapter is centred in the horizontal track:
-  `top(section) + i / (n-1) * (sectionHeight - vh)`. Without motion, `scrollIntoView({inline:'center'})` is used instead.
+- Links to other pages (`/giacca`, `/#fodere`…) are plain navigation. The mobile menu only intercepts its `#` links;
+  on the home the in-page sections are local anchors, on inner pages they go through `url('/#radici')` (`lib/url.ts`, base-path aware).
 - `lockScroll(true|false)` is shared by intro and menu.
 
 The mobile menu closes first, waits 350 ms for the clip-path animation, and only then scrolls.
@@ -237,7 +252,8 @@ Fixed cardinalities are baked into the layout. Changing any of them needs code c
 | Field | Constraint | Why |
 |---|---|---|
 | `process.steps` | exactly 5 | `PILE` array in `Process.astro` has 5 entries |
-| `collection.chapters` | exactly 3, `id ∈ {giacca, pantalone, tessuti}` | anchors are hard-coded in `Header.astro` menu/nav |
+| `collection.chapters` | exactly 3, `id ∈ {giacca, pantalone, tessuti}` | each card links to `/<id>`, and the nav in `Header.astro` is hard-coded |
+| `categories[].groups[].items` (giacca, pantalone) | ≥ 1 | the pile's geometries are cyclic: no fixed cardinality. With 1 item there is nothing to deal |
 | `manifesto.decor` | exactly 3 | three positioned `.decor` slots (`d1`–`d3`) |
 | `atelier.gallery` | ≥ 3 | WebGL gallery bails out below 3 |
 | `details.split` | exactly 2 rows × [left, right] | four `data-col-w` slots `l1 r1 l2 r2`; row 2 is gold |
@@ -250,10 +266,10 @@ Fixed cardinalities are baked into the layout. Changing any of them needs code c
 - `plain()` strips the markup, for meta tags, JSON-LD and `llms.txt`.
 - Heading fields are **arrays of lines**. Each line becomes its own masked reveal.
 - In `phrases` arrays the **last** item is rendered in gold (`.accent`), and trailing spaces inside items are significant.
-- Only some fields go through `rich()`: hero/process/details/atelier/contact titles (via `Lines`),
+- Only some fields go through `rich()`: hero/process/details/atelier/contact titles and the inner pages' `hero.title`, `categories[].title`, `fibres/renylon/partners/denim.title` (via `Lines`),
   `hero.title`, heritage `lead`s, `manifesto.phrases`, `process.phrases`, `linings.phrases`, `linings.kicker` and `quote.text`. Everything else is plain text, so `*` shows literally.
 
-**Hard-coded strings.** These don't come from content, so change them in code: header nav labels, "Contatti" pill,
+**Hard-coded strings.** These don't come from content, so change them in code: header nav labels, the PageCta "Contatti", the placeholder "Render da fornire", "Contatti" pill,
 "Fase NN / NN", "Telefono/Email/Web/Instagram" labels, the `data-cursor` labels, JSON-LD `knowsAbout`/`alternateName`,
 and the prose skeleton of `llms.txt`.
 
@@ -304,10 +320,11 @@ Semantics: one `h1` (hero), one `h2` per section, `h3` for step and chapter titl
 | `baratto-motion-v4.js` + Lenis 1.1.13 from unpkg | own modules in `src/scripts/`, `lenis` 1.3 from npm |
 | `baratto-three.js` (three.js, ~150 KB) | hand-written WebGL in `src/scripts/gl/` (~5 KB); the one exception is the hero seal (`gl/seal.ts`, `three` from npm, ~130 KB gz, own chunk loaded after the intro) |
 | Google Fonts `<link>` | Astro `fonts` API, self-hosted and subset, with metric fallbacks |
+| Inner-page catalogue variants `pila` / `selettore` / `fisarmonica` / `striscia` | **only `pila` shipped** (the others were exploration) |
 | Props `collezioneMotion` A/B, `cardStyle` A/B | **only A shipped** ("Parallasse morbida", "Editoriale"); B variants not ported |
 | Props `intro`, `motion`, `smoothScroll`, `threeEffects`, `webglHover`, `cursor` | `intro` → `site.json`; `motion` → `prefers-reduced-motion`; the rest always on, gated by device capability |
 | Text inline in template | `src/content/*.json`, editable through Decap |
-| Collection card is `<a href="#">` | `<article>` with a stretched per-chapter CTA (`chapters[].cta`) to `#contatti` + screen-reader text; becomes a link to `/giacca`, `/pantalone`, `/tessuti` once those pages exist |
+| Collection card is `<a href="#">` | `<article>` with a stretched per-chapter CTA (`chapters[].cta`) to `/giacca`, `/pantalone`, `/tessuti` |
 | Logo `assets/g/logow.png` | **temporary** `src/assets/brand/logo.svg` |
 | Footer "© Baratto 1948 · …" | current year + optional P.IVA |
 | Intro preloads 10 full images | 6 × 360 px lazy thumbnails + hero srcset |
@@ -355,6 +372,7 @@ Also update `site_url`/`display_url` in `public/admin/config.yml`.
 - **Process card geometry lives in two places.** `PILE` in `Process.astro` (5 entries, one per step) feeds both the `data-pile` values (JS)
   and the `--r/--x/--t/--tm` CSS vars (static fallback and sticky tops). `pile.ts` reads the sticky `top`
   back through `getComputedStyle`.
+- **A pile with one card doesn't animate.** `initHpile` skips it (height 100vh, the card rests). Same for the tilt values: they repeat every 5 cards.
 - **The intro has three failsafes.** A JS guard (~4.1 s), a CSS fade animation at 5.6 s and the inline 6 s class removal.
   If you lengthen the intro, raise all three.
 - **Reveals wait for the intro.** Elements that intersect during the intro are queued and shown when it ends.

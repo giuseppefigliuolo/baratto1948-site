@@ -1,0 +1,232 @@
+{
+  "seo": {
+    "title": "La giacca su misura · Baratto 1948",
+    "description": "La giacca Baratto non è un indumento. È un'architettura. Modelli, spalla, rever, impuntura, tasche e taschino."
+  },
+  "hero": {
+    "kicker": "La giacca",
+    "title": [
+      "La *giacca*"
+    ],
+    "subtitle": "Il cuore della sartoria",
+    "intro": "La giacca Baratto non è un indumento. È un'architettura. Ogni componente – il rever, la spalla, l'impuntura – è una decisione consapevole che riflette il tuo carattere.",
+    "extra": "Affidiamo al cliente la libertà di scelta: scopri come personalizzare ogni elemento della tua giacca.",
+    "image": {
+      "src": "../../assets/images/giacca3.jpg",
+      "alt": "Giacca Baratto 1948"
+    }
+  },
+  "categories": [
+    {
+      "id": "modelli",
+      "title": [
+        "Modelli di *giacca*"
+      ],
+      "kicker": "La giacca",
+      "groups": [
+        {
+          "items": [
+            {
+              "name": "1 Bottone",
+              "sub": "Pura eleganza cerimoniale",
+              "text": "Il più elegante della collezione. Un unico bottone crea una linea verticale che esalta la figura con grazia suprema. Perfetto per cerimonie, serate formali, momenti che richiedono massima sofisticazione.",
+              "image": null
+            },
+            {
+              "name": "2 Bottoni",
+              "sub": "L'equilibrio universale",
+              "text": "Il classico senza tempo che funziona sempre. Due bottoni, proporzioni perfette, versatilità assoluta. Formale o smart-casual, giorno o sera: questa giacca è il fondamento di un guardaroba consapevole.",
+              "image": null
+            },
+            {
+              "name": "3 Bottoni",
+              "sub": "L'autenticità napoletana",
+              "text": "Tre bottoni stirati a due creano il profilo distintivo della tradizione italiana. Elegante e caratterizzato, mantenendo una raffinatezza naturale. Perfetto per chi ama lo stile napoletano autentico, informale ma curato. La firma della sartoria del Sud.",
+              "image": null
+            },
+            {
+              "name": "3 Spezzato a 2",
+              "sub": "Il compromesso intelligente",
+              "text": "Tre bottoni buttati a due: sofisticatezza con una piega moderna. Meno formale del tre bottoni classico, più interessante del due bottoni standard. Per chi sa che i dettagli costruttivi raccontano storia. Stile distinto, senza eccessi.",
+              "image": null
+            },
+            {
+              "name": "Doppiopetto a 4 Bottoni",
+              "sub": "Eleganza contemporanea",
+              "text": "Quattro bottoni per un doppiopetto raffinato e meno rigido del sei. Non vuoi la solennità totale, ma desideri carattere e dimensione. Per serate cocktail, cene importanti, occasioni formali senza conformismo.",
+              "image": null
+            },
+            {
+              "name": "Doppiopetto a 6 Bottoni",
+              "sub": "La maestosità intramontabile",
+              "text": "Il doppiopetto classico per eccellenza. Sei bottoni, proporzioni maestose, eleganza che non invecchia mai. La scelta di chi comprende che l'autorità nello stile è questione di proporzioni. Formale, potente, senza tempo.",
+              "image": null
+            },
+            {
+              "name": "Doppiopetto basso a 6 Bottoni",
+              "sub": "L'interpretazione vintage",
+              "text": "Sei bottoni con sbottonatura più bassa: lo stile italiano dagli anni Trenta a oggi. Meno formale rispetto al sei classico, più sofisticato e nostalgico. Per cultori del vintage consapevole che amano l'eleganza con anima storica.",
+              "image": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "spalla",
+      "kicker": "La fondazione dello stile",
+      "title": [
+        "La *spalla*"
+      ],
+      "intro": "La spalla definisce l'intera silhouette. Baratto offre scelte raffinate, ciascuna con carattere proprio.",
+      "groups": [
+        {
+          "items": [
+            {
+              "name": "Spallina",
+              "text": "Una imbottitura classica che dona una linea solida, elegante, molto classica.",
+              "image": null
+            },
+            {
+              "name": "Arriccio",
+              "text": "L'innovazione consapevole. Arriccio elegante con leggero movimento. Puro stile italiano.",
+              "image": null
+            },
+            {
+              "name": "Spallina Leggera",
+              "text": "Leggerissima imbottitura per una silhouette tradizionale con confort.",
+              "image": null
+            },
+            {
+              "name": "Napoletana Decostruita",
+              "text": "Nessuna imbottitura. Confortevole, pratica, moderna. Per blazer e abiti contemporanei.",
+              "image": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rever",
+      "kicker": "Il volto della giacca",
+      "title": [
+        "Il *rever*"
+      ],
+      "groups": [
+        {
+          "items": [
+            {
+              "name": "Classico",
+              "text": "L'elemento di rifinitura tradizionale che conferisce stile e eleganza.",
+              "image": null
+            },
+            {
+              "name": "A Lancia",
+              "text": "Un'incisione a V che aggiunge eleganza e personalità. Distinto e ricercato.",
+              "image": null
+            },
+            {
+              "name": "Tuxedo Sciallato",
+              "text": "Curvato, sofisticato, per smoking. Mantiene grande eleganza senza alterare l'armonia.",
+              "image": null
+            },
+            {
+              "name": "Tuxedo a Lancia",
+              "text": "Esalta la figura slanciando la silhouette. Lo smoking con lo stile più contemporaneo.",
+              "image": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "impuntura",
+      "kicker": "La firma visibile",
+      "title": [
+        "L'*impuntura*"
+      ],
+      "intro": "Ogni dettaglio visibile è una scelta. L'impuntura racconta il tuo stile: invisibile per l'eleganza classica, audace per chi ama il carattere deciso.",
+      "groups": [
+        {
+          "items": [
+            {
+              "name": "Senza Impuntura",
+              "text": "Invisibile, discreta, sartoriale. Per chi parla attraverso il silenzio. Eleganza pura, senza firma visibile.",
+              "image": null
+            },
+            {
+              "name": "Impuntura a 2mm",
+              "text": "Appena percettibile. Il dettaglio raffinato che suggerisce, non grida. Molto presente negli abiti sartoriali classici.",
+              "image": null
+            },
+            {
+              "name": "Impuntura a 6mm",
+              "text": "Dichiarata, caratterizzata. Un tratto visibile che comunica personalità. Per outfit non formali con stile deciso.",
+              "image": null
+            },
+            {
+              "name": "Doppia Impuntura",
+              "text": "La firma contemporanea. Due linee parallele raccontano un'anima più sportiva e moderna. Carattere e movimento.",
+              "image": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tasche",
+      "kicker": "Funzionalità con stile",
+      "title": [
+        "Tasche & *taschino*"
+      ],
+      "groups": [
+        {
+          "title": "Taschino",
+          "items": [
+            {
+              "name": "Barchetta",
+              "text": "Dolce, curvato, elegante. Il taschino classico che esalta la figura con una linea morbida e naturale. Il riferimento sartoriale puro.",
+              "image": null
+            },
+            {
+              "name": "Toppa",
+              "text": "Pratico e informale. Un taschino costruito sulla superficie, che dona alla giacca uno stile più sportivo e accessibile. Per blazer decontratti.",
+              "image": null
+            }
+          ]
+        },
+        {
+          "title": "Tasche",
+          "items": [
+            {
+              "name": "Pattina",
+              "text": "Funzionale e intermedia. Una pattina posizionata sopra la tasca a filetto, offre la libertà di aprire o lasciar chiuso. Versatile ed elegante.",
+              "image": null
+            },
+            {
+              "name": "Filetto",
+              "text": "La più raffinata. Una tasca sottile, intagliata nella giacca, invisibile quando chiusa. Massima eleganza per occasioni formali.",
+              "image": null
+            },
+            {
+              "name": "Toppa",
+              "text": "Pratica e caratterizzata. La tasca visibile sulla superficie, sportiva e funzionale. Per giacche informali e blazer con personalità.",
+              "image": null
+            },
+            {
+              "name": "Toppa con Pattina",
+              "text": "Il compromesso intelligente. Una pattina elegante sovrapposta dona sofisticatezza alla tasca toppa. Stile casual-chic.",
+              "image": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "linings": {
+    "kicker": "Le fodere custom",
+    "title": "Il tuo racconto privato",
+    "cta": "Scopri le fodere",
+    "href": "/#fodere"
+  }
+}

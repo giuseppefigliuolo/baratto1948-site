@@ -1,0 +1,27 @@
+---
+/** Re-Nylon: the title on two lines beside two lead paragraphs. */
+import type { TessutiPage } from '../../lib/content';
+import Lines from '../ui/Lines.astro';
+
+interface Props { renylon: TessutiPage['renylon'] }
+const { renylon: r } = Astro.props;
+---
+
+<section id="renylon" class="renylon" aria-labelledby="renylon-title">
+  <h2 id="renylon-title" class="title"><Lines lines={r.title} /></h2>
+  <div class="copy">
+    {r.body.map((p) => <p class="body-copy" data-fade>{p}</p>)}
+  </div>
+</section>
+
+<style>
+  .renylon {
+    padding: var(--sp-section) var(--gutter);
+    border-top: 1px solid rgba(236, 229, 214, 0.1);
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+    gap: clamp(32px, 6vw, 96px); align-items: start;
+  }
+  .title { font: 400 var(--fs-h2)/0.98 var(--serif); }
+  .copy { display: flex; flex-direction: column; gap: clamp(20px, 2vw, 28px); }
+  .copy .body-copy { max-width: 34rem; }
+</style>

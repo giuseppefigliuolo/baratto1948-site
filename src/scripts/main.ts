@@ -11,6 +11,7 @@ import { initSmooth } from './core/smooth';
 import { initCollection } from './features/collection';
 import { initCursor } from './features/cursor';
 import { initHeader } from './features/header';
+import { initHpile } from './features/hpile';
 import { runIntro } from './features/intro';
 import { initMarquee } from './features/marquee';
 import { initMenu } from './features/menu';
@@ -30,6 +31,7 @@ if (motion) {
   initReveal(ready);
   initScrollFx();
   initPile();
+  initHpile();
   initCollection();
   initMarquee();
   if (fine()) initCursor();
@@ -58,11 +60,11 @@ function heroPhoto(): Promise<void> {
   return load.then(() => img.decode().catch(() => {}));
 }
 
-/** Hero photo (and the seal canvas inside the same frame) settles from 1.12 to 1 over 8 s. */
+/** Hero photo (and the seal canvas inside the same frame) settles from 1.12 to 1 over 6.4 s. */
 function kenBurns() {
   document.querySelector<HTMLElement>('[data-seal-frame]')?.animate(
     { scale: ['1.12', '1'] },
-    { duration: 8000, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', fill: 'both' }
+    { duration: 6400, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', fill: 'both' }
   );
 }
 

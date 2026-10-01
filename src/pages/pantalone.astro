@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import Category from '../components/sections/Category.astro';
+import LinkRow from '../components/sections/LinkRow.astro';
+import PageCta from '../components/sections/PageCta.astro';
+import Contact from '../components/sections/Contact.astro';
+import { getCatalogPage, getHome, getSettings } from '../lib/content';
+
+const home = await getHome();
+const settings = await getSettings();
+const page = await getCatalogPage('pantalone');
+---
+
+<Base home={home} settings={settings} page={page.seo} intro={false}>
+  <Header settings={settings} inner />
+  <main id="main">
+    <PageHero hero={page.hero} />
+    {page.categories.map((c) => <Category category={c} />)}
+    {page.linings && <LinkRow {...page.linings} />}
+    <PageCta />
+    <Contact home={home} settings={settings} />
+  </main>
+</Base>

@@ -184,6 +184,179 @@ collections:
               - { label: Località, name: location, widget: string }
               - { label: Immagine di sfondo, name: background, widget: image }
               - { label: Frase footer, name: footerTagline, widget: string }
+      - name: giacca
+        label: La giacca
+        file: src/content/pages/giacca.json
+        fields:
+        - label: SEO
+          name: seo
+          widget: object
+          fields:
+            - { label: Titolo (max 70), name: title, widget: string }
+            - { label: Descrizione (max 170), name: description, widget: text }
+        - label: Hero
+          name: hero
+          widget: object
+          fields:
+            - { label: Occhiello, name: kicker, widget: string }
+            - { label: Titolo, name: title, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
+            - { label: Sottotitolo, name: subtitle, widget: string, required: false }
+            - { label: Introduzione, name: intro, widget: text }
+            - { label: Frase in corsivo, name: extra, widget: text, required: false }
+            - { label: Immagine, name: image, widget: object, collapsed: true, fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
+        - label: Categorie
+          name: categories
+          widget: list
+          min: 1
+          summary: '{{fields.id}}'
+          fields:
+            - { label: ID ancora, name: id, widget: string }
+            - { label: Occhiello, name: kicker, widget: string, required: false }
+            - { label: Titolo, name: title, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
+            - { label: Introduzione, name: intro, widget: text, required: false }
+            - label: Gruppi
+              name: groups
+              widget: list
+              min: 1
+              summary: '{{fields.title}}'
+              fields:
+                - { label: Titolo del gruppo (facoltativo), name: title, widget: string, required: false }
+                - label: Voci
+                  name: items
+                  widget: list
+                  min: 1
+                  summary: '{{fields.name}}'
+                  fields:
+                    - { label: Nome, name: name, widget: string }
+                    - { label: Sottotitolo, name: sub, widget: string, required: false }
+                    - { label: Testo, name: text, widget: text }
+                    - { label: Nota (in corsivo oro), name: note, widget: string, required: false }
+                    - { label: Immagine (facoltativa, altrimenti segnaposto), name: image, widget: object, required: false, collapsed: true, fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
+        - label: Rimando alle fodere
+          name: linings
+          widget: object
+          required: false
+          fields:
+            - { label: Occhiello, name: kicker, widget: string }
+            - { label: Titolo, name: title, widget: string }
+            - { label: Testo del link, name: cta, widget: string }
+            - { label: Destinazione (es. /#fodere), name: href, widget: string }
+      - name: pantalone
+        label: Il pantalone
+        file: src/content/pages/pantalone.json
+        fields:
+        - label: SEO
+          name: seo
+          widget: object
+          fields:
+            - { label: Titolo (max 70), name: title, widget: string }
+            - { label: Descrizione (max 170), name: description, widget: text }
+        - label: Hero
+          name: hero
+          widget: object
+          fields:
+            - { label: Occhiello, name: kicker, widget: string }
+            - { label: Titolo, name: title, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
+            - { label: Sottotitolo, name: subtitle, widget: string, required: false }
+            - { label: Introduzione, name: intro, widget: text }
+            - { label: Frase in corsivo, name: extra, widget: text, required: false }
+            - { label: Immagine, name: image, widget: object, collapsed: true, fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
+        - label: Categorie
+          name: categories
+          widget: list
+          min: 1
+          summary: '{{fields.id}}'
+          fields:
+            - { label: ID ancora, name: id, widget: string }
+            - { label: Occhiello, name: kicker, widget: string, required: false }
+            - { label: Titolo, name: title, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
+            - { label: Introduzione, name: intro, widget: text, required: false }
+            - label: Gruppi
+              name: groups
+              widget: list
+              min: 1
+              summary: '{{fields.title}}'
+              fields:
+                - { label: Titolo del gruppo (facoltativo), name: title, widget: string, required: false }
+                - label: Voci
+                  name: items
+                  widget: list
+                  min: 1
+                  summary: '{{fields.name}}'
+                  fields:
+                    - { label: Nome, name: name, widget: string }
+                    - { label: Sottotitolo, name: sub, widget: string, required: false }
+                    - { label: Testo, name: text, widget: text }
+                    - { label: Nota (in corsivo oro), name: note, widget: string, required: false }
+                    - { label: Immagine (facoltativa, altrimenti segnaposto), name: image, widget: object, required: false, collapsed: true, fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
+      - name: tessuti
+        label: Tessuti
+        file: src/content/pages/tessuti.json
+        fields:
+        - label: SEO
+          name: seo
+          widget: object
+          fields:
+            - { label: Titolo (max 70), name: title, widget: string }
+            - { label: Descrizione (max 170), name: description, widget: text }
+        - label: Hero
+          name: hero
+          widget: object
+          fields:
+            - { label: Occhiello, name: kicker, widget: string }
+            - { label: Titolo, name: title, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
+            - { label: Introduzione, name: intro, widget: text }
+            - { label: Immagine, name: image, widget: object, collapsed: true, fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
+        - label: Fibre naturali
+          name: fibres
+          widget: object
+          fields:
+            - { label: Titolo, name: title, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
+            - { label: Testo, name: body, widget: text }
+            - { label: Galleria (striscia scorrevole), name: gallery, widget: list, min: 1, summary: '{{fields.alt}}', fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
+        - label: Re-Nylon
+          name: renylon
+          widget: object
+          fields:
+            - { label: Titolo, name: title, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
+            - { label: Paragrafi, name: body, widget: list, min: 1, field: { label: Paragrafo, name: p, widget: text } }
+        - label: Partner
+          name: partners
+          widget: object
+          fields:
+            - { label: Titolo, name: title, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
+            - label: Paesi
+              name: groups
+              widget: list
+              min: 1
+              summary: '{{fields.title}}'
+              fields:
+                - { label: Paese (es. Lanifici Italiani), name: title, widget: string }
+                - label: Lanifici
+                  name: items
+                  widget: list
+                  min: 1
+                  summary: '{{fields.name}}'
+                  fields:
+                    - { label: Nome, name: name, widget: string }
+                    - { label: Anno di fondazione, name: year, widget: number, value_type: int }
+            - { label: Nota finale, name: note, widget: text }
+        - label: Denim
+          name: denim
+          widget: object
+          fields:
+            - { label: Titolo, name: title, widget: list, hint: 'Una riga per voce. *parola* = corsivo.', field: { label: Riga, name: line, widget: string } }
+            - { label: Testo, name: body, widget: text }
+            - { label: Immagini, name: images, widget: list, min: 1, summary: '{{fields.alt}}', fields: [{ label: Immagine, name: src, widget: image }, { label: Testo alternativo (SEO/accessibilità), name: alt, widget: string }] }
+            - { label: Titolo delle caratteristiche, name: featuresTitle, widget: string }
+            - label: Caratteristiche
+              name: features
+              widget: list
+              min: 1
+              summary: '{{fields.title}}'
+              fields:
+                - { label: Titolo, name: title, widget: string }
+                - { label: Testo, name: body, widget: text }
 
   - name: impostazioni
     label: Impostazioni

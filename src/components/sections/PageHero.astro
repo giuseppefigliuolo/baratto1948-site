@@ -1,0 +1,46 @@
+---
+/** Opening of an inner page: kicker, h1, optional subtitle / intro / extra on one side, a photo on the other. */
+import type { ImageMetadata } from 'astro';
+import Img from '../ui/Img.astro';
+import Lines from '../ui/Lines.astro';
+
+interface Props {
+  hero: {
+    kicker: string;
+    title: string[];
+    subtitle?: string;
+    intro: string;
+    extra?: string;
+    image: { src: ImageMetadata; alt: string };
+  };
+}
+const { hero } = Astro.props;
+---
+
+<section class="hero" aria-labelledby="page-title">
+  <div class="copy">
+    <span class="kicker" data-fade>{hero.kicker}</span>
+    <h1 id="page-title" class="title"><Lines lines={hero.title} /></h1>
+    {hero.subtitle && <span class="sub" data-fade>{hero.subtitle}</span>}
+    <p class="body-copy intro" data-fade>{hero.intro}</p>
+    {hero.extra && <p class="extra" data-fade>{hero.extra}</p>}
+  </div>
+  <div class="media photo" data-clip="c">
+    <Img src={hero.image.src} alt={hero.image.alt} sizes="(max-width: 759px) 92vw, 48vw" priority data-gl data-speed="0.08" data-zoom="1.12" />
+  </div>
+</section>
+
+<style>
+  .hero {
+    min-height: 100svh;
+    padding: clamp(96px, 14vh, 160px) var(--gutter) clamp(48px, 8vh, 96px);
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+    gap: clamp(32px, 5vw, 96px); align-items: center;
+  }
+  .copy { display: flex; flex-direction: column; gap: clamp(18px, 2vw, 28px); }
+  .title { font: 400 clamp(52px, min(8vw, 15svh), 150px)/0.92 var(--serif); }
+  .sub { font: var(--w-bold) var(--fs-micro)/1.4 var(--sans); letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
+  .intro { max-width: 34rem; }
+  .extra { max-width: 30rem; font: 400 italic var(--fs-quote)/1.35 var(--serif); color: var(--fg-2); }
+  .photo { aspect-ratio: 4 / 5; max-height: 76svh; width: 100%; }
+</style>

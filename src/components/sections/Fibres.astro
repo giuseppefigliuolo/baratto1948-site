@@ -1,0 +1,42 @@
+---
+/** Natural fibres: head with the gutter, then a flush-to-the-edge native horizontal strip of swatches. */
+import type { TessutiPage } from '../../lib/content';
+import Img from '../ui/Img.astro';
+import Lines from '../ui/Lines.astro';
+
+interface Props { fibres: TessutiPage['fibres'] }
+const { fibres: f } = Astro.props;
+---
+
+<section id="fibre" class="fibres" aria-labelledby="fibre-title">
+  <div class="head">
+    <h2 id="fibre-title" class="title"><Lines lines={f.title} /></h2>
+    <p class="body-copy intro" data-fade>{f.body}</p>
+  </div>
+  <div class="strip" data-cursor="Trascina">
+    {f.gallery.map((g) => (
+      <figure class="media item">
+        <Img src={g.src} alt={g.alt} sizes="(max-width: 759px) 64vw, 560px" widths={[480, 768, 1080]} data-gl />
+      </figure>
+    ))}
+  </div>
+</section>
+
+<style>
+  .fibres {
+    padding: var(--sp-section) 0;
+    border-top: 1px solid rgba(236, 229, 214, 0.1);
+    display: flex; flex-direction: column; gap: clamp(32px, 4vw, 64px);
+  }
+  .head { display: flex; flex-direction: column; gap: clamp(14px, 1.6vw, 22px); max-width: 60rem; padding: 0 var(--gutter); }
+  .title { font: 400 var(--fs-h2)/0.98 var(--serif); }
+  .intro { max-width: 40rem; }
+  /* Same pattern as the Atelier fallback. */
+  .strip {
+    display: flex; gap: 12px; height: clamp(300px, 56svh, 720px);
+    overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+    padding: 0 var(--gutter);
+  }
+  .strip::-webkit-scrollbar { display: none; }
+  .item { flex: none; width: min(64vw, 26svh + 14vw, 560px); height: 100%; scroll-snap-align: center; }
+</style>

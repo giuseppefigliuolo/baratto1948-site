@@ -13,9 +13,11 @@ interface Props {
   home: Home;
   settings: Settings;
   indexable: boolean;
+  /** Title/description of the current page; the home's own when omitted. */
+  page?: { title: string; description: string };
 }
 
-const { home, settings: s, indexable } = Astro.props;
+const { home, settings: s, indexable, page = home.seo } = Astro.props;
 const site = Astro.site!;
 const root = rootUrl(site);
 const url = new URL(Astro.url.pathname, site).href;
@@ -90,8 +92,8 @@ const jsonLd = {
       '@type': 'WebPage',
       '@id': `${url}#webpage`,
       url,
-      name: home.seo.title,
-      description: home.seo.description,
+      name: page.title,
+      description: page.description,
       inLanguage: 'it-IT',
       isPartOf: { '@id': `${root}#website` },
       about: { '@id': businessId },
@@ -101,8 +103,8 @@ const jsonLd = {
 };
 ---
 
-<title>{home.seo.title}</title>
-<meta name="description" content={home.seo.description} />
+<title>{page.title}</title>
+<meta name="description" content={page.description} />
 <link rel="canonical" href={url} />
 <link rel="alternate" hreflang="it" href={url} />
 <link rel="alternate" hreflang="x-default" href={url} />
@@ -111,16 +113,16 @@ const jsonLd = {
 <meta property="og:type" content="website" />
 <meta property="og:locale" content="it_IT" />
 <meta property="og:site_name" content={s.brand} />
-<meta property="og:title" content={home.seo.title} />
-<meta property="og:description" content={home.seo.description} />
+<meta property="og:title" content={page.title} />
+<meta property="og:description" content={page.description} />
 <meta property="og:url" content={url} />
 <meta property="og:image" content={ogUrl} />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content={home.hero.image.alt} />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content={home.seo.title} />
-<meta name="twitter:description" content={home.seo.description} />
+<meta name="twitter:title" content={page.title} />
+<meta name="twitter:description" content={page.description} />
 <meta name="twitter:image" content={ogUrl} />
 
 <meta name="geo.region" content={`${s.address.country}-${s.address.province}`} />

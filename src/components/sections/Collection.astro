@@ -1,6 +1,7 @@
 ---
 import type { Home, Settings } from '../../lib/content';
 import Img from '../ui/Img.astro';
+import { url } from '../../lib/url';
 
 interface Props { home: Home; settings: Settings }
 const { home } = Astro.props;
@@ -18,7 +19,7 @@ const total = pad(c.chapters.length);
     <div class="viewport" data-coll-viewport>
       <div class="track" data-coll-track>
         {c.chapters.map((ch, i) => (
-          <div class="skew" data-skew id={ch.id}>
+          <div class="skew" data-skew>
             <article class="card" data-coll-card data-cursor="Scopri">
               <div class="media pic">
                 <Img src={ch.image.src} alt={ch.image.alt} sizes="(max-width: 759px) 84vw, 36vw" class="coll-img" data-coll-img />
@@ -32,7 +33,7 @@ const total = pad(c.chapters.length);
                   <p class="b">{ch.body}</p>
                   <p class="x">{ch.extra}</p>
                 </div>
-                <a class="go" href="#contatti">{ch.cta} <span aria-hidden="true">→</span><span class="sr-only"> — prenota una consulenza</span></a>
+                <a class="go" href={url(`/${ch.id}`)}>{ch.cta} <span aria-hidden="true">→</span></a>
               </div>
             </article>
           </div>

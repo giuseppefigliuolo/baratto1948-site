@@ -1,0 +1,157 @@
+{
+  "seo": {
+    "title": "I tessuti · Baratto 1948",
+    "description": "Natura, tracciabilità, innovazione: fibre naturali, Re-Nylon, lanifici partner e denim giapponese."
+  },
+  "hero": {
+    "kicker": "Il materiale",
+    "title": [
+      "Natura, Tracciabilità, *Innovazione*"
+    ],
+    "intro": "Ogni fibra scelta da Baratto racconta una storia di natura e qualità. Lino, seta, cotone, lana o il nostro Re-Nylon: selezioniamo solo materiali tracciabili, resistenti e di altissimo pregio. Lavoriamo con esperti che esaltano le proprietà uniche di ogni tessuto, per un risultato finale che è puro piacere al tatto e durabilità impeccabile.",
+    "image": {
+      "src": "../../assets/images/tess.jpg",
+      "alt": "Tessuti Baratto 1948"
+    }
+  },
+  "fibres": {
+    "title": [
+      "Le Fibre *Naturali*"
+    ],
+    "body": "Dalla morbidezza del cotone che diventa arioso alla freschezza del lino, ogni fibra è scelta per vestire con eleganza senza tempo. La seta scivola con grazia, mentre la lana respira e mantiene la sua elasticità.",
+    "gallery": [
+      {
+        "src": "../../assets/images/tessuti/t1.jpg",
+        "alt": "Tessuto 1"
+      },
+      {
+        "src": "../../assets/images/tessuti/t2.jpg",
+        "alt": "Tessuto 2"
+      },
+      {
+        "src": "../../assets/images/tessuti/t3.jpg",
+        "alt": "Tessuto 3"
+      },
+      {
+        "src": "../../assets/images/tessuti/t4.jpg",
+        "alt": "Tessuto 4"
+      },
+      {
+        "src": "../../assets/images/tessuti/t5.jpg",
+        "alt": "Tessuto 5"
+      },
+      {
+        "src": "../../assets/images/tessuti/t6.png",
+        "alt": "Tessuto 6"
+      },
+      {
+        "src": "../../assets/images/tessuti/tess.jpg",
+        "alt": "Tessuto 7"
+      }
+    ]
+  },
+  "renylon": {
+    "title": [
+      "L'Innovazione del",
+      "*Re-Nylon*"
+    ],
+    "body": [
+      "Per i nostri capi tecnici, scegliamo il Re-Nylon rigenerato: leggero, idrorepellente e certificato. Questo tessuto incarna il nostro impegno per la sostenibilità, senza mai compromettere funzionalità e stile inimitabile.",
+      "Ogni filato è trattato con cura in Italia, nel rispetto più profondo dell'ambiente e della sua origine, per garantirti un capo Baratto autentico e responsabile."
+    ]
+  },
+  "partners": {
+    "title": [
+      "I Nostri Partner: *Eccellenza Tessile Mondiale*"
+    ],
+    "groups": [
+      {
+        "title": "Lanifici Italiani",
+        "items": [
+          {
+            "name": "Vitale Barberis Canonico",
+            "year": 1663
+          },
+          {
+            "name": "Loro Piana",
+            "year": 1924
+          },
+          {
+            "name": "Reda",
+            "year": 1865
+          },
+          {
+            "name": "Drago Biella",
+            "year": 1973
+          },
+          {
+            "name": "Piacenza",
+            "year": 1733
+          },
+          {
+            "name": "Ermenegildo Zegna",
+            "year": 1910
+          },
+          {
+            "name": "Cerruti",
+            "year": 1881
+          }
+        ]
+      },
+      {
+        "title": "Lanifici Britannici",
+        "items": [
+          {
+            "name": "Holland & Sherry",
+            "year": 1836
+          }
+        ]
+      },
+      {
+        "title": "Lanifici Belgi",
+        "items": [
+          {
+            "name": "Scabal",
+            "year": 1938
+          }
+        ]
+      }
+    ],
+    "note": "La maggior parte dei lanifici di eccellenza mondiale si concentra nel distretto biellese in Piemonte, considerato la capitale mondiale della produzione tessile di lusso."
+  },
+  "denim": {
+    "title": [
+      "Denim Giapponese: *L'Anima del Selvedge*"
+    ],
+    "body": "Dal cuore delle prefetture di Okayama e Hiroshima, dove Kojima è la \"città del jeans\", nasce il denim giapponese. Espressione del \"monozukuri\" – l'arte giapponese della creazione artigianale – ogni capo racconta una storia di meticolosa dedizione e qualità superiore.",
+    "images": [
+      {
+        "src": "../../assets/images/denim1.jpg",
+        "alt": "Denim giapponese con cimosa"
+      },
+      {
+        "src": "../../assets/images/denim2.jpg",
+        "alt": "Denim giapponese, dettaglio"
+      }
+    ],
+    "featuresTitle": "Caratteristiche distintive",
+    "features": [
+      {
+        "title": "Cimosa (selvedge)",
+        "body": "Bordo rifinito che impedisce lo sfilacciamento, segno di autentica lavorazione su telai a navetta vintage degli anni '50."
+      },
+      {
+        "title": "Tintura indaco naturale puro",
+        "body": "Colore profondo e vibrante, ottenuto con metodi tradizionali."
+      },
+      {
+        "title": "Sbiadimento unico nel tempo",
+        "body": "Ogni lavaggio rivela una pattina personalizzata, un vero diario del tuo stile di vita."
+      },
+      {
+        "title": "Maggiore resistenza e durabilità",
+        "body": "Una trama fitta e robusta che garantisce una longevità eccezionale."
+      }
+    ]
+  }
+}

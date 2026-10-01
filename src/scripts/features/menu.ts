@@ -26,8 +26,10 @@ export function initMenu() {
   });
   $$<HTMLAnchorElement>('[data-menu-link]', menu).forEach((a) =>
     a.addEventListener('click', (e) => {
-      e.preventDefault();
       const hash = a.getAttribute('href')!;
+      // Links to other pages navigate natively.
+      if (hash[0] !== '#') return;
+      e.preventDefault();
       set(false);
       setTimeout(() => scrollToHash(hash, 1.6), 350);
     })

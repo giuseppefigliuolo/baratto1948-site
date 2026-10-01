@@ -1,0 +1,48 @@
+---
+/** Textile partners: a compact list, one ruled row per country, with the founding year of each mill. */
+import type { TessutiPage } from '../../lib/content';
+import Lines from '../ui/Lines.astro';
+
+interface Props { partners: TessutiPage['partners'] }
+const { partners: p } = Astro.props;
+---
+
+<section id="partner" class="partners" aria-labelledby="partner-title">
+  <div class="head">
+    <h2 id="partner-title" class="title"><Lines lines={p.title} /></h2>
+  </div>
+  <div class="list">
+    {p.groups.map((g) => (
+      <div class="row" data-fade>
+        <h3 class="kicker">{g.title}</h3>
+        <ul class="items">
+          {g.items.map((it) => <li>{it.name}<span class="year">{it.year}</span></li>)}
+        </ul>
+      </div>
+    ))}
+  </div>
+  <p class="note" data-fade>{p.note}</p>
+</section>
+
+<style>
+  .partners {
+    padding: var(--sp-section) var(--gutter);
+    border-top: 1px solid rgba(236, 229, 214, 0.1);
+    display: flex; flex-direction: column; gap: clamp(32px, 4vw, 64px);
+  }
+  .head { max-width: 60rem; }
+  .title { font: 400 var(--fs-h2)/0.98 var(--serif); }
+  .list { display: flex; flex-direction: column; border-bottom: 1px solid var(--line); }
+  .row {
+    display: flex; flex-wrap: wrap; gap: 14px 48px;
+    padding: clamp(18px, 2vw, 28px) 0; border-top: 1px solid var(--line);
+  }
+  .kicker { flex: 0 0 14rem; }
+  .items {
+    flex: 1 1 20rem; display: flex; flex-wrap: wrap; gap: 10px 36px;
+    margin: 0; padding: 0; list-style: none;
+  }
+  .items li { font: 400 clamp(22px, min(2vw, 4svh), 36px)/1.2 var(--serif); }
+  .year { margin-left: 0.7em; font: var(--w-bold) var(--fs-micro)/1 var(--sans); letter-spacing: 0.14em; color: var(--gold); }
+  .note { max-width: 44rem; font: 400 italic var(--fs-quote)/1.35 var(--serif); color: var(--fg-2); }
+</style>

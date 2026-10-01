@@ -1,0 +1,59 @@
+---
+/** Japanese denim: head, two photos, then the distinctive features as ruled cells. */
+import type { TessutiPage } from '../../lib/content';
+import Img from '../ui/Img.astro';
+import Lines from '../ui/Lines.astro';
+
+interface Props { denim: TessutiPage['denim'] }
+const { denim: d } = Astro.props;
+---
+
+<section id="denim" class="denim" aria-labelledby="denim-title">
+  <div class="head">
+    <h2 id="denim-title" class="title"><Lines lines={d.title} /></h2>
+    <p class="body-copy intro" data-fade>{d.body}</p>
+  </div>
+  <div class="photos">
+    {d.images.map((im) => (
+      <div class="media photo" data-clip="c">
+        <Img src={im.src} alt={im.alt} sizes="(max-width: 759px) 92vw, 46vw" data-gl data-speed="0.08" data-zoom="1.12" />
+      </div>
+    ))}
+  </div>
+  <div class="features" data-fade>
+    <h3 class="kicker">{d.featuresTitle}</h3>
+    <div class="grid">
+      {d.features.map((f) => (
+        <div class="cell">
+          <h4 class="ft">{f.title}</h4>
+          <p class="fb">{f.body}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .denim {
+    padding: var(--sp-section) var(--gutter);
+    border-top: 1px solid rgba(236, 229, 214, 0.1);
+    display: flex; flex-direction: column; gap: clamp(32px, 4vw, 64px);
+  }
+  .head { display: flex; flex-direction: column; gap: clamp(14px, 1.6vw, 22px); max-width: 60rem; }
+  .title { font: 400 var(--fs-h2)/0.98 var(--serif); }
+  .intro { max-width: 40rem; }
+  .photos {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    gap: clamp(12px, 2vw, 32px);
+  }
+  .photo { aspect-ratio: 4 / 3; }
+  .features { display: flex; flex-direction: column; gap: clamp(16px, 2vw, 24px); }
+  /* Rules are cell borders, not a coloured 1px gap: a wrapped row would show an empty grey cell. */
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    column-gap: clamp(16px, 2vw, 32px); border-bottom: 1px solid var(--line);
+  }
+  .cell { display: flex; flex-direction: column; gap: 14px; padding: clamp(18px, 2vw, 28px) 0; border-top: 1px solid var(--line); }
+  .ft { font: 400 italic var(--fs-quote)/1.1 var(--serif); }
+  .fb { font: var(--w-light) var(--fs-body)/1.5 var(--sans); color: var(--muted); }
+</style>

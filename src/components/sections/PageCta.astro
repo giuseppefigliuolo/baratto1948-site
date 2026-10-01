@@ -1,0 +1,25 @@
+---
+/** Closing call to action of an inner page: a huge "Contatti →" that scrolls to the contact section. */
+---
+
+<section class="cta">
+  <a class="link" href="#contatti" data-fade data-cursor="Contatti"><em>Contatti</em><span aria-hidden="true">→</span></a>
+</section>
+
+<style>
+  .cta {
+    padding: var(--sp-section) var(--gutter);
+    border-top: 1px solid rgba(236, 229, 214, 0.1);
+    display: flex; justify-content: center;
+  }
+  .link {
+    display: flex; align-items: baseline; gap: 0.25em;
+    font: 400 var(--fs-mega)/1 var(--serif); letter-spacing: -0.01em;
+    transition: color 0.4s;
+  }
+  /* The reveal transition would otherwise replace the colour one. */
+  :global(.m) .link[data-fade] {
+    transition: opacity 1s ease var(--d, 0ms), transform 1.2s var(--ease) var(--d, 0ms), color 0.4s;
+  }
+  .link span { color: var(--gold); font-size: 0.6em; }
+</style>

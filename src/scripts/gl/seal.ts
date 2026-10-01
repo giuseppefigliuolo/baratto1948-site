@@ -25,6 +25,7 @@ interface Opts {
 
 const smoother = (t: number) => t * t * t * (t * (t * 6 - 15) + 10);
 const T = 0.14; // coin thickness
+const PACE = 800; // ms per timeline second (opening sequence runs 20% faster)
 const R = 0.036; // letter relief
 const FOV = 18;
 const FRAME = 2.4; // half-height of the view at z=0: coin diameter (2) = printed stamp diameter
@@ -138,7 +139,7 @@ export async function seal(frameEl: HTMLElement, opts: Opts) {
   const spin = hit ? spinner(hit, sp) : null;
 
   // A late start (slow device) begins at the fade-in rather than popping in half-way.
-  const t0 = Math.max(start, performance.now() - 600);
+  const t0 = Math.max(start, performance.now() - 480);
   let last = 0;
   subscribe((fr) => {
     const dt = last ? fr.now - last : 1000 / 60;
@@ -148,7 +149,7 @@ export async function seal(frameEl: HTMLElement, opts: Opts) {
     m.x += (m.tx - m.x) * 0.05;
     m.y += (m.ty - m.y) * 0.05;
     spin?.(dt);
-    pose((fr.now - t0) / 1000);
+    pose((fr.now - t0) / PACE);
   });
 }
 

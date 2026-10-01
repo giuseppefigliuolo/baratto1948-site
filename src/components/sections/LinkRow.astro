@@ -1,0 +1,33 @@
+---
+/** Full-width pointer to another part of the site (e.g. jacket page → the home's linings). */
+import { url } from '../../lib/url';
+
+interface Props { kicker: string; title: string; cta: string; href: string }
+const { kicker, title, cta, href } = Astro.props;
+---
+
+<section class="row">
+  <a class="link" href={url(href)} data-fade>
+    <span class="txt">
+      <span class="kicker">{kicker}</span>
+      <span class="title">{title}</span>
+    </span>
+    <span class="go">{cta} <span aria-hidden="true">→</span></span>
+  </a>
+</section>
+
+<style>
+  .row { padding: clamp(48px, 6vw, 96px) var(--gutter); border-top: 1px solid rgba(236, 229, 214, 0.1); }
+  .link {
+    display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px 24px;
+    transition: color 0.4s;
+  }
+  /* The reveal transition would otherwise replace the colour one. */
+  :global(.m) .link[data-fade] {
+    transition: opacity 1s ease var(--d, 0ms), transform 1.2s var(--ease) var(--d, 0ms), color 0.4s;
+  }
+  .txt { display: flex; flex-direction: column; gap: 12px; }
+  .title { font: 400 italic clamp(28px, min(3vw, 5.4svh), 56px)/1.05 var(--serif); }
+  .go { font: var(--w-bold) var(--fs-micro)/1 var(--sans); letter-spacing: 0.2em; text-transform: uppercase; }
+  .go span { color: var(--gold); }
+</style>

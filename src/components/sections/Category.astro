@@ -1,0 +1,35 @@
+---
+/** One category of options: head (kicker, h2, intro) and its groups, each a horizontal-pile catalogue. */
+import type { Category } from '../../lib/content';
+import Catalog from '../ui/Catalog.astro';
+import Lines from '../ui/Lines.astro';
+
+interface Props { category: Category }
+const { category: c } = Astro.props;
+---
+
+<section id={c.id} class="cat" aria-labelledby={`${c.id}-title`}>
+  <div class="head">
+    {c.kicker && <span class="kicker" data-fade>{c.kicker}</span>}
+    <h2 id={`${c.id}-title`} class="title"><Lines lines={c.title} /></h2>
+    {c.intro && <p class="body-copy intro" data-fade>{c.intro}</p>}
+  </div>
+  {c.groups.map((g) => (
+    <>
+      {g.title && <h3 class="group" data-fade>{g.title}</h3>}
+      <Catalog items={g.items} level={g.title ? 4 : 3} />
+    </>
+  ))}
+</section>
+
+<style>
+  .cat {
+    padding: var(--sp-section) var(--gutter);
+    border-top: 1px solid rgba(236, 229, 214, 0.1);
+    display: flex; flex-direction: column; gap: clamp(32px, 4vw, 64px);
+  }
+  .head { display: flex; flex-direction: column; gap: clamp(14px, 1.6vw, 22px); max-width: 60rem; }
+  .title { font: 400 var(--fs-h2)/0.98 var(--serif); }
+  .intro { max-width: 40rem; }
+  .group { font: 400 italic clamp(28px, min(3vw, 5.4svh), 56px)/1.05 var(--serif); }
+</style>

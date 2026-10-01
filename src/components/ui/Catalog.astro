@@ -1,0 +1,137 @@
+---
+/**
+ * Catalogue of options as a "horizontal pile": the section pins, each card enters from the right
+ * tilted and settles on top of the previous one (src/scripts/features/hpile.ts).
+ * Without motion it is a plain static column. Items without a photo show a placeholder.
+ */
+import type { CatalogItem } from '../../lib/content';
+import Img from './Img.astro';
+
+interface Props {
+  items: CatalogItem[];
+  /** Heading level of the item names (4 when the group has its own h3). */
+  level?: 3 | 4;
+}
+const { items, level = 3 } = Astro.props;
+const Name = `h${level}` as 'h3' | 'h4';
+const n = items.length;
+const pad = (i: number) => String(i).padStart(2, '0');
+const total = pad(n);
+
+// Per-card resting rotation (deg), resting x (px, halved under 760) and entry rotation. Cycles by index.
+const GEOM = [[-0.4, -4, -3.5], [0.5, 6, 4], [-0.3, -2, -3], [0.4, 5, 3.5], [-0.2, -3, -3]] as const;
+const cards = items.map((it, i) => {
+  const [r, x, er] = GEOM[i % GEOM.length];
+  return {
+    ...it,
+    n: pad(i + 1),
+    args: `${r},${x},${er}`,
+    // Initial state under motion: the first card rests, the others wait off screen to the right.
+    t0: i === 0 ? `rotate(${r}deg)` : `translate3d(120%,0,0) rotate(${er}deg)`
+  };
+});
+---
+
+<div class="hpile" data-hpile style={`--n:${n}`}>
+  <div class="sticky">
+    <div class="ctr" aria-hidden="true"><span data-hpile-ctr>01</span><span class="of">/ {total}</span></div>
+    <div class="stage" data-hpile-stage>
+      {cards.map((c, i) => (
+        <article class="card" data-hpile-card={c.args} style={`z-index:${i + 1};--t0:${c.t0}`}>
+          <div class="dim" data-hpile-dim></div>
+          <div class="media pic">
+            {c.image ? (
+              <Img src={c.image.src} alt={c.image.alt} sizes="(max-width: 759px) 92vw, 550px" class="pic-img" data-hpile-img />
+            ) : (
+              <div class="ph" aria-hidden="true">
+                <span class="ph-name">{c.name}</span>
+                <span class="ph-note">Render da fornire</span>
+              </div>
+            )}
+          </div>
+          <div class="body">
+            <span class="num">{c.n} / {total}</span>
+            <Name class="name">{c.name}</Name>
+            {c.sub && <p class="sub">{c.sub}</p>}
+            <p class="text">{c.text}</p>
+            {c.note && <p class="note">{c.note}</p>}
+          </div>
+        </article>
+      ))}
+    </div>
+    <div class="bar" aria-hidden="true"><div data-hpile-bar></div></div>
+  </div>
+</div>
+
+<style>
+  /* Static column by default (no motion): cards stack with a gap and read as a normal list. */
+  .hpile { position: relative; }
+  .sticky { display: flex; flex-direction: column; }
+  .stage { display: flex; flex-direction: column; gap: 16px; }
+  .ctr, .bar { display: none; }
+
+  .card {
+    position: relative; display: flex;
+    background: var(--bg-2); border: 1px solid rgba(236, 229, 214, 0.16); overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+  }
+  .dim { position: absolute; inset: 0; z-index: 3; background: var(--bg); opacity: 0; pointer-events: none; }
+  .pic { flex: 0 0 50%; aspect-ratio: 4 / 3; background: #26241f; }
+  .pic :global(.pic-img) { object-position: 50% 30%; }
+  .ph {
+    position: absolute; inset: clamp(12px, 1.4vw, 20px);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+    padding: 16px; text-align: center; border: 1px dashed rgba(236, 229, 214, 0.22);
+  }
+  .ph-name { font: 400 italic clamp(22px, 2vw, 34px)/1.1 var(--serif); color: var(--muted); }
+  .ph-note { font: var(--w-bold) var(--fs-micro)/1.4 var(--sans); letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); }
+
+  .body {
+    position: relative; z-index: 2; flex: 1 1 0; min-width: 0;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    gap: clamp(12px, 1.4vw, 18px); padding: clamp(24px, 3vw, 48px);
+  }
+  .num { font: var(--w-bold) var(--fs-micro)/1 var(--sans); letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
+  .body :global(.name) { font: 400 clamp(36px, min(3.8vw, 7svh), 72px)/1 var(--serif); letter-spacing: -0.01em; }
+  .sub { font: 400 italic clamp(18px, min(1.6vw, 3svh), 30px)/1.25 var(--serif); color: var(--fg-2); text-wrap: balance; }
+  .text { font: 400 var(--fs-body)/1.55 var(--sans); color: var(--muted); text-wrap: pretty; }
+  .note { font: 400 italic clamp(16px, 1.2vw, 22px)/1.4 var(--serif); color: var(--gold); }
+
+  /* Motion: the section pins and the cards pile up inside it. Height = one screen + 0.62 screen per extra card. */
+  :global(.m) .hpile { height: calc(100vh * (1 + 0.62 * (var(--n) - 1))); }
+  :global(.m) .sticky {
+    position: sticky; top: 0; height: 100vh; overflow: hidden;
+    gap: clamp(14px, 2.4vh, 24px);
+    padding: clamp(84px, 11vh, 120px) 0 clamp(32px, 5vh, 56px);
+  }
+  :global(.m) .ctr, :global(.m) .bar { display: flex; width: min(100%, 1100px); margin: 0 auto; }
+  :global(.m) .ctr {
+    justify-content: flex-end; align-items: baseline; gap: 6px;
+    font: 400 clamp(22px, min(2.2vw, 4svh), 40px)/1 var(--serif);
+  }
+  .ctr span:first-child { color: var(--gold); }
+  .of { color: var(--dim); }
+  :global(.m) .stage {
+    position: relative; display: block; flex: 1 1 auto; min-height: 0;
+    width: min(100%, 1100px); max-height: min(70vh, 660px); margin: 0 auto;
+  }
+  :global(.m) .card {
+    position: absolute; inset: 0;
+    transform: var(--t0); transform-origin: 50% 100%; will-change: transform;
+  }
+  :global(.m) .pic { aspect-ratio: auto; min-height: 0; }
+  :global(.m) .pic :global(.pic-img) { will-change: transform, filter; }
+  :global(.m) .bar { display: block; flex: none; height: 1px; background: rgba(236, 229, 214, 0.15); }
+  .bar div { height: 1px; background: var(--gold); transform-origin: 0 50%; transform: scaleX(0); }
+
+  @media (max-width: 759px) {
+    .card { flex-direction: column; }
+    .pic { flex: none; aspect-ratio: 1 / 1; }
+    .body { flex: 0 0 auto; gap: 10px; padding: 20px 20px 22px; }
+    .body :global(.name) { font-size: clamp(30px, 8.6vw, 40px); }
+    .text { font-size: 14px; }
+    :global(.m) .sticky { padding: 84px 0 calc(24px + env(safe-area-inset-bottom)); }
+    :global(.m) .stage { max-height: none; }
+    :global(.m) .pic { flex: 1 1 auto; aspect-ratio: auto; }
+  }
+</style>

@@ -1,27 +1,31 @@
 ---
 import type { Settings } from '../lib/content';
 import logo from '../assets/brand/logo.png';
+import { url } from '../lib/url';
 
-interface Props { settings: Settings }
-const { settings: s } = Astro.props;
+/** `inner`: an inner page (giacca, pantalone, tessuti). The logo is always visible and leads home. */
+interface Props { settings: Settings; inner?: boolean }
+const { settings: s, inner = false } = Astro.props;
 
+// On the home the in-page sections are local anchors; elsewhere they go through the home.
+const home = (hash: string) => (inner ? url(`/${hash}`) : hash);
 const menuLinks = [
-  ['#radici', 'Radici'],
-  ['#esperienza', 'Esperienza'],
-  ['#giacca', 'Giacca'],
-  ['#pantalone', 'Pantalone'],
-  ['#tessuti', 'Tessuti'],
+  [home('#radici'), 'Radici'],
+  [home('#esperienza'), 'Esperienza'],
+  [url('/giacca'), 'Giacca'],
+  [url('/pantalone'), 'Pantalone'],
+  [url('/tessuti'), 'Tessuti'],
   ['#contatti', 'Contatti']
 ] as const;
 ---
 
 <div class="progress" data-progress aria-hidden="true"></div>
 
-<header class="hdr">
+<header class:list={['hdr', { 'is-past-hero': inner }]}>
   <nav class="hdr-nav" aria-label="Sezioni">
-    <a href="#giacca">Giacca</a><a href="#pantalone">Pantalone</a><a href="#tessuti">Tessuti</a>
+    <a href={url('/giacca')}>Giacca</a><a href={url('/pantalone')}>Pantalone</a><a href={url('/tessuti')}>Tessuti</a>
   </nav>
-  <a href="#top" class="hdr-logo" aria-label={`${s.brand} — torna all'inizio`}>
+  <a href={inner ? url('/') : '#top'} class="hdr-logo" aria-label={`${s.brand} — ${inner ? 'vai alla home' : "torna all'inizio"}`}>
     <img src={logo.src} width="58" height="58" alt={`${s.brand} Sartoria Artigianale`} />
   </a>
   <div class="hdr-cta">

@@ -30,14 +30,14 @@ const HERO_MOBILE = '(max-width: 759px) and (max-aspect-ratio: 1/1)';
     <div class="shade" aria-hidden="true"></div>
     <div class="content">
       <div class="head">
-        <span class="mask"><span class="kicker" data-line style="--d:4200ms">{h.kicker}</span></span>
+        <span class="mask"><span class="kicker" data-line style="--d:3360ms">{h.kicker}</span></span>
         <h1 id="hero-title" class="title">
           {h.title.map((line, i) => (
-            <span class="mask"><span data-line style={`--d:${4350 + 150 * i}ms`} set:html={rich(line)} /></span>
+            <span class="mask"><span data-line style={`--d:${3480 + 120 * i}ms`} set:html={rich(line)} /></span>
           ))}
         </h1>
       </div>
-      <p class="tagline" data-fade style="--d:4750ms">{h.tagline}</p>
+      <p class="tagline" data-fade style="--d:3800ms">{h.tagline}</p>
     </div>
   </div>
 </section>
@@ -93,6 +93,9 @@ const HERO_MOBILE = '(max-width: 759px) and (max-aspect-ratio: 1/1)';
     display: flex; justify-content: space-between; align-items: flex-end; gap: 24px;
     pointer-events: none;
   }
+  /* Opening reveals run 20% faster than the global ones. */
+  :global(.m) .hero [data-line] { transition-duration: 1.04s; }
+  :global(.m) .hero [data-fade] { transition-duration: 0.8s, 0.96s; }
   .head { display: flex; flex-direction: column; gap: 14px; max-width: 32rem; }
   .head > .mask:first-child { padding: 0 0 0.1em; margin-bottom: -0.1em; }
   .title { font: 400 clamp(2.75rem, min(4.4vw, 7.1svh), 5rem)/1.02 var(--serif); }

@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import Fibres from '../components/sections/Fibres.astro';
+import Renylon from '../components/sections/Renylon.astro';
+import Partners from '../components/sections/Partners.astro';
+import Denim from '../components/sections/Denim.astro';
+import PageCta from '../components/sections/PageCta.astro';
+import Contact from '../components/sections/Contact.astro';
+import { getHome, getSettings, getTessuti } from '../lib/content';
+
+const home = await getHome();
+const settings = await getSettings();
+const page = await getTessuti();
+---
+
+<Base home={home} settings={settings} page={page.seo} intro={false}>
+  <Header settings={settings} inner />
+  <main id="main">
+    <PageHero hero={page.hero} />
+    <Fibres fibres={page.fibres} />
+    <Renylon renylon={page.renylon} />
+    <Partners partners={page.partners} />
+    <Denim denim={page.denim} />
+    <PageCta />
+    <Contact home={home} settings={settings} />
+  </main>
+</Base>

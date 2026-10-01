@@ -12,9 +12,10 @@ import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
 const lines = z.array(z.string().min(1)).min(1);
+const seo = z.object({ title: z.string().max(70), description: z.string().max(170) });
 
 const pages = defineCollection({
-  loader: glob({ pattern: '*.json', base: './src/content/pages' }),
+  loader: glob({ pattern: 'home.json', base: './src/content/pages' }),
   schema: ({ image }) => {
     const pic = z.object({ src: image(), alt: z.string() });
     return z.object({
@@ -104,6 +105,72 @@ const pages = defineCollection({
   }
 });
 
+// Inner pages. Giacca and Pantalone share one shape: a hero plus categories of options
+// (each rendered by the horizontal-pile catalogue). `image: null` renders the "render to be supplied" placeholder.
+const catalogPages = defineCollection({
+  loader: glob({ pattern: '{giacca,pantalone}.json', base: './src/content/pages' }),
+  schema: ({ image }) => {
+    const pic = z.object({ src: image(), alt: z.string() });
+    const item = z.object({
+      name: z.string(),
+      sub: z.string().optional(),
+      text: z.string(),
+      note: z.string().optional(),
+      image: pic.nullable().default(null)
+    });
+    const category = z.object({
+      id: z.string(),
+      kicker: z.string().optional(),
+      title: lines,
+      intro: z.string().optional(),
+      groups: z
+        .array(z.object({ title: z.string().optional(), items: z.array(item).min(1) }))
+        .min(1)
+    });
+    return z.object({
+      seo,
+      hero: z.object({
+        kicker: z.string(),
+        title: lines,
+        subtitle: z.string().optional(),
+        intro: z.string(),
+        extra: z.string().optional(),
+        image: pic
+      }),
+      categories: z.array(category).min(1),
+      // Only the jacket page links to the linings section of the home page.
+      linings: z.object({ kicker: z.string(), title: z.string(), cta: z.string(), href: z.string() }).optional()
+    });
+  }
+});
+
+const tessutiPage = defineCollection({
+  loader: glob({ pattern: 'tessuti.json', base: './src/content/pages' }),
+  schema: ({ image }) => {
+    const pic = z.object({ src: image(), alt: z.string() });
+    return z.object({
+      seo,
+      hero: z.object({ kicker: z.string(), title: lines, intro: z.string(), image: pic }),
+      fibres: z.object({ title: lines, body: z.string(), gallery: z.array(pic).min(1) }),
+      renylon: z.object({ title: lines, body: z.array(z.string()).min(1) }),
+      partners: z.object({
+        title: lines,
+        groups: z
+          .array(z.object({ title: z.string(), items: z.array(z.object({ name: z.string(), year: z.number().int() })).min(1) }))
+          .min(1),
+        note: z.string()
+      }),
+      denim: z.object({
+        title: lines,
+        body: z.string(),
+        images: z.array(pic).min(1),
+        featuresTitle: z.string(),
+        features: z.array(z.object({ title: z.string(), body: z.string() })).min(1)
+      })
+    });
+  }
+});
+
 const settings = defineCollection({
   loader: glob({ pattern: '*.json', base: './src/content/settings' }),
   schema: z.object({
@@ -132,4 +199,4 @@ const settings = defineCollection({
   })
 });
 
-export const collections = { pages, settings };
+export const collections = { pages, catalogPages, tessutiPage, settings };

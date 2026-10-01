@@ -1,5 +1,5 @@
 /** Desktop-only custom cursor (labels from [data-cursor]) and magnetic buttons. */
-import { $$, lerp } from '../core/dom';
+import { $$, damp } from '../core/dom';
 import { subscribe } from '../core/loop';
 
 export function initCursor() {
@@ -24,9 +24,9 @@ export function initCursor() {
   });
   document.addEventListener('mouseleave', () => { target = 0; });
 
-  subscribe(() => {
+  subscribe((f) => {
     if (Math.abs(mx - cx) < 0.1 && Math.abs(my - cy) < 0.1 && Math.abs(s - target) < 0.001) return;
-    cx = lerp(cx, mx, 0.2); cy = lerp(cy, my, 0.2); s = lerp(s, target, 0.15);
+    cx = damp(cx, mx, 0.2, f.k); cy = damp(cy, my, 0.2, f.k); s = damp(s, target, 0.15, f.k);
     cur.style.transform = `translate3d(${cx.toFixed(1)}px,${cy.toFixed(1)}px,0) scale(${s.toFixed(3)})`;
   });
 

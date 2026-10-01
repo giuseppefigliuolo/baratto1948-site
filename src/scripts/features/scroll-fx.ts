@@ -130,11 +130,13 @@ function column() {
   const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
   vid.muted = true;
   vid.addEventListener('error', () => sec.classList.add('no-video'));
-  let b: Box = { top: 0, h: 0 }, playing = true; // `autoplay` starts it
+  let b: Box = { top: 0, h: 0 }, playing = false, fetched = false;
   onMeasure(() => { b = { top: docTop(sec), h: sec.offsetHeight }; });
   subscribe((f) => {
     if (!f.changed) return;
     const top = b.top - f.y;
+    // 3.6 MB: kept out of the page load, fetched once the section is a couple of screens away.
+    if (!fetched && top < f.vh * 2.5) { fetched = true; vid.preload = 'auto'; vid.src = vid.dataset.src!; }
     // Decode only while the section is on screen.
     const on = !(top > f.vh + 50 || top + b.h < -50);
     if (on !== playing) { playing = on; on ? vid.play().catch(() => {}) : vid.pause(); }

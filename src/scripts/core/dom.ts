@@ -5,6 +5,11 @@ export const $$ = <T extends Element = HTMLElement>(sel: string, root: ParentNod
 
 export const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
 export const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+/**
+ * Frame-rate independent easing. `rate` is the fraction covered per 60 Hz frame, `k` the elapsed time in such
+ * frames (Frame.k): identical to lerp(a, b, rate) at 60 Hz, same speed at 120 Hz.
+ */
+export const damp = (a: number, b: number, rate: number, k: number) => a + (b - a) * (1 - Math.pow(1 - rate, k));
 export const easeOut3 = (t: number) => 1 - Math.pow(1 - t, 3);
 
 export const fine = () => matchMedia('(hover: hover) and (pointer: fine)').matches;

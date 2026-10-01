@@ -3,7 +3,7 @@
  * three.js version). Panels bend away from the centre, react to drag velocity,
  * lift on hover and desaturate when out of focus.
  */
-import { clamp, lerp } from '../core/dom';
+import { clamp, damp } from '../core/dom';
 import { onMeasure, subscribe } from '../core/loop';
 import { watch } from '../core/visible';
 import { bitmap, context, program, texture, touch } from './util';
@@ -127,10 +127,10 @@ export function atelier(host: HTMLElement) {
 
   subscribe((f) => {
     if (!vis.on) return;
-    if (!dragging) target -= 0.45 + f.vel * 0.9;
+    if (!dragging) target -= (0.45 + f.vel * 0.9) * f.k;
     const prev = off;
-    off = lerp(off, target, 0.075);
-    vel = lerp(vel, off - prev, 0.2);
+    off = damp(off, target, 0.075, f.k);
+    vel = damp(vel, (off - prev) / f.k, 0.2, f.k);
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.uniform1f(U.uVel, clamp(vel / 40, -1, 1));
@@ -141,8 +141,8 @@ export function atelier(host: HTMLElement) {
       // Screen-space hit test at the panel's curved depth (replaces a raycaster).
       const s = cam / (cam + ((x * x) / W) * 0.55);
       const hit = !touch && Math.abs(mx - x * s) < (pw / 2) * s && Math.abs(my) < (ph / 2) * s;
-      m.hover = lerp(m.hover, hit ? 1 : 0, 0.1);
-      m.ready = lerp(m.ready, m.tex ? 1 : 0, 0.06);
+      m.hover = damp(m.hover, hit ? 1 : 0, 0.1, f.k);
+      m.ready = damp(m.ready, m.tex ? 1 : 0, 0.06, f.k);
       if (focus > bestF) { bestF = focus; best = m.i; }
       if (!m.tex || m.ready < 0.01 || Math.abs(x) > W) continue;
       const pa = pw / ph;

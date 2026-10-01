@@ -11,7 +11,7 @@ export function initMarquee() {
     const sk = clamp(f.vel * 0.12, -7, 7);
     for (const m of items) {
       if (!m.zone.on || !m.half) continue;
-      m.x -= (0.6 + Math.abs(f.vel) * 0.35) * f.dir;
+      m.x -= (0.6 + Math.abs(f.vel) * 0.35) * f.dir * f.k;
       if (m.x < -m.half) m.x += m.half;
       if (m.x > 0) m.x -= m.half;
       setStyle(m.el, 'transform', `translate3d(${m.x.toFixed(1)}px,0,0) skewX(${(-sk * 0.8).toFixed(2)}deg)`);

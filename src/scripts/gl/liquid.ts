@@ -4,7 +4,7 @@
  * One small WebGL context per image, created lazily, drawing only while the
  * image is on screen and the effect is active.
  */
-import { clamp, hostOf, lerp } from '../core/dom';
+import { clamp, damp, hostOf } from '../core/dom';
 import { subscribe } from '../core/loop';
 import { watch } from '../core/visible';
 import { context, dpr, loaded, program, quad, texture, touch } from './util';
@@ -101,15 +101,15 @@ export function liquid(img: HTMLImageElement, host: HTMLElement = hostOf(img), o
       const T = (f.now / 1000) * (soft ? 0.55 : 1);
       if (touch) {
         if (!hero) st.target = 1;
-        st.tmx += (0.5 + Math.sin(T * 0.35 + st.ph) * 0.3 - st.tmx) * 0.01;
-        st.tmy += (0.45 + Math.cos(T * 0.27 + st.ph) * 0.25 - st.tmy) * 0.01;
+        st.tmx = damp(st.tmx, 0.5 + Math.sin(T * 0.35 + st.ph) * 0.3, 0.01, f.k);
+        st.tmy = damp(st.tmy, 0.45 + Math.cos(T * 0.27 + st.ph) * 0.25, 0.01, f.k);
         st.s = Math.max(st.s, 0.12);
       }
-      st.h = hero ? 1 : lerp(st.h, st.target, touch ? 0.025 : 0.06);
-      st.mx = lerp(st.mx, st.tmx, 0.08); st.my = lerp(st.my, st.tmy, 0.08);
-      st.s *= touch ? 0.99 : 0.965;
-      st.S = lerp(st.S, st.s, 0.1);
-      st.v = lerp(st.v, f.vel, touch ? 0.06 : 0.15);
+      st.h = hero ? 1 : damp(st.h, st.target, touch ? 0.025 : 0.06, f.k);
+      st.mx = damp(st.mx, st.tmx, 0.08, f.k); st.my = damp(st.my, st.tmy, 0.08, f.k);
+      st.s *= Math.pow(touch ? 0.99 : 0.965, f.k);
+      st.S = damp(st.S, st.s, 0.1, f.k);
+      st.v = damp(st.v, f.vel, touch ? 0.06 : 0.15, f.k);
 
       const d = soft && !hero ? Math.min(dpr(), 1.25) : dpr();
       const cw = Math.max(1, Math.round(hr.width * d)), ch = Math.max(1, Math.round(hr.height * d));

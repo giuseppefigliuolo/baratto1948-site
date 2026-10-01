@@ -8,13 +8,15 @@
  * `seal-reference.js`, "lift" mode, "bronze" finish only.
  */
 import {
-  ACESFilmicToneMapping, AmbientLight, CanvasTexture, CircleGeometry, Color, CylinderGeometry, DirectionalLight,
-  DoubleSide, Group, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry,
-  PMREMGenerator, Scene, SRGBColorSpace, WebGLRenderer, type Texture
+  ACESFilmicToneMapping, AmbientLight, BufferAttribute, BufferGeometry, CircleGeometry, Color, CylinderGeometry,
+  DataTexture, DirectionalLight, DoubleSide, Group, LinearFilter, LinearMipmapLinearFilter, Mesh, MeshBasicMaterial,
+  MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, PMREMGenerator, RGBAFormat, Scene, SRGBColorSpace,
+  WebGLRenderer, type Texture
 } from 'three';
 import logoUrl from '../../assets/brand/logo.png?url';
-import { clamp, fine, lerp, setStyle } from '../core/dom';
+import { clamp, damp, fine, lerp, setStyle } from '../core/dom';
 import { subscribe } from '../core/loop';
+import { buildSeal, M, N, R, T, type SealBuild } from './seal.compute';
 
 interface Opts {
   /** resolves to the `performance.now()` at which the timeline starts (hero photo on screen) */
@@ -24,9 +26,7 @@ interface Opts {
 }
 
 const smoother = (t: number) => t * t * t * (t * (t * 6 - 15) + 10);
-const T = 0.14; // coin thickness
 const PACE = 800; // ms per timeline second (opening sequence runs 20% faster)
-const R = 0.036; // letter relief
 const FOV = 18;
 const FRAME = 2.4; // half-height of the view at z=0: coin diameter (2) = printed stamp diameter
 const CAM_Z = FRAME / Math.tan(((FOV / 2) * Math.PI) / 180);
@@ -40,7 +40,8 @@ export async function seal(frameEl: HTMLElement, opts: Opts) {
   if (!host || !hero) return;
 
   const img = await load(logoUrl);
-  const alpha = logoAlpha(img);
+  // Relief, colour/bump maps and face mesh are built off the main thread while the renderer is set up here.
+  const built = build(logoPixels(img));
 
   const renderer = new WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
@@ -54,11 +55,13 @@ export async function seal(frameEl: HTMLElement, opts: Opts) {
 
   const scene = new Scene();
   scene.environment = envFor(renderer);
+  await idle();
   const camera = new PerspectiveCamera(FOV, 1, 0.1, 100);
   camera.position.set(0, 0, CAM_Z);
 
-  const map = colorMap(alpha);
-  const bump = bumpMap();
+  const b = await built;
+  const map = dataTexture(b.color, true);
+  const bump = dataTexture(b.bump, false);
   const mat = (roughness: number) => new MeshStandardMaterial({
     map, metalness: 0.25, roughness, bumpMap: bump, bumpScale: 0.5, envMapIntensity: 0.3,
     transparent: true, opacity: opts.still ? 1 : 0
@@ -66,7 +69,7 @@ export async function seal(frameEl: HTMLElement, opts: Opts) {
   const face = mat(0.88), edge = mat(0.91);
 
   const coin = new Group();
-  coin.add(new Mesh(faceGeometry(alpha), face));
+  coin.add(new Mesh(faceGeometry(b), face));
   const rim = new Mesh(new CylinderGeometry(1.006, 1.006, T + R, 180, 1, true), edge);
   rim.rotation.x = Math.PI / 2;
   rim.position.z = R / 2;
@@ -116,6 +119,13 @@ export async function seal(frameEl: HTMLElement, opts: Opts) {
   };
   resize();
 
+  // Compile the shaders without blocking, then draw once (still invisible: opacity 0) so geometry and
+  // textures are already on the GPU when the timeline starts.
+  if (!opts.still) {
+    await renderer.compileAsync(scene, camera).catch(() => {});
+    renderer.render(scene, camera);
+  }
+
   const start = await opts.start;
   if (opts.still) {
     new ResizeObserver(() => { resize(); pose(0, 1); }).observe(host);
@@ -146,8 +156,8 @@ export async function seal(frameEl: HTMLElement, opts: Opts) {
     last = fr.now;
     // The sheet covers the sticky hero after one viewport: stop drawing.
     if (fr.y >= fr.vh) return;
-    m.x += (m.tx - m.x) * 0.05;
-    m.y += (m.ty - m.y) * 0.05;
+    m.x = damp(m.x, m.tx, 0.05, fr.k);
+    m.y = damp(m.y, m.ty, 0.05, fr.k);
     spin?.(dt);
     pose((fr.now - t0) / PACE);
   });
@@ -237,105 +247,56 @@ function load(src: string) {
   });
 }
 
-const N = 1024; // heightmap resolution
-const M = 512; // colour / bump map resolution
-
-/** Logo alpha at N², blurred (~2.2 px) so the relief has soft shoulders. JS blur: ctx.filter isn't everywhere. */
-function logoAlpha(img: HTMLImageElement) {
+/** The logo drawn at N² (the relief is sampled from its alpha channel). */
+function logoPixels(img: HTMLImageElement) {
   const c = document.createElement('canvas');
   c.width = c.height = N;
   const x = c.getContext('2d', { willReadFrequently: true })!;
   x.drawImage(img, 0, 0, N, N);
-  const d = x.getImageData(0, 0, N, N).data;
-  let a = new Float32Array(N * N), b = new Float32Array(N * N);
-  for (let i = 0; i < N * N; i++) a[i] = d[i * 4 + 3] / 255;
-  // 3 box passes (r=2) per axis ≈ gaussian σ 2.4
-  const r = 2, k = 1 / (2 * r + 1);
-  for (let pass = 0; pass < 3; pass++) {
-    for (const horiz of [true, false]) {
-      for (let j = 0; j < N; j++) {
-        let s = 0;
-        const at = (i: number) => a[horiz ? j * N + clamp(i, 0, N - 1) : clamp(i, 0, N - 1) * N + j];
-        for (let i = -r; i <= r; i++) s += at(i);
-        for (let i = 0; i < N; i++) {
-          b[horiz ? j * N + i : i * N + j] = s * k;
-          s += at(i + r + 1) - at(i - r);
-        }
-      }
-      [a, b] = [b, a];
-    }
-  }
-  return a;
+  return x.getImageData(0, 0, N, N).data;
 }
 
-/** Relief face: a dense plane displaced by the logo alpha, trimmed to the unit disc. */
-function faceGeometry(alpha: Float32Array) {
-  const S = 440;
-  const g = new PlaneGeometry(2, 2, S, S), p = g.attributes.position;
-  for (let i = 0; i < p.count; i++) {
-    const u = clamp(Math.round(((p.getX(i) + 1) / 2) * (N - 1)), 0, N - 1);
-    const v = clamp(Math.round(((1 - p.getY(i)) / 2) * (N - 1)), 0, N - 1);
-    p.setZ(i, T / 2 + R * alpha[v * N + u]);
-  }
-  const idx = g.index!.array, keep: number[] = [];
-  for (let i = 0; i < idx.length; i += 3) {
-    const A = idx[i], B = idx[i + 1], C = idx[i + 2];
-    const cx = (p.getX(A) + p.getX(B) + p.getX(C)) / 3, cy = (p.getY(A) + p.getY(B) + p.getY(C)) / 3;
-    if (cx * cx + cy * cy <= 1) keep.push(A, B, C);
-  }
-  g.setIndex(keep);
-  g.computeVertexNormals();
-  return g;
+/** buildSeal() in a worker; on the main thread (after a frame's rest) if workers are unavailable or fail. */
+function build(pixels: Uint8ClampedArray): Promise<SealBuild> {
+  const local = async () => {
+    await idle();
+    return buildSeal(pixels);
+  };
+  if (typeof Worker === 'undefined') return local();
+  return new Promise<SealBuild>((res, rej) => {
+    const w = new Worker(new URL('./seal.worker.ts', import.meta.url), { type: 'module' });
+    w.onmessage = (e: MessageEvent<SealBuild>) => { w.terminate(); res(e.data); };
+    w.onerror = (e) => { w.terminate(); rej(e); };
+    const copy = pixels.slice(); // transferred; `pixels` stays intact for the fallback
+    w.postMessage(copy, [copy.buffer]);
+  }).catch(local);
 }
 
-const hash = (x: number, y: number) => {
-  let h = (Math.imul(x, 374761393) + Math.imul(y, 668265263)) | 0;
-  h = Math.imul(h ^ (h >>> 13), 1274126177);
-  return ((h ^ (h >>> 16)) >>> 0) / 4294967295;
-};
-const vnoise = (x: number, y: number) => {
-  const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
-  const u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
-  const a = hash(xi, yi), b = hash(xi + 1, yi), c = hash(xi, yi + 1), d = hash(xi + 1, yi + 1);
-  return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
-};
-const fbm = (x: number, y: number) =>
-  vnoise(x, y) * 0.5 + vnoise(x * 2.03 + 7, y * 2.03 + 3) * 0.25 + vnoise(x * 4.1 + 13, y * 4.1 + 17) * 0.125 + vnoise(x * 8.3 + 5, y * 8.3 + 11) * 0.0625;
-const mix = (a: number, b: number, t: number) => a + (b - a) * t;
+/** Let the browser draw a frame between two heavy steps. */
+const idle = () => new Promise<void>((res) => setTimeout(res, 0));
 
-function canvasMap(fill: (i: number, j: number) => [number, number, number]) {
-  const c = document.createElement('canvas');
-  c.width = c.height = M;
-  const x = c.getContext('2d')!, d = x.createImageData(M, M);
-  for (let j = 0; j < M; j++) for (let i = 0; i < M; i++) {
-    const o = (j * M + i) * 4, [r, g, b] = fill(i, j);
-    d.data[o] = r; d.data[o + 1] = g; d.data[o + 2] = b; d.data[o + 3] = 255;
+/** M² RGBA bytes → mipmapped texture (what a canvas texture would give). */
+function dataTexture(px: Uint8ClampedArray, colour: boolean): Texture {
+  const tex = new DataTexture(px, M, M, RGBAFormat);
+  tex.generateMipmaps = true;
+  tex.minFilter = LinearMipmapLinearFilter;
+  tex.magFilter = LinearFilter;
+  if (colour) {
+    tex.colorSpace = SRGBColorSpace;
+    tex.anisotropy = 4;
   }
-  x.putImageData(d, 0, 0);
-  return new CanvasTexture(c);
-}
-
-/** Patinated bronze: warm base, green patina in the field only, letters worn lighter. */
-function colorMap(alpha: Float32Array): Texture {
-  const base = [0x5c, 0x4a, 0x32], patch = [0x66, 0x70, 0x5a], wear = [0x96, 0x77, 0x4b];
-  const tex = canvasMap((i, j) => {
-    const u = i / M, v = j / M, h = alpha[j * 2 * N + i * 2];
-    const n = fbm(u * 5, v * 5), n2 = fbm(u * 11 + 4, v * 11 + 9);
-    const pt = clamp((n2 - 0.52) / 0.18, 0, 1) * (1 - h) * 0.7;
-    const sh = 0.9 + n * 0.2;
-    return [0, 1, 2].map((k) => mix(mix(base[k], patch[k], pt), wear[k], h * 0.85) * sh) as [number, number, number];
-  });
-  tex.colorSpace = SRGBColorSpace;
-  tex.anisotropy = 4;
+  tex.needsUpdate = true;
   return tex;
 }
 
-/** Fine cast-metal grain. */
-function bumpMap(): Texture {
-  return canvasMap((i, j) => {
-    const s = (vnoise((i / M) * 120, (j / M) * 120) * 0.5 + hash(i, j) * 0.5) * 255;
-    return [s, s, s];
-  });
+/** Relief face, built by the worker: a dense plane displaced by the logo alpha, trimmed to the unit disc. */
+function faceGeometry(b: SealBuild) {
+  const g = new BufferGeometry();
+  g.setAttribute('position', new BufferAttribute(b.position, 3));
+  g.setAttribute('normal', new BufferAttribute(b.normal, 3));
+  g.setAttribute('uv', new BufferAttribute(b.uv, 2));
+  g.setIndex(new BufferAttribute(b.index, 1));
+  return g;
 }
 
 /** Small warm studio for reflections: five emissive panels, prefiltered once. */

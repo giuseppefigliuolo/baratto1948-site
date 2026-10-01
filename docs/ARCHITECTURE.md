@@ -192,7 +192,7 @@ onMeasure(() => { /* cache offsets/sizes; runs now and after every resize */ });
 Each tick:
 
 1. `driver(now)`: Lenis advances the smooth scroll position.
-2. `frame` is updated: `y`, `dy`, `vel` (lerped velocity used for skews), `dir`, `vw/vh`, and `changed`
+2. `frame` is updated: `y`, `dy`, `vel` (lerped velocity in px per 60 Hz frame, used for skews), `k` (time since the last frame in 60 Hz frames), `dir`, `vw/vh`, and `changed`
    (true on scroll or after a remeasure).
 3. Every subscriber's `read` runs, then every `write`, so layout is never interleaved with writes.
 
@@ -225,6 +225,10 @@ The mobile menu closes first, waits 350 ms for the clip-path animation, and only
 
 Plain WebGL1 with no dependencies. Helpers live in [`gl/util.ts`](../src/scripts/gl/util.ts).
 
+**Frame-rate independence.** Anything that eases or drifts per frame uses `f.k` (`damp(a, b, rate, k)` in
+`core/dom.ts`, or `speed * f.k`), so it runs at the same speed on 60 and 120 Hz screens; at 60 Hz it is the old `lerp`.
+Don't write a bare `lerp(a, b, 0.1)` inside a `subscribe` callback.
+
 **Loaded only if** motion is on, the intro has finished, the browser is idle, `saveData` is off,
 `deviceMemory >= 4` (when reported) and a WebGL context can be created. Otherwise the plain images stay.
 The hero seal has the same device gate but loads right after the intro (not on idle), because its timeline
@@ -233,7 +237,7 @@ starts with the Ken Burns; without motion it renders once, in its final pose.
 | Module | Used on | Notes |
 |---|---|---|
 | `gl/liquid.ts` | `img[data-gl]` (on hover on desktop, ambient drift on touch) | one small canvas per image, created lazily; draws only while visible and active; object-fit cover handled by `uC`/`uO` uniforms; chromatic split from scroll velocity |
-| `gl/seal.ts` | Hero | **three.js** (the only module that uses it). Logo alpha (`assets/brand/logo.png`, blurred) → 440² relief plane trimmed to a disc + rim + back; patinated bronze `MeshStandardMaterial` with procedural colour/bump maps and a small PMREM studio env. Camera fov 18° at `2.4 / tan 9°`, so at z=0 the coin matches the printed stamp. Timeline from the intro: fade 0.6–3.2 s, lift 1.8–7.6 s to z≈1.91 (+14.5%); both wait for the hero photo to be decoded; rotation follows the pointer (desktop) or `deviceorientation` (touch; iOS asks on first tap); the key light follows too. Drawn by the shared loop until the sheet covers the hero (`y ≥ vh`). On any failure the photo's printed stamp remains |
+| `gl/seal.ts` | Hero | **three.js** (the only module that uses it). Logo alpha (`assets/brand/logo.png`, blurred) → 440² relief plane trimmed to a disc + rim + back; patinated bronze `MeshStandardMaterial` with procedural colour/bump maps and a small PMREM studio env. Camera fov 18° at `2.4 / tan 9°`, so at z=0 the coin matches the printed stamp. Timeline from the intro: fade 0.6–3.2 s, lift 1.8–7.6 s to z≈1.91 (+14.5%); both wait for the hero photo to be decoded; rotation follows the pointer (desktop) or `deviceorientation` (touch; iOS asks on first tap); the key light follows too. Drawn by the shared loop until the sheet covers the hero (`y ≥ vh`). On any failure the photo's printed stamp remains. The CPU-heavy part (blur, relief mesh with normals, colour and bump maps, ~1 s on a mid-range phone) is `gl/seal.compute.ts`, run in a Web Worker (`gl/seal.worker.ts`; main-thread fallback if workers fail) and returned as typed arrays, so the hero never stalls on it. Shaders are compiled with `compileAsync` and one invisible draw uploads geometry and textures before the timeline starts. `main.ts` prefetches the chunk while the intro plays. To change the coin's look, edit `seal.compute.ts` (maps, relief) or `seal.ts` (scene, materials) |
 | `gl/atelier.ts` | Atelier gallery | 24×24 grid per panel, bent along z; infinite wrap; drag (pointer), horizontal wheel, autoplay drift + scroll velocity; screen-space hover hit test; textures fetched from the 800 px WebP URLs in `data-items`, staggered 60 ms apart |
 
 The DOM remains the source of truth. The hero `<img>` stays in the page (it's the LCP element); the seal canvas only sits on top of it.
@@ -295,6 +299,7 @@ Image paths in JSON are relative to the JSON file (`../../assets/images/x.jpg`).
   to find the real layout container for parallax and WebGL.
 - Videos are not processed. `public/video/dettagli.mp4` is encoded by hand: 1080×1920, H.264 High, yuv420p, 30 fps,
   no audio, `+faststart`, ~2.2 Mbit/s (≈ 3.7 MB for 13 s). `details.image` stays as the intro frame and the no-motion / error fallback.
+  The `<video>` has no `src` in the HTML (`data-src`, `preload="none"`): `column()` attaches it when the section is within 2.5 screens and plays/pauses it by visibility, so the 3.7 MB never competes with the hero.
 
 ## 12. SEO / GEO outputs
 

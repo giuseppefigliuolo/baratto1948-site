@@ -21,6 +21,10 @@ import { initScrollFx } from './features/scroll-fx';
 
 const html = document.documentElement;
 const motion = html.classList.contains('m');
+// Module state used by the top-level code below: declared first (a later `const` would still be in its TDZ).
+let canGL: boolean | undefined;
+let sealChunk: Promise<typeof import('./gl/seal')> | undefined;
+const sealModule = () => (sealChunk ||= import('./gl/seal'));
 
 initSmooth(motion);
 initMenu();
@@ -39,6 +43,8 @@ if (motion) {
   // The seal is built meanwhile, but its timeline (and the Ken Burns) waits for the photo on screen:
   // first the printed stamp, then the bronze coin rising out of it.
   const photoIn = ready.then(heroPhoto).then(() => { kenBurns(); return performance.now(); });
+  // Fetch and parse the three.js chunk while the intro plays, not after it.
+  if (capable()) idle(() => sealModule().catch(() => {}));
   ready.then(() => {
     loadSeal({ start: photoIn });
     idle(loadGL);
@@ -72,7 +78,7 @@ async function loadSeal(opts: { start: Promise<number>; still?: boolean }) {
   const frame = document.querySelector<HTMLElement>('[data-seal-frame]');
   if (!frame || !capable()) return;
   try {
-    const { seal } = await import('./gl/seal');
+    const { seal } = await sealModule();
     await seal(frame, opts);
   } catch (e) {
     // The printed stamp in the photo stands on its own.
@@ -80,17 +86,18 @@ async function loadSeal(opts: { start: Promise<number>; still?: boolean }) {
   }
 }
 
-function idle(fn: () => void) {
+function idle(fn: () => unknown) {
   const ric = (window as any).requestIdleCallback as ((cb: () => void, o?: { timeout: number }) => void) | undefined;
   ric ? ric(fn, { timeout: 2500 }) : setTimeout(fn, 600);
 }
 
+/** Device gate for every WebGL effect; probed once (each probe would open a throw-away context). */
 function capable() {
+  if (canGL !== undefined) return canGL;
   const nav = navigator as any;
-  if (nav.connection?.saveData) return false;
-  if (typeof nav.deviceMemory === 'number' && nav.deviceMemory < 4) return false;
-  const c = document.createElement('canvas');
-  return !!c.getContext('webgl');
+  if (nav.connection?.saveData) return (canGL = false);
+  if (typeof nav.deviceMemory === 'number' && nav.deviceMemory < 4) return (canGL = false);
+  return (canGL = !!document.createElement('canvas').getContext('webgl'));
 }
 
 async function loadGL() {

@@ -6,13 +6,15 @@
  *    cost almost nothing.
  *  - Layout caches are rebuilt only on resize (see `onMeasure`).
  */
-import { lerp } from './dom';
+import { clamp, damp } from './dom';
 
 export interface Frame {
   now: number;
   y: number;
   dy: number;
   vel: number;
+  /** time since the last frame, in 60 Hz frames (1 at 60 Hz, 0.5 at 120 Hz), clamped to 0.25..4 */
+  k: number;
   dir: 1 | -1;
   vw: number;
   vh: number;
@@ -28,10 +30,10 @@ const measures = new Set<() => void>();
 let driver: ((now: number) => void) | null = null;
 
 export const frame: Frame = {
-  now: 0, y: scrollY, dy: 0, vel: 0, dir: 1, vw: innerWidth, vh: innerHeight, changed: true
+  now: 0, y: scrollY, dy: 0, vel: 0, k: 1, dir: 1, vw: innerWidth, vh: innerHeight, changed: true
 };
 
-let lastY = scrollY;
+let lastY = scrollY, lastNow = 0;
 let dirty = true;
 
 function tick(now: number) {
@@ -39,10 +41,14 @@ function tick(now: number) {
   const y = scrollY;
   const dy = y - lastY;
   lastY = y;
+  const k = lastNow ? clamp((now - lastNow) / (1000 / 60), 0.25, 4) : 1;
+  lastNow = now;
   frame.now = now;
+  frame.k = k;
   frame.dy = dy;
   frame.y = y;
-  frame.vel = lerp(frame.vel, dy, 0.12);
+  // px per 60 Hz frame, so the velocity-driven effects feel the same at any refresh rate
+  frame.vel = damp(frame.vel, dy / k, 0.12, k);
   if (Math.abs(frame.vel) < 0.001) frame.vel = 0;
   if (Math.abs(dy) > 0.5) frame.dir = dy > 0 ? 1 : -1;
   frame.changed = dirty || dy !== 0;

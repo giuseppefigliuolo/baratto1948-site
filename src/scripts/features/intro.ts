@@ -1,14 +1,14 @@
 /**
- * First-visit intro (≈1.6s): counter + image flicker, then the frame opens into
+ * First-visit intro (≈0.9s): counter + image flicker, then the frame opens into
  * the hero. Skipped for returning visitors in the same session.
  */
 import { $, $$, clamp, easeOut3 } from '../core/dom';
 import { lockScroll } from '../core/smooth';
 
 const KEY = 'b48-intro';
-const COUNT_MS = 1000;
-const OPEN_MS = 650;
-const FADE_MS = 500;
+const COUNT_MS = 500;
+const OPEN_MS = 200; // hand-off to the hero (menu + texts) while the frame is still settling
+const FADE_MS = 400;
 
 export function runIntro(): Promise<void> {
   const html = document.documentElement;

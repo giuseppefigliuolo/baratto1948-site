@@ -17,9 +17,7 @@ const HERO_MOBILE = '(max-width: 759px) and (max-aspect-ratio: 1/1)'; // same as
 const frames = await Promise.all(
   [
     home.heritage.roots.image.src,
-    home.heritage.founder.image.src,
     home.process.steps[1].image.src,
-    home.process.steps[2].image.src,
     home.details.image.src,
     home.collection.chapters[0].image.src
   ].map((src) => getImage({ src, width: 360, format: 'webp', quality: 55 }))
@@ -51,7 +49,7 @@ const frames = await Promise.all(
     display: none;
     position: fixed; inset: 0; z-index: 9999;
     background: var(--bg); color: var(--fg);
-    transition: opacity 0.5s ease;
+    transition: opacity 0.4s ease;
   }
   :global(html.intro) { overflow: hidden; }
   /* Failsafe: if JS never runs, the overlay removes itself. */
@@ -61,7 +59,7 @@ const frames = await Promise.all(
   .frame {
     position: absolute; inset: 0; overflow: hidden;
     clip-path: inset(calc(50% - min(20vw, 170px)) calc(50% - min(15vw, 130px)));
-    transition: clip-path 0.9s var(--ease);
+    transition: clip-path 0.72s var(--ease);
   }
   .frame.is-open { clip-path: inset(0 0 0 0); }
   .frame img,
@@ -86,6 +84,6 @@ const frames = await Promise.all(
     position: absolute; left: var(--gutter); bottom: 24px;
     font: 400 italic clamp(1.75rem, min(4vw, 7svh), 4rem)/1 var(--serif);
   }
-  [data-intro-fade] { transition: opacity 0.4s; }
+  [data-intro-fade] { transition: opacity 0.32s; }
   .is-done [data-intro-fade] { opacity: 0; }
 </style>

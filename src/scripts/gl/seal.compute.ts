@@ -1,24 +1,12 @@
 /**
  * Seal: the CPU-heavy, DOM-free part (logo relief, procedural maps, face mesh).
- * Runs in a Web Worker (seal.worker.ts) so the hero never waits on it; seal.ts falls back to calling it
- * on the main thread when workers are unavailable. Same maths as the original in-page version.
+ * Runs in a Web Worker (seal.worker.ts) so the hero never waits on it; seal.ts loads it on the main thread
+ * only when the worker is unavailable or fails.
  */
 
-export const T = 0.14; // coin thickness
-export const R = 0.036; // letter relief
-export const N = 1024; // heightmap resolution
-export const M = 512; // colour / bump map resolution
-const S = 440; // face grid segments
+import { M, N, R, T, type SealBuild } from './seal.shape';
 
-export interface SealBuild {
-  /** RGBA, M², rows already flipped for a non-flipY DataTexture */
-  color: Uint8ClampedArray;
-  bump: Uint8ClampedArray;
-  position: Float32Array;
-  normal: Float32Array;
-  uv: Float32Array;
-  index: Uint32Array;
-}
+const S = 440; // face grid segments
 
 const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
 

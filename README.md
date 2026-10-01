@@ -52,8 +52,8 @@ public/admin/              ← Decap CMS (config.yml)
 
 ## Performance notes
 - Zero framework runtime: HTML + inlined CSS; one ~10 KB (gzip) script incl. smooth scroll.
-- three.js (~150 KB) replaced by ~5 KB of hand-written WebGL, lazy-loaded when the page is idle,
-  skipped on Save-Data / low-memory devices and with `prefers-reduced-motion`.
+- No three.js: ~5 KB of hand-written WebGL, lazy-loaded when the page is idle, skipped on Save-Data /
+  low-memory devices and with `prefers-reduced-motion`. The 3D hero seal is ~11 KB gz more (own chunk + worker).
 - One animation loop for everything. Layout is measured on resize only; each effect runs only
   while its section is near the viewport and only when scroll changed. Only `transform`,
   `opacity`, `clip-path`, `filter` are animated.

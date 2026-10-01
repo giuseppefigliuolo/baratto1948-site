@@ -4,19 +4,14 @@
  * pointer (desktop) or device tilt (phones), with a soft shadow left on the cloth. It can be spun by
  * dragging (mouse or finger), with momentum, and settles face-on again.
  *
- * The only three.js module on the site (see ARCHITECTURE §9, §13). Ported from the design's
- * `seal-reference.js`, "lift" mode, "bronze" finish only.
+ * Ported from the design's `seal-reference.js` ("lift" mode, "bronze" finish only), first with three.js, now with
+ * plain WebGL2 (seal.gl.ts) that reproduces three's rendering of it (see ARCHITECTURE §9).
  */
-import {
-  ACESFilmicToneMapping, AmbientLight, BufferAttribute, BufferGeometry, CircleGeometry, Color, CylinderGeometry,
-  DataTexture, DirectionalLight, DoubleSide, Group, LinearFilter, LinearMipmapLinearFilter, Mesh, MeshBasicMaterial,
-  MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, PMREMGenerator, RGBAFormat, Scene, SRGBColorSpace,
-  WebGLRenderer, type Texture
-} from 'three';
 import logoUrl from '../../assets/brand/logo.png?url';
 import { clamp, damp, fine, lerp, setStyle } from '../core/dom';
 import { subscribe } from '../core/loop';
-import { buildSeal, M, N, R, T, type SealBuild } from './seal.compute';
+import { N, R, T, type SealBuild } from './seal.shape';
+import { coinRenderer, type CoinPose } from './seal.gl';
 
 interface Opts {
   /** resolves to the `performance.now()` at which the timeline starts (hero photo on screen) */
@@ -40,50 +35,13 @@ export async function seal(frameEl: HTMLElement, opts: Opts) {
   if (!host || !hero) return;
 
   const img = await load(logoUrl);
-  // Relief, colour/bump maps and face mesh are built off the main thread while the renderer is set up here.
-  const built = build(logoPixels(img));
-
-  const renderer = new WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
-  renderer.outputColorSpace = SRGBColorSpace;
-  renderer.toneMapping = ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
-  renderer.setClearColor(0x000000, 0);
-  const cv = renderer.domElement;
+  const cv = document.createElement('canvas');
   cv.setAttribute('aria-hidden', 'true');
   host.appendChild(cv);
-
-  const scene = new Scene();
-  scene.environment = envFor(renderer);
-  await idle();
-  const camera = new PerspectiveCamera(FOV, 1, 0.1, 100);
-  camera.position.set(0, 0, CAM_Z);
-
-  const b = await built;
-  const map = dataTexture(b.color, true);
-  const bump = dataTexture(b.bump, false);
-  const mat = (roughness: number) => new MeshStandardMaterial({
-    map, metalness: 0.25, roughness, bumpMap: bump, bumpScale: 0.5, envMapIntensity: 0.3,
-    transparent: true, opacity: opts.still ? 1 : 0
-  });
-  const face = mat(0.88), edge = mat(0.91);
-
-  const coin = new Group();
-  coin.add(new Mesh(faceGeometry(b), face));
-  const rim = new Mesh(new CylinderGeometry(1.006, 1.006, T + R, 180, 1, true), edge);
-  rim.rotation.x = Math.PI / 2;
-  rim.position.z = R / 2;
-  coin.add(rim);
-  const back = new Mesh(new CircleGeometry(1.006, 180), edge);
-  back.rotation.y = Math.PI;
-  back.position.z = -T / 2;
-  coin.add(back);
-  scene.add(coin);
-
-  const key = new DirectionalLight(0xffe4bd, 2.8);
-  key.position.set(0.6, 3, 4);
-  scene.add(key);
-  scene.add(new AmbientLight(0x2a2018, 0.6));
+  // Relief, colour/bump maps and face mesh are built off the main thread while the shaders compile.
+  const coin = await coinRenderer(cv, build(logoPixels(img)), { cam: CAM_Z, fov: FOV, thickness: T, relief: R })
+    .catch((e) => { cv.remove(); throw e; });
+  const state: CoinPose = { z: 0, rx: 0, ry: 0, opacity: opts.still ? 1 : 0, light: [0.6, 3, 4] };
 
   // Pointer (or tilt) in [-1, 1], relative to the hero.
   const m = { x: 0, y: 0, tx: 0, ty: 0 };
@@ -97,34 +55,26 @@ export async function seal(frameEl: HTMLElement, opts: Opts) {
     const lr = clamp((t - 1.8) / 5.8, 0, 1);
     const l = lf ?? smoother(smoother(lr) * 0.35 + (1 - Math.pow(1 - lr, 3)) * 0.65);
     const sway = lf == null ? 1 : 0;
-    face.opacity = edge.opacity = f;
-    coin.position.z = LIFT * l;
-    coin.rotation.x = l * (-0.34 + sway * Math.sin(t * 0.4) * 0.05 + m.y * 0.22) + sp.x;
-    coin.rotation.y = l * (0.2 + sway * Math.sin(t * 0.3) * 0.08 + m.x * 0.3) + sp.y;
+    state.opacity = f;
+    state.z = LIFT * l;
+    state.rx = l * (-0.34 + sway * Math.sin(t * 0.4) * 0.05 + m.y * 0.22) + sp.x;
+    state.ry = l * (0.2 + sway * Math.sin(t * 0.3) * 0.08 + m.x * 0.3) + sp.y;
     if (!live && hit && f > 0.5) { live = true; hit.classList.add('is-live'); }
-    key.position.x = 0.6 + m.x * 2.4;
-    key.position.y = 3 - m.y * 1.5;
+    state.light = [0.6 + m.x * 2.4, 3 - m.y * 1.5, 4];
     if (shadow) {
       setStyle(shadow, 'opacity', (0.8 * l).toFixed(3));
       // A coin turned edge-on casts a narrower shadow.
       const s = 1 + 0.15 * l, sx = s * (0.3 + 0.7 * Math.abs(Math.cos(sp.y))), sy = s * (0.3 + 0.7 * Math.abs(Math.cos(sp.x)));
       setStyle(shadow, 'transform', `translate(-50%,-50%) translate(${(5 * l).toFixed(2)}%,${(11 * l).toFixed(2)}%) scale(${sx.toFixed(3)},${sy.toFixed(3)})`);
     }
-    renderer.render(scene, camera);
+    coin.draw(state);
   };
 
-  const resize = () => {
-    const w = host.clientWidth || 1;
-    renderer.setSize(w, w, false); // the host is square
-  };
+  const resize = () => coin.resize(host.clientWidth || 1); // the host is square
   resize();
 
-  // Compile the shaders without blocking, then draw once (still invisible: opacity 0) so geometry and
-  // textures are already on the GPU when the timeline starts.
-  if (!opts.still) {
-    await renderer.compileAsync(scene, camera).catch(() => {});
-    renderer.render(scene, camera);
-  }
+  // One invisible frame (opacity 0) so geometry and textures are already on the GPU when the timeline starts.
+  if (!opts.still) coin.draw(state);
 
   const start = await opts.start;
   if (opts.still) {
@@ -256,12 +206,9 @@ function logoPixels(img: HTMLImageElement) {
   return x.getImageData(0, 0, N, N).data;
 }
 
-/** buildSeal() in a worker; on the main thread (after a frame's rest) if workers are unavailable or fail. */
+/** buildSeal() in a worker; on the main thread if workers are unavailable or fail. */
 function build(pixels: Uint8ClampedArray): Promise<SealBuild> {
-  const local = async () => {
-    await idle();
-    return buildSeal(pixels);
-  };
+  const local = async () => (await import('./seal.compute')).buildSeal(pixels);
   if (typeof Worker === 'undefined') return local();
   return new Promise<SealBuild>((res, rej) => {
     const w = new Worker(new URL('./seal.worker.ts', import.meta.url), { type: 'module' });
@@ -270,51 +217,4 @@ function build(pixels: Uint8ClampedArray): Promise<SealBuild> {
     const copy = pixels.slice(); // transferred; `pixels` stays intact for the fallback
     w.postMessage(copy, [copy.buffer]);
   }).catch(local);
-}
-
-/** Let the browser draw a frame between two heavy steps. */
-const idle = () => new Promise<void>((res) => setTimeout(res, 0));
-
-/** M² RGBA bytes → mipmapped texture (what a canvas texture would give). */
-function dataTexture(px: Uint8ClampedArray, colour: boolean): Texture {
-  const tex = new DataTexture(px, M, M, RGBAFormat);
-  tex.generateMipmaps = true;
-  tex.minFilter = LinearMipmapLinearFilter;
-  tex.magFilter = LinearFilter;
-  if (colour) {
-    tex.colorSpace = SRGBColorSpace;
-    tex.anisotropy = 4;
-  }
-  tex.needsUpdate = true;
-  return tex;
-}
-
-/** Relief face, built by the worker: a dense plane displaced by the logo alpha, trimmed to the unit disc. */
-function faceGeometry(b: SealBuild) {
-  const g = new BufferGeometry();
-  g.setAttribute('position', new BufferAttribute(b.position, 3));
-  g.setAttribute('normal', new BufferAttribute(b.normal, 3));
-  g.setAttribute('uv', new BufferAttribute(b.uv, 2));
-  g.setIndex(new BufferAttribute(b.index, 1));
-  return g;
-}
-
-/** Small warm studio for reflections: five emissive panels, prefiltered once. */
-function envFor(renderer: WebGLRenderer) {
-  const pm = new PMREMGenerator(renderer), es = new Scene();
-  es.background = new Color(0x0b0908);
-  const add = (w: number, h: number, pos: [number, number, number], col: number, k: number) => {
-    const mesh = new Mesh(new PlaneGeometry(w, h), new MeshBasicMaterial({ color: new Color(col).multiplyScalar(k), side: DoubleSide }));
-    mesh.position.set(...pos);
-    mesh.lookAt(0, 0, 0);
-    es.add(mesh);
-  };
-  add(5, 5, [0, 7, 5], 0xffe0b0, 4.5);
-  add(12, 1.6, [-8, 2, 3], 0xfff0da, 1.6);
-  add(1.6, 12, [8, -1, 4], 0xc2a36b, 1.2);
-  add(10, 10, [0, -7, 5], 0x3b2b1c, 1.2);
-  add(20, 20, [0, 0, -9], 0x1a1410, 1);
-  const t = pm.fromScene(es, 0.035).texture;
-  pm.dispose();
-  return t;
 }
